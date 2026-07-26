@@ -167,13 +167,20 @@
 
     <!-- Resume-by-Email Modal -->
     <div id="resumeEmailModal" class="modal-overlay" onclick="handleResumeBackdropClick(event)">
-        <div class="bg-white w-full max-w-md mx-4 my-auto rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative border border-gray-100">
+        <div class="bg-white w-full max-w-2xl mx-4 my-auto rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative border border-gray-100">
             <button type="button" onclick="closeResumeModal()" aria-label="Close" class="sticky float-right -mt-2 -mr-2 top-2 z-10 w-10 h-10 flex items-center justify-center bg-gray-50 rounded-full text-gray-400 hover:text-gray-900 hover:bg-gray-100 text-xl transition shadow-md">✕</button>
 
             <div id="resumeFormState">
                 <div class="text-3xl mb-3">📄</div>
                 <h2 class="text-2xl font-black text-gray-900 mb-2">Get Resume</h2>
-                <p class="text-sm text-gray-500 mb-6">Enter your email and I'll send Shivam's resume straight to your inbox.</p>
+                <p class="text-sm text-gray-500 mb-6">Preview Shivam's resume below, then enter your details to have it emailed to you.</p>
+
+                <div class="mb-8 rounded-2xl overflow-hidden border border-gray-200 shadow-inner bg-gray-50">
+                    <iframe src="assets/Shivam-Soni-Resume.pdf" title="Shivam Soni - Resume Preview" class="w-full h-[420px] md:h-[520px] block" style="border: none;">
+                        <p class="p-6 text-sm text-gray-500">Your browser can't preview PDFs inline. You can still get the resume emailed to you using the form below.</p>
+                    </iframe>
+                </div>
+
                 <form id="resumeEmailForm" onsubmit="handleResumeSubmit(event)">
                     <label for="resumeNameInput" class="sr-only">Your name</label>
                     <input type="text" id="resumeNameInput" required placeholder="Your name"
