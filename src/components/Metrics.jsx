@@ -93,7 +93,7 @@ export default function Metrics() {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
-            className="grid grid-cols-3 w-full md:w-auto bg-surface p-2 rounded-2xl border border-line shadow-soft self-start md:self-auto"
+            className="grid grid-cols-3 w-full md:flex md:w-auto bg-surface p-2 rounded-2xl border border-line shadow-soft self-start md:self-auto"
           >
             {headlineStats.map((s, i) => (
               <motion.div

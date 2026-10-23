@@ -9,6 +9,8 @@ import Lab from './components/Lab';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import ResumeModal from './components/ResumeModal';
+import CursorReveal from './components/CursorReveal';
+import StarTrail from './components/StarTrail';
 
 export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -22,6 +24,8 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="grain" aria-hidden />
+      <CursorReveal />
+      <StarTrail />
       <Navbar onConnect={openContact} onResume={openResume} />
       <main>
         <Hero onConnect={openContact} />
