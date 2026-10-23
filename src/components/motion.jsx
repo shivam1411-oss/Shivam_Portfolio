@@ -105,7 +105,7 @@ export function SplitWords({ text, className = '', wordClassName = '', delay = 0
             className={`inline-block ${wordClassName}`}
             initial={{ y: '110%' }}
             animate={{ y: 0 }}
-            transition={{ duration: 0.9, ease, delay: delay + i * step }}
+            transition={{ duration: 0.7, ease, delay: delay + i * step }}
           >
             {w}
             {i < words.length - 1 ? ' ' : ''}

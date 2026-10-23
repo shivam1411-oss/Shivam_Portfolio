@@ -74,7 +74,7 @@ function Decode({ text, delay = 0, className }) {
     const start = setTimeout(() => {
       id = setInterval(() => {
         step++;
-        const done = Math.floor(step / 2);
+        const done = step;
         setOut(
           text
             .split('')
@@ -82,7 +82,7 @@ function Decode({ text, delay = 0, className }) {
             .join('')
         );
         if (done >= text.length) clearInterval(id);
-      }, 35);
+      }, 28);
     }, delay * 1000);
     return () => {
       clearTimeout(start);
@@ -139,8 +139,8 @@ export default function Intro({ onEnter, onDone }) {
     x.set(px);
     y.set(py);
     const max = Math.hypot(Math.max(px, window.innerWidth - px), Math.max(py, window.innerHeight - py)) + 120;
-    animate(r, max, { duration: 1.1, ease: [0.65, 0, 0.35, 1] });
-    animate(edge, max + 120, { duration: 1.1, ease: [0.65, 0, 0.35, 1], onComplete: onDone });
+    animate(r, max, { duration: 0.6, ease: [0.7, 0, 0.3, 1] });
+    animate(edge, max + 120, { duration: 0.6, ease: [0.7, 0, 0.3, 1], onComplete: onDone });
   };
 
   useEffect(() => {
@@ -166,7 +166,7 @@ export default function Intro({ onEnter, onDone }) {
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: leaving && reduceMotion() ? 0 : 1 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.2 }}
       style={leaving && !reduceMotion() ? { maskImage: mask, WebkitMaskImage: mask } : undefined}
       className="fixed inset-0 z-[80] bg-bg cursor-pointer select-none overflow-hidden"
     >
@@ -190,7 +190,7 @@ export default function Intro({ onEnter, onDone }) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease, delay: 0.2 }}
+          transition={{ duration: 0.4, ease, delay: 0.05 }}
           className="font-mono text-xs sm:text-sm text-accent mb-6 sm:mb-8"
         >
           <span className="text-subtle">~/portfolio $</span> ./welcome<span className="caret" />
@@ -199,20 +199,20 @@ export default function Intro({ onEnter, onDone }) {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease, delay: 0.3 }}
+          transition={{ duration: 0.5, ease, delay: 0.1 }}
           className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden ring-2 ring-accent/50 ring-offset-4 ring-offset-bg mb-6 sm:mb-8 shadow-soft"
         >
           <img src={profile.photo} alt="" className="w-full h-full object-cover" />
         </motion.div>
 
         <h1 className="font-mono font-semibold text-[2.6rem] leading-none sm:text-7xl md:text-8xl tracking-tight text-fg mb-4 sm:mb-5">
-          <Decode text={profile.name.toUpperCase()} delay={0.5} />
+          <Decode text={profile.name.toUpperCase()} delay={0.2} />
         </h1>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
+          transition={{ duration: 0.5, delay: 0.55 }}
           className="eyebrow text-muted mb-8 sm:mb-10"
         >
           Collection Strategy &amp; Credit Risk Leader
@@ -221,7 +221,7 @@ export default function Intro({ onEnter, onDone }) {
         <motion.blockquote
           initial="hidden"
           animate="show"
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: 1.7 } } }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.03, delayChildren: 0.6 } } }}
           className="max-w-2xl text-xl sm:text-2xl md:text-3xl font-bold leading-snug text-fg mb-10 sm:mb-12"
         >
           <span className="text-accent">“</span>
@@ -230,7 +230,7 @@ export default function Intro({ onEnter, onDone }) {
               word.trim() ? (
                 <motion.span
                   key={`${pi}-${wi}`}
-                  variants={{ hidden: { opacity: 0, y: 10, filter: 'blur(6px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.5, ease } } }}
+                  variants={{ hidden: { opacity: 0, y: 10, filter: 'blur(6px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.35, ease } } }}
                   className={`inline-block ${part.hl ? 'text-gradient' : ''}`}
                 >
                   {word}
@@ -248,7 +248,7 @@ export default function Intro({ onEnter, onDone }) {
           autoFocus
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease, delay: 2.6 }}
+          transition={{ duration: 0.4, ease, delay: 1.1 }}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
           onClick={(e) => {
@@ -265,7 +265,7 @@ export default function Intro({ onEnter, onDone }) {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 3.1 }}
+          transition={{ delay: 1.4 }}
           className="mt-5 text-[11px] sm:text-xs text-subtle font-medium"
         >
           {window.matchMedia('(pointer: coarse)').matches ? 'Tap anywhere to enter' : 'Click anywhere or press Enter'}

@@ -46,7 +46,7 @@ function MobileStats() {
           key={st.label}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 + i * 0.15, duration: 0.6, ease }}
+          transition={{ delay: 0.45 + i * 0.1, duration: 0.5, ease }}
         >
           <StatCard {...st} />
         </motion.div>
@@ -77,7 +77,7 @@ function TiltPhoto() {
     <motion.div
       initial={{ opacity: 0, scale: 0.9, rotate: -4 }}
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
-      transition={{ duration: 1.1, ease, delay: 0.3 }}
+      transition={{ duration: 0.8, ease, delay: 0.1 }}
       className="relative [perspective:1000px]"
       onMouseMove={onMove}
       onMouseLeave={reset}
@@ -94,7 +94,7 @@ function TiltPhoto() {
           style={{ translateZ: 60 }}
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.1, duration: 0.8, ease }}
+          transition={{ delay: 0.55, duration: 0.6, ease }}
           className="hidden lg:block absolute -right-14 bottom-10"
         >
           <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
@@ -106,7 +106,7 @@ function TiltPhoto() {
           style={{ translateZ: 40 }}
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.3, duration: 0.8, ease }}
+          transition={{ delay: 0.65, duration: 0.6, ease }}
           className="hidden lg:block absolute -left-12 top-10"
         >
           <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}>
@@ -148,7 +148,7 @@ export default function Hero({ onConnect }) {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease, delay: 0.2 }}
+            transition={{ duration: 0.5, ease, delay: 0.1 }}
             className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-line bg-surface/70 eyebrow text-muted mb-8"
           >
             <span className="relative flex h-2 w-2">
@@ -159,16 +159,16 @@ export default function Hero({ onConnect }) {
           </motion.div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-extrabold text-fg leading-[0.98] mb-8 tracking-tighter">
-            <SplitWords text="Data-Driven" delay={0.35} />
+            <SplitWords text="Data-Driven" delay={0.15} />
             <br />
-            <SplitWords text="Recovery" delay={0.5} wordClassName="text-gradient" />{' '}
-            <SplitWords text="Control." delay={0.6} />
+            <SplitWords text="Recovery" delay={0.25} wordClassName="text-gradient" />{' '}
+            <SplitWords text="Control." delay={0.3} />
           </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease, delay: 0.85 }}
+            transition={{ duration: 0.6, ease, delay: 0.4 }}
             className="text-base sm:text-lg text-muted mb-10 leading-relaxed font-medium max-w-2xl"
           >
             7+ years in unsecured consumer credit across banking, NBFC, and fintech environments. Specializing in transforming AR from a cost
@@ -180,7 +180,7 @@ export default function Hero({ onConnect }) {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease, delay: 1 }}
+            transition={{ duration: 0.6, ease, delay: 0.5 }}
             className="flex flex-wrap gap-4"
           >
             <Magnetic>
@@ -216,7 +216,7 @@ export default function Hero({ onConnect }) {
         aria-label="Scroll to metrics"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.6 }}
+        transition={{ delay: 0.9 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 text-subtle hover:text-fg transition-colors"
       >
         <span className="eyebrow">Scroll</span>
