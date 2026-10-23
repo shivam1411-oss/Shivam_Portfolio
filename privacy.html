@@ -1,88 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230f172a%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 font-family=%22Arial, sans-serif%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>SS</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <script>
+      // Apply the saved/system theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+        } catch (e) {}
+      })();
+    </script>
     <title>Privacy Policy | Shivam Soni</title>
-    <meta name="description" content="Privacy policy for Shivam Soni's portfolio website and iOS app.">
-    <link rel="stylesheet" href="assets/style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #ffffff;
-            color: #000000;
-        }
-    </style>
-</head>
-<body class="max-w-3xl mx-auto px-6 py-16">
-
-    <a href="index.html" class="text-xs font-black text-gray-600 uppercase tracking-widest hover:text-gray-900 transition">&larr; Back to Portfolio</a>
-
-    <h1 class="text-4xl font-black text-gray-900 mt-6 mb-2 tracking-tight">Privacy Policy</h1>
-    <p class="text-sm text-gray-400 font-bold uppercase tracking-widest mb-12">Effective Date: July 27, 2026</p>
-
-    <div class="space-y-10 text-gray-700 leading-relaxed">
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">Overview</h2>
-            <p>This privacy policy applies to Shivam Soni's portfolio website (this site) and the accompanying iOS app (together, "the App"). It explains what information is collected, how it's used, and who it's shared with. This is a personal portfolio, not a commercial product, and the App collects the minimum information needed to provide the features described below.</p>
-        </section>
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">Information We Collect</h2>
-            <p>The App collects information only when you choose to use the <strong>"Get Resume"</strong> feature:</p>
-            <ul class="list-disc list-inside mt-3 space-y-2">
-                <li><strong>Name</strong> — used to personalize the email you receive.</li>
-                <li><strong>Email address</strong> — used solely to send you a copy of the resume.</li>
-            </ul>
-            <p class="mt-3">No other personal information is collected. The App does not use cookies, does not track your browsing activity, and does not collect location data, device identifiers, or analytics of any kind.</p>
-        </section>
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">How We Use Your Information</h2>
-            <p>The name and email you provide are used for exactly one purpose: sending you the requested resume by email. This information is not used for marketing, is not added to any mailing list, and is not used to contact you for any other reason.</p>
-        </section>
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">Third-Party Services</h2>
-            <p>To deliver the resume by email, the App sends your name and email address to <strong>EmailJS</strong>, a third-party email delivery service, which processes the request and sends the message. EmailJS's own handling of this data is governed by their privacy policy, available at <a href="https://www.emailjs.com/legal/privacy-policy/" class="underline hover:text-gray-900" target="_blank">emailjs.com/legal/privacy-policy</a>.</p>
-            <p class="mt-3">No other third parties receive your information. The App does not sell, rent, or share your data with advertisers or data brokers.</p>
-        </section>
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">Data Storage &amp; Retention</h2>
-            <p>Shivam Soni does not maintain a database of names or email addresses submitted through this feature. Your information is transmitted directly to EmailJS for the purpose of sending the email and is not separately stored, logged, or retained by this website or app beyond what EmailJS itself retains as part of its standard email delivery logs.</p>
-        </section>
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">Children's Privacy</h2>
-            <p>This App is not directed at children and is not intended for use by anyone under the age of 13. We do not knowingly collect personal information from children.</p>
-        </section>
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">Your Rights</h2>
-            <p>If you've submitted your name and email through the "Get Resume" feature and would like to know what information was sent or would like it removed from EmailJS's delivery logs, contact us using the details below and we'll assist or direct you to EmailJS's own data request process.</p>
-        </section>
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">Changes to This Policy</h2>
-            <p>This policy may be updated occasionally to reflect changes to the App's features. The effective date at the top of this page will always reflect the most recent version.</p>
-        </section>
-
-        <section>
-            <h2 class="text-xl font-extrabold text-gray-900 mb-3">Contact</h2>
-            <p>Questions about this policy or your information can be sent to:</p>
-            <p class="mt-3 font-bold text-gray-900">Shivam Soni<br>
-            <a href="mailto:Shivam.soni1495@outlook.com" class="underline hover:text-gray-600">Shivam.soni1495@outlook.com</a></p>
-        </section>
-
-    </div>
-
-    <div class="mt-16 pt-8 border-t border-gray-100 text-center">
-        <p class="text-[10px] text-gray-300 font-bold uppercase tracking-[0.2em]">© 2026 Shivam Soni</p>
-    </div>
-
-</body>
+    <meta name="description" content="Privacy policy for Shivam Soni's portfolio website and iOS app." />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/privacy.jsx"></script>
+  </body>
 </html>
