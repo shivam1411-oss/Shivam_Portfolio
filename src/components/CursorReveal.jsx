@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
 
-const MASK_SCALE = 0.3; // low-res mask: cheap to draw and naturally soft when scaled up
-const SPACING = 16; // px of cursor travel per new droplet
-const MAX_DROPS = 140;
+// Tuning per input type. Phones get bigger cubes, fewer droplets and no glow to stay smooth.
+const SETTINGS = {
+  mouse: { maskScale: 0.3, spacing: 16, maxDrops: 140, cell: 14, maxDpr: 1.5, glow: 8, dropScale: 1 },
+  touch: { maskScale: 0.22, spacing: 22, maxDrops: 60, cell: 18, maxDpr: 1, glow: 0, dropScale: 0.45 },
+};
 
-const CELL = 14; // size of one matrix cube, in CSS px
 const TRAIL = 22; // cells lit behind each falling stream head
 
 // Real code, read top-to-bottom down each column (whitespace squeezed out).
@@ -31,13 +32,11 @@ const themes = {
 const rand = (min, max) => min + Math.random() * (max - min);
 const glitch = () => GLITCH[(Math.random() * GLITCH.length) | 0];
 
-// Only for devices with a real cursor; touch screens have nothing to follow.
-const hasFinePointer = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 /**
  * A hidden "cubic code matrix" behind the page: a dense grid of beveled tiles
  * spelling out real SQL/Python/Excel code down each column, lit by falling
- * Matrix-style streams. The cursor leaves a trail of
+ * Matrix-style streams. The cursor (or a finger on touch screens) leaves a trail of
  * wobbling, spreading "water" droplets that reveal it; they drift with the motion,
  * ripple outward and dry up, so the matrix is covered again once the cursor leaves.
  */
@@ -45,7 +44,8 @@ export default function CursorReveal() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (!hasFinePointer()) return;
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    const { maskScale: MASK_SCALE, spacing: SPACING, maxDrops: MAX_DROPS, cell: CELL, maxDpr, glow, dropScale } = isTouch ? SETTINGS.touch : SETTINGS.mouse;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const canvas = canvasRef.current;
@@ -70,9 +70,12 @@ export default function CursorReveal() {
     let lastScroll = window.scrollY;
 
     const resize = () => {
+      // Mobile browsers resize the viewport as the address bar shows/hides while scrolling;
+      // ignore those small height changes so the matrix doesn't reshuffle mid-reveal.
+      if (isTouch && w === window.innerWidth && Math.abs(h - window.innerHeight) < 160) return;
       w = window.innerWidth;
       h = window.innerHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       for (const [c, cx] of [
         [canvas, ctx],
         [art, actx],
@@ -103,8 +106,8 @@ export default function CursorReveal() {
         y: y + rand(-25, 25),
         vx: vx * 0.12 + rand(-0.4, 0.4),
         vy: vy * 0.12 + rand(-0.2, 0.6), // a slight downward pull, like running water
-        r: big ? rand(150, 220) : rand(90, 150),
-        grow: rand(0.5, 1.3),
+        r: (big ? rand(150, 220) : rand(90, 150)) * dropScale,
+        grow: rand(0.5, 1.3) * dropScale,
         life: rand(110, 170),
         age: 0,
         seed: rand(0, 1000),
@@ -168,7 +171,7 @@ export default function CursorReveal() {
           if (d >= 0 && d < 1) {
             actx.fillStyle = theme.head;
             actx.shadowColor = `rgb(${theme.glyph})`;
-            actx.shadowBlur = 8;
+            actx.shadowBlur = glow;
           } else {
             actx.fillStyle = `rgba(${theme.glyph},${theme.base + lit * (1 - theme.base)})`;
             actx.shadowBlur = 0;
@@ -249,9 +252,7 @@ export default function CursorReveal() {
       frame = drops.length || pointer ? requestAnimationFrame(tick) : 0;
     };
 
-    const onMove = (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
+    const moveTo = (x, y) => {
       pointer = { x, y };
       lastMove = time;
       if (!lastEmit) {
@@ -268,11 +269,20 @@ export default function CursorReveal() {
       if (steps) lastEmit = { x, y };
     };
 
+    const onMove = (e) => e.pointerType === 'mouse' && moveTo(e.clientX, e.clientY);
+
+    // Touch: the water follows the finger while it is down (dragging also scrolls the page as usual).
+    const onTouch = (e) => {
+      const t = e.touches[0];
+      if (t) moveTo(t.clientX, t.clientY);
+    };
+
     // Scrolling slides the page under a still cursor; let the water stream the other way.
+    // (On touch the finger itself moves while scrolling, so the touch trail already covers it.)
     const onScroll = () => {
       const delta = window.scrollY - lastScroll;
       lastScroll = window.scrollY;
-      if (!pointer || !delta) return;
+      if (!pointer || !delta || isTouch) return;
       const count = Math.min(Math.ceil(Math.abs(delta) / 40), 3);
       for (let i = 0; i < count; i++) addDrop(pointer.x, pointer.y, 0, -Math.sign(delta) * rand(15, 30));
     };
@@ -283,21 +293,27 @@ export default function CursorReveal() {
     };
     const onOut = (e) => !e.relatedTarget && onLeave();
 
-    window.addEventListener('pointermove', onMove, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
+    // Reduced motion: no flowing animation, the matrix simply stays hidden.
+    if (reduce) return undefined;
+
+    const passive = { passive: true };
+    window.addEventListener('pointermove', onMove, passive);
+    window.addEventListener('touchstart', onTouch, passive);
+    window.addEventListener('touchmove', onTouch, passive);
+    window.addEventListener('touchend', onLeave, passive);
+    window.addEventListener('touchcancel', onLeave, passive);
+    window.addEventListener('scroll', onScroll, passive);
     window.addEventListener('resize', resize);
     window.addEventListener('blur', onLeave);
     document.addEventListener('mouseout', onOut);
 
-    // Reduced motion: no flowing animation, the matrix simply stays hidden.
-    if (reduce) {
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('scroll', onScroll);
-    }
-
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('touchstart', onTouch);
+      window.removeEventListener('touchmove', onTouch);
+      window.removeEventListener('touchend', onLeave);
+      window.removeEventListener('touchcancel', onLeave);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', resize);
       window.removeEventListener('blur', onLeave);

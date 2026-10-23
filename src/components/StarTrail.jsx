@@ -1,7 +1,10 @@
 import { useEffect, useRef } from 'react';
 
-const MAX_STARS = 260;
-const SPACING = 10; // px of cursor travel per spawned star
+// Phones get fewer stars, no glow and a lower canvas resolution to stay smooth.
+const SETTINGS = {
+  mouse: { maxStars: 260, spacing: 10, maxDpr: 2, glow: 8 },
+  touch: { maxStars: 110, spacing: 14, maxDpr: 1.5, glow: 0 },
+};
 
 const palettes = {
   dark: ['#ffffff', '#3fd1bf', '#9196f6', '#fde68a'],
@@ -26,14 +29,15 @@ function drawStar(ctx, x, y, r, rot) {
   ctx.restore();
 }
 
-/** Canvas overlay that leaves a trail of twinkling stars behind the cursor, also while scrolling. */
+/** Canvas overlay that leaves a trail of twinkling stars behind the cursor (or finger), also while scrolling. */
 export default function StarTrail() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!fine || reduce) return;
+    if (reduce) return;
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    const { maxStars: MAX_STARS, spacing: SPACING, maxDpr, glow } = isTouch ? SETTINGS.touch : SETTINGS.mouse;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -43,7 +47,7 @@ export default function StarTrail() {
     let lastScroll = window.scrollY;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -67,7 +71,7 @@ export default function StarTrail() {
         age: 0,
         twinkle: rand(0, Math.PI * 2),
         color: colors[(Math.random() * colors.length) | 0],
-        glow: dark,
+        glow: dark ? glow : 0,
       });
       if (!frame) frame = requestAnimationFrame(tick);
     };
@@ -88,7 +92,7 @@ export default function StarTrail() {
         ctx.globalAlpha = Math.max(0, fade * flicker);
         ctx.fillStyle = s.color;
         ctx.shadowColor = s.color;
-        ctx.shadowBlur = s.glow ? 8 : 0;
+        ctx.shadowBlur = s.glow;
         drawStar(ctx, s.x, s.y, s.size * (1 - t * 0.5), s.rot);
       }
       ctx.globalAlpha = 1;
@@ -108,14 +112,30 @@ export default function StarTrail() {
       if (steps) last = { x, y };
     };
 
-    const onMove = (e) => trailTo(e.clientX, e.clientY);
+    const onMove = (e) => e.pointerType === 'mouse' && trailTo(e.clientX, e.clientY);
+
+    // Touch: stars follow the finger while it is down (dragging still scrolls the page).
+    const onTouchStart = (e) => {
+      const t = e.touches[0];
+      if (!t) return;
+      last = null;
+      trailTo(t.clientX, t.clientY);
+      for (let i = 0; i < 4; i++) spawn(t.clientX, t.clientY); // a little burst where the finger lands
+    };
+    const onTouchMove = (e) => {
+      const t = e.touches[0];
+      if (t) trailTo(t.clientX, t.clientY);
+    };
+    const onTouchEnd = () => {
+      last = null;
+    };
 
     // While scrolling the cursor stays put on screen but moves over the page,
     // so shed stars that stream away opposite to the scroll direction.
     const onScroll = () => {
       const delta = window.scrollY - lastScroll;
       lastScroll = window.scrollY;
-      if (!last || !delta) return;
+      if (!last || !delta || isTouch) return; // on touch the finger trail already covers scrolling
       const count = Math.min(Math.ceil(Math.abs(delta) / 25), 4);
       const dir = Math.sign(delta);
       for (let i = 0; i < count; i++) spawn(last.x, last.y, { x: 0, y: -dir * rand(1.5, 3.5) });
@@ -125,13 +145,22 @@ export default function StarTrail() {
       if (!e.relatedTarget) last = null;
     };
 
-    window.addEventListener('pointermove', onMove, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const passive = { passive: true };
+    window.addEventListener('pointermove', onMove, passive);
+    window.addEventListener('touchstart', onTouchStart, passive);
+    window.addEventListener('touchmove', onTouchMove, passive);
+    window.addEventListener('touchend', onTouchEnd, passive);
+    window.addEventListener('touchcancel', onTouchEnd, passive);
+    window.addEventListener('scroll', onScroll, passive);
     window.addEventListener('resize', resize);
     document.addEventListener('mouseout', onOut);
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', resize);
       document.removeEventListener('mouseout', onOut);
