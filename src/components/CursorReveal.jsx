@@ -1,37 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { createMatrix, currentMatrixTheme, rand } from './codeMatrix';
 
 // Tuning per input type. Phones get bigger cubes, fewer droplets and no glow to stay smooth.
 const SETTINGS = {
   mouse: { maskScale: 0.3, spacing: 16, maxDrops: 140, cell: 14, maxDpr: 1.5, glow: 8, dropScale: 1 },
   touch: { maskScale: 0.22, spacing: 22, maxDrops: 60, cell: 18, maxDpr: 1, glow: 0, dropScale: 0.45 },
 };
-
-const TRAIL = 22; // cells lit behind each falling stream head
-
-// Real code, read top-to-bottom down each column (whitespace squeezed out).
-const CODE = `
-SELECT bucket, SUM(balance) AS exposure FROM ar_book WHERE dpd BETWEEN 30 AND 150 GROUP BY bucket;
-WITH roll AS (SELECT acct_id, LAG(bucket) OVER (PARTITION BY acct_id ORDER BY month) AS prev FROM dpd_hist)
-SELECT prev, bucket, COUNT(*) FROM roll GROUP BY prev, bucket;
-cei = (opening_ar + sales - closing_ar) / (opening_ar + sales - current_ar) * 100
-dso = ar_balance / credit_sales * days
-df = pd.read_sql(query, conn); df['slip'] = df.gross_slip.sub(df.recoveries).div(df.portfolio)
-if challenger.cure_rate > champion.cure_rate: strategy.scale(challenger)
-for seg in segments: seg.treatment = assign(seg.risk, seg.behaviour, seg.recovery_score)
-UPDATE strategy SET channel = 'digital' WHERE risk_band IN ('A','B') AND dpd < 60;
-const roll = (b) => b.next / b.prev; return accounts.filter(a => a.dpd > 90).map(roll);
-=SUMIFS(Balance,Bucket,">=30",Bucket,"<=150") =INDEX(MATCH(Agency,Range,0)) => {} [] () != && ||
-`.replace(/\s+/g, '');
-const GLITCH = '01{}[]()<>=+*/;:#$%&|!?'.split('');
-
-const themes = {
-  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, head: '#e8fffb', ripple: '255,255,255' },
-  light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, head: '#0c3b36', ripple: '15,138,126' },
-};
-
-const rand = (min, max) => min + Math.random() * (max - min);
-const glitch = () => GLITCH[(Math.random() * GLITCH.length) | 0];
-
 
 /**
  * A hidden "cubic code matrix" behind the page: a dense grid of beveled tiles
@@ -57,10 +31,7 @@ export default function CursorReveal() {
 
     let w = 0;
     let h = 0;
-    let cols = 0;
-    let rows = 0;
-    let cells = []; // glyph per cell, row-major
-    let heads = []; // per column: { y, speed }
+    const matrix = createMatrix(CELL);
     let drops = [];
     let frame = 0;
     let time = 0;
@@ -87,15 +58,7 @@ export default function CursorReveal() {
       mask.width = Math.ceil(w * MASK_SCALE);
       mask.height = Math.ceil(h * MASK_SCALE);
 
-      cols = Math.ceil(w / CELL);
-      rows = Math.ceil(h / CELL);
-      // Each column starts at a random point in the code and reads downward.
-      cells = new Array(cols * rows);
-      for (let col = 0; col < cols; col++) {
-        const start = (Math.random() * CODE.length) | 0;
-        for (let row = 0; row < rows; row++) cells[row * cols + col] = CODE[(start + row) % CODE.length];
-      }
-      heads = Array.from({ length: cols }, () => ({ y: rand(-rows, rows), speed: rand(0.18, 0.5) }));
+      matrix.resize(w, h);
     };
     resize();
 
@@ -134,67 +97,13 @@ export default function CursorReveal() {
       c.closePath();
     };
 
-    // Draw only the cubes inside the revealed area; the rest is masked away anyway.
-    const drawMatrix = (theme, box) => {
-      const c0 = Math.max(0, Math.floor(box.x0 / CELL));
-      const c1 = Math.min(cols - 1, Math.floor(box.x1 / CELL));
-      const r0 = Math.max(0, Math.floor(box.y0 / CELL));
-      const r1 = Math.min(rows - 1, Math.floor(box.y1 / CELL));
-      const s = CELL - 1;
-
-      actx.clearRect(0, 0, w, h);
-      actx.font = `600 ${Math.round(CELL * 0.72)}px "JetBrains Mono", ui-monospace, monospace`;
-      actx.textAlign = 'center';
-      actx.textBaseline = 'middle';
-
-      for (let col = c0; col <= c1; col++) {
-        const head = heads[col].y;
-        for (let row = r0; row <= r1; row++) {
-          const x = col * CELL;
-          const y = row * CELL;
-
-          // Cube: flat face with a light top-left edge and a shaded bottom-right edge.
-          actx.fillStyle = theme.tile;
-          actx.fillRect(x, y, s, s);
-          actx.fillStyle = theme.hi;
-          actx.fillRect(x, y, s, 1);
-          actx.fillRect(x, y, 1, s);
-          actx.fillStyle = theme.lo;
-          actx.fillRect(x, y + s - 1, s, 1);
-          actx.fillRect(x + s - 1, y, 1, s);
-
-          const d = head - row;
-          const lit = d >= 0 && d < TRAIL ? 1 - d / TRAIL : 0;
-          const i = row * cols + col;
-          let ch = cells[i];
-          if (lit > 0.6 && Math.random() < 0.06) ch = glitch(); // brief glitch near the head
-          if (d >= 0 && d < 1) {
-            actx.fillStyle = theme.head;
-            actx.shadowColor = `rgb(${theme.glyph})`;
-            actx.shadowBlur = glow;
-          } else {
-            actx.fillStyle = `rgba(${theme.glyph},${theme.base + lit * (1 - theme.base)})`;
-            actx.shadowBlur = 0;
-          }
-          actx.fillText(ch, x + s / 2, y + s / 2 + 0.5);
-        }
-      }
-      actx.shadowBlur = 0;
-    };
-
     const tick = () => {
       time++;
 
       // Keep the area under a resting cursor gently "wet".
       if (pointer && time - lastMove > 6 && time % 7 === 0) addDrop(pointer.x, pointer.y);
 
-      for (const head of heads) {
-        head.y += head.speed;
-        if (head.y - TRAIL > rows) {
-          head.y = rand(-rows * 0.5, 0);
-          head.speed = rand(0.18, 0.5);
-        }
-      }
+      matrix.step();
 
       drops = drops.filter((d) => d.age < d.life);
 
@@ -230,8 +139,9 @@ export default function CursorReveal() {
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, w, h);
       if (drops.length) {
-        const theme = document.documentElement.classList.contains('dark') ? themes.dark : themes.light;
-        drawMatrix(theme, box);
+        const theme = currentMatrixTheme();
+        // Draw only the cubes inside the revealed area; the rest is masked away anyway.
+        matrix.drawRegion(actx, theme, box, glow);
         ctx.drawImage(mask, 0, 0, w, h);
         ctx.globalCompositeOperation = 'source-in';
         ctx.drawImage(art, 0, 0, w, h);
