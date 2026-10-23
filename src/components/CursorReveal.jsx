@@ -1,19 +1,45 @@
 import { useEffect, useRef } from 'react';
-import { profile } from '../data/content';
 
 const MASK_SCALE = 0.3; // low-res mask: cheap to draw and naturally soft when scaled up
 const SPACING = 16; // px of cursor travel per new droplet
 const MAX_DROPS = 140;
 
+const CELL = 14; // size of one matrix cube, in CSS px
+const TRAIL = 22; // cells lit behind each falling stream head
+
+// Real code, read top-to-bottom down each column (whitespace squeezed out).
+const CODE = `
+SELECT bucket, SUM(balance) AS exposure FROM ar_book WHERE dpd BETWEEN 30 AND 150 GROUP BY bucket;
+WITH roll AS (SELECT acct_id, LAG(bucket) OVER (PARTITION BY acct_id ORDER BY month) AS prev FROM dpd_hist)
+SELECT prev, bucket, COUNT(*) FROM roll GROUP BY prev, bucket;
+cei = (opening_ar + sales - closing_ar) / (opening_ar + sales - current_ar) * 100
+dso = ar_balance / credit_sales * days
+df = pd.read_sql(query, conn); df['slip'] = df.gross_slip.sub(df.recoveries).div(df.portfolio)
+if challenger.cure_rate > champion.cure_rate: strategy.scale(challenger)
+for seg in segments: seg.treatment = assign(seg.risk, seg.behaviour, seg.recovery_score)
+UPDATE strategy SET channel = 'digital' WHERE risk_band IN ('A','B') AND dpd < 60;
+const roll = (b) => b.next / b.prev; return accounts.filter(a => a.dpd > 90).map(roll);
+=SUMIFS(Balance,Bucket,">=30",Bucket,"<=150") =INDEX(MATCH(Agency,Range,0)) => {} [] () != && ||
+`.replace(/\s+/g, '');
+const GLITCH = '01{}[]()<>=+*/;:#$%&|!?'.split('');
+
+const themes = {
+  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, head: '#e8fffb', ripple: '255,255,255' },
+  light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, head: '#0c3b36', ripple: '15,138,126' },
+};
+
 const rand = (min, max) => min + Math.random() * (max - min);
+const glitch = () => GLITCH[(Math.random() * GLITCH.length) | 0];
 
 // Only for devices with a real cursor; touch screens have nothing to follow.
 const hasFinePointer = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 /**
- * Full-screen photo kept hidden behind the page. The cursor leaves a trail of
+ * A hidden "cubic code matrix" behind the page: a dense grid of beveled tiles
+ * spelling out real SQL/Python/Excel code down each column, lit by falling
+ * Matrix-style streams. The cursor leaves a trail of
  * wobbling, spreading "water" droplets that reveal it; they drift with the motion,
- * ripple outward and dry up, so the photo is covered again once the cursor leaves.
+ * ripple outward and dry up, so the matrix is covered again once the cursor leaves.
  */
 export default function CursorReveal() {
   const canvasRef = useRef(null);
@@ -26,12 +52,15 @@ export default function CursorReveal() {
     const ctx = canvas.getContext('2d');
     const mask = document.createElement('canvas');
     const mctx = mask.getContext('2d');
-    const photo = new Image();
-    photo.src = profile.photoFull;
+    const art = document.createElement('canvas'); // the matrix, rendered before masking
+    const actx = art.getContext('2d');
 
     let w = 0;
     let h = 0;
-    let cover = null;
+    let cols = 0;
+    let rows = 0;
+    let cells = []; // glyph per cell, row-major
+    let heads = []; // per column: { y, speed }
     let drops = [];
     let frame = 0;
     let time = 0;
@@ -40,27 +69,32 @@ export default function CursorReveal() {
     let lastMove = 0;
     let lastScroll = window.scrollY;
 
-    const computeCover = () => {
-      if (!photo.naturalWidth) return;
-      const s = Math.max(w / photo.naturalWidth, h / photo.naturalHeight);
-      const dw = photo.naturalWidth * s;
-      const dh = photo.naturalHeight * s;
-      cover = { x: (w - dw) / 2, y: (h - dh) * 0.3, w: dw, h: dh };
-    };
-
     const resize = () => {
       w = window.innerWidth;
       h = window.innerHeight;
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      for (const [c, cx] of [
+        [canvas, ctx],
+        [art, actx],
+      ]) {
+        c.width = w * dpr;
+        c.height = h * dpr;
+        cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
       mask.width = Math.ceil(w * MASK_SCALE);
       mask.height = Math.ceil(h * MASK_SCALE);
-      computeCover();
+
+      cols = Math.ceil(w / CELL);
+      rows = Math.ceil(h / CELL);
+      // Each column starts at a random point in the code and reads downward.
+      cells = new Array(cols * rows);
+      for (let col = 0; col < cols; col++) {
+        const start = (Math.random() * CODE.length) | 0;
+        for (let row = 0; row < rows; row++) cells[row * cols + col] = CODE[(start + row) % CODE.length];
+      }
+      heads = Array.from({ length: cols }, () => ({ y: rand(-rows, rows), speed: rand(0.18, 0.5) }));
     };
     resize();
-    photo.onload = computeCover;
 
     const addDrop = (x, y, vx = 0, vy = 0, big = false) => {
       if (drops.length >= MAX_DROPS) drops.shift();
@@ -97,15 +131,72 @@ export default function CursorReveal() {
       c.closePath();
     };
 
+    // Draw only the cubes inside the revealed area; the rest is masked away anyway.
+    const drawMatrix = (theme, box) => {
+      const c0 = Math.max(0, Math.floor(box.x0 / CELL));
+      const c1 = Math.min(cols - 1, Math.floor(box.x1 / CELL));
+      const r0 = Math.max(0, Math.floor(box.y0 / CELL));
+      const r1 = Math.min(rows - 1, Math.floor(box.y1 / CELL));
+      const s = CELL - 1;
+
+      actx.clearRect(0, 0, w, h);
+      actx.font = `600 ${Math.round(CELL * 0.72)}px "JetBrains Mono", ui-monospace, monospace`;
+      actx.textAlign = 'center';
+      actx.textBaseline = 'middle';
+
+      for (let col = c0; col <= c1; col++) {
+        const head = heads[col].y;
+        for (let row = r0; row <= r1; row++) {
+          const x = col * CELL;
+          const y = row * CELL;
+
+          // Cube: flat face with a light top-left edge and a shaded bottom-right edge.
+          actx.fillStyle = theme.tile;
+          actx.fillRect(x, y, s, s);
+          actx.fillStyle = theme.hi;
+          actx.fillRect(x, y, s, 1);
+          actx.fillRect(x, y, 1, s);
+          actx.fillStyle = theme.lo;
+          actx.fillRect(x, y + s - 1, s, 1);
+          actx.fillRect(x + s - 1, y, 1, s);
+
+          const d = head - row;
+          const lit = d >= 0 && d < TRAIL ? 1 - d / TRAIL : 0;
+          const i = row * cols + col;
+          let ch = cells[i];
+          if (lit > 0.6 && Math.random() < 0.06) ch = glitch(); // brief glitch near the head
+          if (d >= 0 && d < 1) {
+            actx.fillStyle = theme.head;
+            actx.shadowColor = `rgb(${theme.glyph})`;
+            actx.shadowBlur = 8;
+          } else {
+            actx.fillStyle = `rgba(${theme.glyph},${theme.base + lit * (1 - theme.base)})`;
+            actx.shadowBlur = 0;
+          }
+          actx.fillText(ch, x + s / 2, y + s / 2 + 0.5);
+        }
+      }
+      actx.shadowBlur = 0;
+    };
+
     const tick = () => {
       time++;
 
       // Keep the area under a resting cursor gently "wet".
       if (pointer && time - lastMove > 6 && time % 7 === 0) addDrop(pointer.x, pointer.y);
 
+      for (const head of heads) {
+        head.y += head.speed;
+        if (head.y - TRAIL > rows) {
+          head.y = rand(-rows * 0.5, 0);
+          head.speed = rand(0.18, 0.5);
+        }
+      }
+
       drops = drops.filter((d) => d.age < d.life);
 
-      // 1) Paint the mask.
+      // 1) Paint the mask and track the revealed area's bounds.
+      const box = { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity };
       mctx.clearRect(0, 0, mask.width, mask.height);
       for (const d of drops) {
         d.age++;
@@ -125,23 +216,30 @@ export default function CursorReveal() {
         blobPath(mctx, d.x, d.y, d.r, d.seed, MASK_SCALE);
         mctx.fill();
         d.alpha = alpha;
+        const reach = d.r * 1.3;
+        box.x0 = Math.min(box.x0, d.x - reach);
+        box.y0 = Math.min(box.y0, d.y - reach);
+        box.x1 = Math.max(box.x1, d.x + reach);
+        box.y1 = Math.max(box.y1, d.y + reach);
       }
 
-      // 2) Photo shown only where the mask is painted.
+      // 2) Matrix shown only where the mask is painted.
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, w, h);
-      if (cover && drops.length) {
+      if (drops.length) {
+        const theme = document.documentElement.classList.contains('dark') ? themes.dark : themes.light;
+        drawMatrix(theme, box);
         ctx.drawImage(mask, 0, 0, w, h);
         ctx.globalCompositeOperation = 'source-in';
-        ctx.drawImage(photo, cover.x, cover.y, cover.w, cover.h);
+        ctx.drawImage(art, 0, 0, w, h);
 
         // 3) Faint expanding ripple rings on the revealed water.
         ctx.globalCompositeOperation = 'source-atop';
         ctx.lineWidth = 1.5;
         for (const d of drops) {
           if (!d.ripple) continue;
-          const t = d.age / d.life;
-          ctx.strokeStyle = `rgba(255,255,255,${0.22 * d.alpha * (1 - t)})`;
+          const t = Math.min(d.age / d.life, 1);
+          ctx.strokeStyle = `rgba(${theme.ripple},${0.25 * d.alpha * (1 - t)})`;
           blobPath(ctx, d.x, d.y, d.r * (0.45 + t * 0.6), d.seed + 50);
           ctx.stroke();
         }
@@ -191,7 +289,7 @@ export default function CursorReveal() {
     window.addEventListener('blur', onLeave);
     document.addEventListener('mouseout', onOut);
 
-    // Reduced motion: no flowing animation, the photo simply stays hidden.
+    // Reduced motion: no flowing animation, the matrix simply stays hidden.
     if (reduce) {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('scroll', onScroll);

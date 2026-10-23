@@ -5,7 +5,6 @@ export const profile = {
   location: 'Pune, India',
   relocation: 'Open to relocation: Gurgaon or Indore',
   photo: 'assets/profile-photo.jpg',
-  photoFull: 'assets/profile-photo-full.jpg',
   resume: 'assets/Shivam-Soni-Resume.pdf',
 };
 
