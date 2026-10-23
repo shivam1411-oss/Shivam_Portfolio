@@ -104,7 +104,7 @@ export default function Metrics() {
                 <div className="text-xl sm:text-2xl font-extrabold text-gradient whitespace-nowrap">
                   <Counter value={s.value} decimals={s.decimals} suffix={s.suffix} />
                 </div>
-                <div className="eyebrow !text-[9px] text-subtle mt-1">{s.label}</div>
+                <div className="eyebrow text-subtle mt-1">{s.label}</div>
               </motion.div>
             ))}
           </motion.div>

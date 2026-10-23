@@ -48,7 +48,7 @@ function TimelineItem({ job, index }) {
         <div className="flex flex-wrap items-center gap-3">
           <span className={`eyebrow ${job.current ? 'text-accent' : 'text-subtle'}`}>{job.period}</span>
           {job.current && (
-            <span className="px-2 py-0.5 rounded-full bg-accent/10 text-accent text-[9px] font-extrabold uppercase tracking-widest">Current</span>
+            <span className="px-2 py-0.5 rounded-full bg-accent/10 text-accent text-[10px] font-extrabold uppercase tracking-widest">Current</span>
           )}
         </div>
         <h3 className="text-2xl font-extrabold text-fg mt-2">{job.title}</h3>

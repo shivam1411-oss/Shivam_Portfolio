@@ -62,7 +62,7 @@ export default function Footer({ onResume }) {
           <a href="privacy.html" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
             Privacy Policy
           </a>
-          <div className="text-[9px] text-subtle font-bold uppercase tracking-[0.2em] mt-8">© 2026 Shivam Soni. Built for the future of Finance.</div>
+          <div className="text-[10px] text-subtle font-bold uppercase tracking-[0.2em] mt-8">© 2026 Shivam Soni. Built for the future of Finance.</div>
         </div>
       </div>
 

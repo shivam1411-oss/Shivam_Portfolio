@@ -91,10 +91,13 @@ body {
 }
 
 @utility eyebrow {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.2em;
   text-transform: uppercase;
+  @media (width >= 48rem) {
+    font-size: 10px;
+  }
 }
 
 /* Soft dotted grid that fades out toward the edges */

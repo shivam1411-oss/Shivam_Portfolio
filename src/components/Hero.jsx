@@ -1,8 +1,59 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react';
 import { ArrowDown, ArrowRight, Briefcase, TrendingUp } from 'lucide-react';
 import { profile } from '../data/content';
 import { Counter, Magnetic, SplitWords, ease } from './motion';
+
+const stats = [
+  { icon: TrendingUp, value: 15, suffix: '%', label: 'CEI Growth', tone: 'bg-accent/12 text-accent' },
+  { icon: Briefcase, value: 7, suffix: '+', label: 'Years in Credit', tone: 'bg-accent-2/12 text-accent-2' },
+];
+
+function StatCard({ icon: Icon, value, suffix, label, tone }) {
+  return (
+    <div className="glass border border-line shadow-soft rounded-2xl p-3 md:p-4 flex items-center gap-3">
+      <div className={`w-9 h-9 md:w-10 md:h-10 shrink-0 rounded-full flex items-center justify-center ${tone}`}>
+        <Icon size={18} />
+      </div>
+      <div>
+        <div className="text-lg font-extrabold text-fg leading-none">
+          <Counter value={value} suffix={suffix} />
+        </div>
+        <div className="eyebrow text-subtle mt-1">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+const useIsDesktop = () => {
+  const query = '(min-width: 1024px)';
+  const [match, setMatch] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = (e) => setMatch(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return match;
+};
+
+// Phones and tablets: the stat cards sit in a row under the photo instead of covering it.
+function MobileStats() {
+  return (
+    <div className="lg:hidden mt-8 w-full max-w-sm grid grid-cols-2 gap-3">
+      {stats.map((st, i) => (
+        <motion.div
+          key={st.label}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 + i * 0.15, duration: 0.6, ease }}
+        >
+          <StatCard {...st} />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 function TiltPhoto() {
   const rx = useMotionValue(0);
@@ -34,32 +85,20 @@ function TiltPhoto() {
       <motion.div style={{ rotateX: srx, rotateY: sry }} className="relative [transform-style:preserve-3d]">
         {/* Spinning gradient ring */}
         <div className="ring-spin absolute -inset-[3px] rounded-[3.2rem] opacity-70 blur-[1px]" />
-        <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-[3rem] overflow-hidden bg-surface-2 border-[6px] border-surface shadow-2xl">
+        <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-[3rem] overflow-hidden bg-surface-2 border-[6px] border-surface shadow-2xl">
           <img src={profile.photo} alt="Shivam Soni - Finance Manager" className="w-full h-full object-cover scale-105" />
         </div>
 
-        {/* Floating stat cards */}
+        {/* Floating stat cards (desktop; smaller screens show them in a row below the photo) */}
         <motion.div
           style={{ translateZ: 60 }}
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1.1, duration: 0.8, ease }}
-          className="absolute -right-6 md:-right-14 bottom-10"
+          className="hidden lg:block absolute -right-14 bottom-10"
         >
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            className="glass border border-line shadow-soft rounded-2xl p-4 flex items-center gap-3"
-          >
-            <div className="w-10 h-10 rounded-full bg-accent/12 text-accent flex items-center justify-center">
-              <TrendingUp size={18} />
-            </div>
-            <div>
-              <div className="text-lg font-extrabold text-fg leading-none">
-                <Counter value={15} suffix="%" />
-              </div>
-              <div className="eyebrow text-subtle mt-1 !text-[8px]">CEI Growth</div>
-            </div>
+          <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
+            <StatCard {...stats[0]} />
           </motion.div>
         </motion.div>
 
@@ -68,22 +107,10 @@ function TiltPhoto() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1.3, duration: 0.8, ease }}
-          className="absolute -left-6 md:-left-12 top-10"
+          className="hidden lg:block absolute -left-12 top-10"
         >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-            className="glass border border-line shadow-soft rounded-2xl p-4 flex items-center gap-3"
-          >
-            <div className="w-10 h-10 rounded-full bg-accent-2/12 text-accent-2 flex items-center justify-center">
-              <Briefcase size={18} />
-            </div>
-            <div>
-              <div className="text-lg font-extrabold text-fg leading-none">
-                <Counter value={7} suffix="+" />
-              </div>
-              <div className="eyebrow text-subtle mt-1 !text-[8px]">Years in Credit</div>
-            </div>
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}>
+            <StatCard {...stats[1]} />
           </motion.div>
         </motion.div>
       </motion.div>
@@ -96,9 +123,11 @@ export default function Hero({ onConnect }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  // On phones the photo is stacked in the hero, so fading on scroll would dim it.
+  const isDesktop = useIsDesktop();
 
   return (
-    <section id="top" ref={ref} className="relative min-h-[100svh] flex items-center pt-32 pb-24 px-6 overflow-hidden">
+    <section id="top" ref={ref} className="relative min-h-[100svh] flex items-center pt-28 md:pt-32 pb-24 px-6 overflow-hidden">
       {/* Ambient background */}
       <div className="absolute inset-0 dot-grid opacity-60 -z-10" />
       <motion.div
@@ -114,7 +143,7 @@ export default function Hero({ onConnect }) {
         className="absolute top-1/3 -right-40 w-[36rem] h-[36rem] rounded-full bg-accent-2/15 blur-[130px] -z-10"
       />
 
-      <motion.div style={{ y, opacity: fade }} className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      <motion.div style={isDesktop ? { y, opacity: fade } : undefined} className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
         <div className="lg:col-span-7">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -140,7 +169,7 @@ export default function Hero({ onConnect }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease, delay: 0.85 }}
-            className="text-lg text-muted mb-10 leading-relaxed font-medium max-w-2xl"
+            className="text-base sm:text-lg text-muted mb-10 leading-relaxed font-medium max-w-2xl"
           >
             7+ years in unsecured consumer credit across banking, NBFC, and fintech environments. Specializing in transforming AR from a cost
             center into a{' '}
@@ -176,8 +205,9 @@ export default function Hero({ onConnect }) {
           </motion.div>
         </div>
 
-        <div className="lg:col-span-5 flex justify-center">
+        <div className="lg:col-span-5 flex flex-col items-center order-first lg:order-none">
           <TiltPhoto />
+          <MobileStats />
         </div>
       </motion.div>
 
@@ -189,7 +219,7 @@ export default function Hero({ onConnect }) {
         transition={{ delay: 1.6 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 text-subtle hover:text-fg transition-colors"
       >
-        <span className="eyebrow !text-[9px]">Scroll</span>
+        <span className="eyebrow">Scroll</span>
         <motion.span animate={{ y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
           <ArrowDown size={16} />
         </motion.span>

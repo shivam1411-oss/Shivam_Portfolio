@@ -73,7 +73,7 @@ export default function Lab() {
                     />
                   )}
                   <span className="relative block">
-                    <span className={`block eyebrow !text-[9px] mb-1 ${isActive ? 'text-accent' : 'text-subtle'}`}>{item.category}</span>
+                    <span className={`block eyebrow mb-1 ${isActive ? 'text-accent' : 'text-subtle'}`}>{item.category}</span>
                     <span className="block font-bold text-fg">{item.label}</span>
                   </span>
                   <ArrowRight
@@ -118,7 +118,7 @@ export default function Lab() {
                 {active.badge}
               </div>
               <h3 className="text-3xl md:text-4xl font-extrabold mb-6">{active.title}</h3>
-              <p className="text-white/70 mb-10 text-lg font-medium leading-relaxed">{active.desc}</p>
+              <p className="text-white/70 mb-10 text-base md:text-lg font-medium leading-relaxed">{active.desc}</p>
               <div className="bg-black/40 p-8 md:p-10 rounded-2xl border border-white/10 font-mono text-base md:text-xl text-center shadow-inner min-h-[7rem] flex items-center justify-center">
                 <span className="text-[#5eead4] break-words">
                   <Typewriter text={active.math} />

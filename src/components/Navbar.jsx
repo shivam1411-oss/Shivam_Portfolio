@@ -55,7 +55,7 @@ export default function Navbar({ onConnect, onResume }) {
             </motion.div>
             <div className="hidden min-[400px]:flex flex-col leading-tight">
               <span className="text-sm font-extrabold tracking-tight text-fg uppercase">{profile.name}</span>
-              <span className="text-[9px] font-bold text-subtle uppercase tracking-widest">{profile.tagline}</span>
+              <span className="text-[10px] font-bold text-subtle uppercase tracking-widest">{profile.tagline}</span>
             </div>
           </a>
 
@@ -92,7 +92,7 @@ export default function Navbar({ onConnect, onResume }) {
               onClick={onConnect}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.96 }}
-              className="h-10 px-5 rounded-xl bg-fg text-bg text-[10px] font-extrabold uppercase tracking-widest shadow-soft"
+              className="h-10 px-4 sm:px-5 rounded-xl bg-fg text-bg text-[11px] sm:text-[10px] font-extrabold uppercase tracking-widest shadow-soft"
             >
               Connect
             </motion.button>

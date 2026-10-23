@@ -175,7 +175,7 @@ export default function ResumeModal({ open, onClose }) {
                 {state === 'sending' ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 {state === 'sending' ? 'Sending…' : 'Send Resume to My Email'}
               </motion.button>
-              <p className="text-[10px] text-subtle mt-4 text-center">
+              <p className="text-[11px] sm:text-[10px] text-subtle mt-4 text-center">
                 Your email is only used to send this resume and won't be stored or shared.{' '}
                 <a href="privacy.html" className="underline hover:text-muted">Privacy policy</a>
               </p>
