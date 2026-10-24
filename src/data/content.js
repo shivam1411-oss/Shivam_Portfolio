@@ -23,6 +23,25 @@ export const navLinks = [
   { id: 'lab', label: 'Analytical Lab' },
 ];
 
+// Hero proof points: how collections were automated, tested and measured.
+export const heroPillars = [
+  {
+    key: 'automation',
+    title: 'Automated collections',
+    body: 'Moved collections from Excel to a CRM-driven model, needing fewer agencies at a lower cost.',
+  },
+  {
+    key: 'testing',
+    title: 'Strategy, tested',
+    body: 'Champion-challenger tests decide channel, timing and messaging. Only proven winners scale.',
+  },
+  {
+    key: 'results',
+    title: 'Measurable results',
+    body: 'Collection efficiency 50%\u00A0→\u00A065%, forward roll rates −15%, DSO −12\u00A0days.',
+  },
+];
+
 export const headlineStats = [
   { value: 1.5, decimals: 1, suffix: '%', label: 'Slippage Cut' },
   { value: 65, suffix: '%', label: 'Efficiency' },
