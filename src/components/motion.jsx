@@ -9,8 +9,8 @@ export function Reveal({ children, delay = 0, y = 24, className, as = 'div', ...
   return (
     <Tag
       className={className}
-      initial={{ opacity: 0, y, filter: 'blur(6px)' }}
-      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.8, ease, delay }}
       {...rest}

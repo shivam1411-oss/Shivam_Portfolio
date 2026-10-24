@@ -1,0 +1,9 @@
+{
+  "appId": "com.shivamsoni.portfolio",
+  "appName": "Shivam Soni",
+  "webDir": "dist",
+  "backgroundColor": "#0a0b0e",
+  "android": {
+    "adjustMarginsForEdgeToEdge": "auto"
+  }
+}

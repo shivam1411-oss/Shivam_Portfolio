@@ -33,7 +33,7 @@ export default function Lab() {
   return (
     <section id="lab" className="relative py-28 px-6 overflow-hidden">
       <div className="absolute inset-0 dot-grid opacity-50 -z-10" />
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[50rem] h-[30rem] rounded-full bg-accent/8 blur-[140px] -z-10" />
+      <div className="glow-accent absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70rem] h-[50rem] opacity-60 -z-10" />
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20">
         <div className="lg:col-span-5">

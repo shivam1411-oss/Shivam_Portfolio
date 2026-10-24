@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* Devices with a mouse/trackpad; phones and tablets skip the costliest effects */
+@custom-variant fine (@media (pointer: fine));
 
 /* ---------- Theme tokens ---------- */
 :root {
@@ -88,6 +90,21 @@ body {
   background: color-mix(in oklab, var(--surface) 72%, transparent);
   backdrop-filter: blur(14px) saturate(1.4);
   -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  /* Frosted glass re-blurs everything behind it on every frame; too costly on phones */
+  @media (pointer: coarse) {
+    background: color-mix(in oklab, var(--surface) 94%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Soft colour glow. A radial gradient looks like a big blurred circle but costs nothing to draw,
+   unlike filter: blur() on a large element. */
+.glow-accent {
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 22%, transparent), transparent);
+}
+.glow-accent-2 {
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--accent-2) 22%, transparent), transparent);
 }
 
 @utility eyebrow {
@@ -119,6 +136,12 @@ body {
 .dark .grain {
   opacity: 0.05;
 }
+/* A full-screen layer on top of everything adds work to every frame; skip it on phones */
+@media (pointer: coarse) {
+  .grain {
+    display: none;
+  }
+}
 
 /* Cursor-following spotlight on cards (uses --mx / --my set from JS) */
 .spotlight {
@@ -140,19 +163,21 @@ body {
   opacity: 1;
 }
 
-/* Rotating gradient ring around the profile photo */
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
+/* Rotating gradient ring around the profile photo. The gradient layer itself rotates (a cheap
+   GPU transform) rather than animating the gradient angle, which repaints every frame. */
 .ring-spin {
-  background: conic-gradient(from var(--angle), var(--accent), transparent 30%, var(--accent-2), transparent 70%, var(--accent));
-  animation: spin-angle 8s linear infinite;
+  overflow: hidden;
 }
-@keyframes spin-angle {
+.ring-spin::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(var(--accent), transparent 30%, var(--accent-2), transparent 70%, var(--accent));
+  animation: ring-rotate 8s linear infinite;
+}
+@keyframes ring-rotate {
   to {
-    --angle: 360deg;
+    transform: rotate(360deg);
   }
 }
 
@@ -189,7 +214,7 @@ body {
   html {
     scroll-behavior: auto;
   }
-  .ring-spin,
+  .ring-spin::before,
   .marquee-track,
   .caret::after {
     animation: none;

@@ -84,7 +84,7 @@ function TiltPhoto() {
     >
       <motion.div style={{ rotateX: srx, rotateY: sry }} className="relative [transform-style:preserve-3d]">
         {/* Spinning gradient ring */}
-        <div className="ring-spin absolute -inset-[3px] rounded-[3.2rem] opacity-70 blur-[1px]" />
+        <div className="ring-spin absolute -inset-[3px] rounded-[3.2rem] opacity-70" />
         <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-[3rem] overflow-hidden bg-surface-2 border-[6px] border-surface shadow-2xl">
           <img src={profile.photo} alt="Shivam Soni - Finance Manager" className="w-full h-full object-cover scale-105" />
         </div>
@@ -130,17 +130,18 @@ export default function Hero({ onConnect }) {
     <section id="top" ref={ref} className="relative min-h-[100svh] flex items-center pt-28 md:pt-32 pb-24 px-6 overflow-hidden">
       {/* Ambient background */}
       <div className="absolute inset-0 dot-grid opacity-60 -z-10" />
+      {/* Soft glows; they drift slowly on desktop and stay still on phones to save battery */}
       <motion.div
         aria-hidden
-        animate={{ x: [0, 60, -20, 0], y: [0, -40, 30, 0] }}
+        animate={isDesktop ? { x: [0, 60, -20, 0], y: [0, -40, 30, 0] } : undefined}
         transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute -top-32 -left-32 w-[32rem] h-[32rem] rounded-full bg-accent/15 blur-[120px] -z-10"
+        className="glow-accent absolute -top-64 -left-64 w-[48rem] h-[48rem] -z-10"
       />
       <motion.div
         aria-hidden
-        animate={{ x: [0, -50, 30, 0], y: [0, 50, -20, 0] }}
+        animate={isDesktop ? { x: [0, -50, 30, 0], y: [0, 50, -20, 0] } : undefined}
         transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-1/3 -right-40 w-[36rem] h-[36rem] rounded-full bg-accent-2/15 blur-[130px] -z-10"
+        className="glow-accent-2 absolute top-0 -right-72 w-[54rem] h-[54rem] -z-10"
       />
 
       <motion.div style={isDesktop ? { y, opacity: fade } : undefined} className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">

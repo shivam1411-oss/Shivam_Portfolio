@@ -22,7 +22,7 @@ export default function Modal({ open, onClose, children, maxWidth = 'max-w-lg', 
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto py-6 px-4 bg-black/50 backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto py-6 px-4 bg-black/60 fine:bg-black/50 fine:backdrop-blur-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

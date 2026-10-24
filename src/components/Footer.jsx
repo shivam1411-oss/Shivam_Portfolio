@@ -7,7 +7,7 @@ import { Reveal, ease, stagger } from './motion';
 export default function Footer({ onResume }) {
   return (
     <footer className="relative py-28 px-6 text-center border-t border-line overflow-hidden">
-      <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 w-[40rem] h-[20rem] rounded-full bg-accent/10 blur-[120px] -z-10" />
+      <div className="glow-accent absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 w-[60rem] h-[36rem] opacity-80 -z-10" />
       <div className="max-w-7xl mx-auto">
         <Reveal>
           <motion.div whileHover={{ scale: 1.06, rotate: 3 }} className="w-20 h-20 rounded-full mx-auto mb-6 overflow-hidden ring-4 ring-surface shadow-soft">
