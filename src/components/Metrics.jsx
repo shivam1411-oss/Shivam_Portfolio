@@ -1,127 +1,142 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'motion/react';
-import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Tooltip } from 'chart.js';
-import { Bar, Doughnut } from 'react-chartjs-2';
-import { headlineStats } from '../data/content';
-import { useTheme } from '../theme/ThemeProvider';
-import { Counter, Reveal, SectionHeading, Spotlight, fadeUp, stagger } from './motion';
+import { motion } from 'motion/react';
+import { ArrowDownRight, ArrowRight, ArrowUpRight, ChevronRight } from 'lucide-react';
+import { careerScope, impactLevers, impactMetrics } from '../data/impact';
+import { Counter, Reveal, SectionHeading, Spotlight, ease, fadeUp, stagger } from './motion';
 
-ChartJS.register(BarElement, ArcElement, CategoryScale, LinearScale, Tooltip, Legend);
-
-const palettes = {
-  light: { strong: '#0f8a7e', mid: '#5b61d6', soft: '#e4e4df', text: '#5b5f68', grid: 'rgba(15,23,42,0.07)', tooltip: '#0c0d10', tooltipText: '#ffffff' },
-  dark: { strong: '#3fd1bf', mid: '#9196f6', soft: '#262a31', text: '#a0a4ad', grid: 'rgba(255,255,255,0.06)', tooltip: '#ecedef', tooltipText: '#0a0b0e' },
-};
-
-const font = { family: 'Plus Jakarta Sans', size: 11, weight: '700' };
-
-function ChartCard({ title, subtitle, badge, children }) {
-  const ref = useRef(null);
-  // Mount the chart only once it is visible so Chart.js plays its entry animation on scroll.
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+/** Before → after bar on a real scale; the "after" fill animates in when scrolled into view. */
+function BeforeAfterBar({ from, to, max, caption, lowerIsBetter }) {
   return (
-    <Spotlight className="bg-surface p-8 md:p-10 rounded-[2rem] border border-line shadow-soft hover:border-line-strong transition-colors">
-      <div className="mb-8 flex justify-between items-start gap-4">
-        <div>
-          <h3 className="text-lg font-extrabold text-fg">{title}</h3>
-          <p className="eyebrow text-subtle mt-1.5">{subtitle}</p>
+    <div className="mt-5">
+      <div className="relative h-2.5 rounded-full bg-surface-2 overflow-hidden">
+        {/* Before */}
+        <div className="absolute inset-y-0 left-0 rounded-full bg-line-strong" style={{ width: `${(from / max) * 100}%` }} />
+        {/* After */}
+        <motion.div
+          initial={{ width: `${(from / max) * 100}%` }}
+          whileInView={{ width: `${(to / max) * 100}%` }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 1.4, ease, delay: 0.3 }}
+          className={`absolute inset-y-0 left-0 rounded-full bg-gradient-to-r ${lowerIsBetter ? 'from-accent-2 to-accent' : 'from-accent to-accent-2'}`}
+        />
+      </div>
+      <div className="mt-2 flex justify-between text-[11px] font-semibold text-subtle">
+        <span>{caption}</span>
+        <span className="tabular-nums whitespace-nowrap ml-3">
+          {from} → <span className="text-fg">{to}</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function MetricCard({ m, index }) {
+  const Down = m.prefix === '−';
+  const Trend = Down ? ArrowDownRight : ArrowUpRight;
+  return (
+    <Reveal delay={index * 0.08} className="h-full">
+      <Spotlight className="h-full flex flex-col p-6 md:p-7 rounded-[1.75rem] bg-surface border border-line shadow-soft hover:border-line-strong transition-colors">
+        <div className="flex items-start justify-between gap-3">
+          <span className="eyebrow text-subtle">{m.label}</span>
+          <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-accent/10 text-accent text-[11px] font-extrabold whitespace-nowrap">
+            <Trend size={13} />
+            {m.change}
+          </span>
         </div>
-        <span className="shrink-0 px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-extrabold tracking-wider">{badge}</span>
-      </div>
-      <div ref={ref} className="relative w-full max-w-[600px] mx-auto h-[300px] md:h-[340px]">
-        {inView && children}
-      </div>
-    </Spotlight>
+
+        <div className="mt-4 text-5xl md:text-6xl font-extrabold tracking-tight text-gradient leading-none">
+          <Counter value={m.value} decimals={m.decimals} prefix={m.prefix} suffix={m.suffix} />
+          {m.unit && <span className="ml-2 text-2xl md:text-3xl">{m.unit}</span>}
+        </div>
+        {m.before !== 'Baseline' && <div className="mt-2 text-sm font-semibold text-subtle">up from {m.before}</div>}
+
+        <p className="mt-4 text-sm text-muted leading-relaxed">{m.meaning}</p>
+
+        <div className="mt-auto">{m.bar && <BeforeAfterBar {...m.bar} />}</div>
+      </Spotlight>
+    </Reveal>
   );
 }
 
 export default function Metrics() {
-  const { theme } = useTheme();
-  const c = palettes[theme];
-
-  const tooltip = {
-    backgroundColor: c.tooltip,
-    titleColor: c.tooltipText,
-    bodyColor: c.tooltipText,
-    padding: 12,
-    cornerRadius: 10,
-    titleFont: font,
-    bodyFont: font,
-    displayColors: false,
-  };
-
-  const barData = {
-    labels: ['Baseline (Early 2023)', 'Target Achievement'],
-    datasets: [{ data: [50, 65], backgroundColor: [c.soft, c.strong], borderRadius: 14, barThickness: 56 }],
-  };
-  const barOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: { duration: 1400, easing: 'easeOutQuart', delay: (ctx) => ctx.dataIndex * 250 },
-    plugins: { legend: { display: false }, tooltip: { ...tooltip, callbacks: { label: (i) => `CEI: ${i.raw}%` } } },
-    scales: {
-      y: { beginAtZero: true, max: 100, border: { display: false }, ticks: { font, color: c.text, callback: (v) => `${v}%` }, grid: { color: c.grid } },
-      x: { grid: { display: false }, border: { display: false }, ticks: { font, color: c.text } },
-    },
-  };
-
-  const doughnutData = {
-    labels: ['Slippage Reduction', 'Roll Rate Stability', 'Standard Assets'],
-    datasets: [{ data: [1.5, 15, 83.5], backgroundColor: [c.strong, c.mid, c.soft], borderWidth: 0, hoverOffset: 8, spacing: 2 }],
-  };
-  const doughnutOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '78%',
-    animation: { animateRotate: true, animateScale: true, duration: 1600, easing: 'easeOutQuart' },
-    plugins: {
-      tooltip: { ...tooltip, callbacks: { label: (i) => `${i.label}: ${i.raw}%` } },
-      legend: { position: 'bottom', labels: { font, color: c.text, usePointStyle: true, pointStyle: 'circle', padding: 22 } },
-    },
-  };
-
   return (
     <section id="impact" className="relative py-28 px-6 bg-surface-2/50">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between md:items-end mb-16 gap-10">
-          <SectionHeading eyebrow="Impact" title="Executive Performance Metrics">
-            Quantifying the impact of collection strategy design and credit risk management on the credit card book at FPL Technologies (OneCard).
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-14">
+          <SectionHeading eyebrow="Impact" title="Impact by the numbers">
+            What changed on the OneCard credit card book once segmentation, tested treatment and automation went live.
           </SectionHeading>
+          <Reveal delay={0.15}>
+            <a
+              href="#lab"
+              className="group inline-flex items-center gap-2 text-sm font-bold text-muted hover:text-fg transition-colors whitespace-nowrap"
+            >
+              See how each is measured
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </a>
+          </Reveal>
+        </div>
 
-          <motion.div
-            variants={stagger(0.12)}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid grid-cols-3 w-full md:flex md:w-auto bg-surface p-2 rounded-2xl border border-line shadow-soft self-start md:self-auto"
-          >
-            {headlineStats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                variants={fadeUp}
-                className={`px-2 sm:px-6 py-3 text-center ${i < headlineStats.length - 1 ? 'border-r border-line' : ''}`}
-              >
-                <div className="text-xl sm:text-2xl font-extrabold text-gradient whitespace-nowrap">
-                  <Counter value={s.value} decimals={s.decimals} suffix={s.suffix} />
+        {/* Headline results */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {impactMetrics.map((m, i) => (
+            <MetricCard key={m.key} m={m} index={i} />
+          ))}
+        </div>
+
+        {/* How the results were produced */}
+        <Reveal className="mt-16">
+          <h3 className="eyebrow text-subtle mb-5">How the results were delivered</h3>
+        </Reveal>
+        <motion.ol
+          variants={stagger(0.1)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-60px' }}
+          className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-0"
+        >
+          {impactLevers.map((l, i) => (
+            <motion.li key={l.step} variants={fadeUp} className="relative flex md:block items-start gap-4 md:pr-6">
+              <div className="flex md:items-center gap-3 md:mb-4">
+                <span className="w-9 h-9 shrink-0 rounded-full border border-accent/40 bg-accent/10 text-accent text-sm font-extrabold flex items-center justify-center">
+                  {i + 1}
+                </span>
+                {i < impactLevers.length - 1 && (
+                  <span className="hidden md:block flex-1 h-px bg-gradient-to-r from-accent/50 to-line" aria-hidden />
+                )}
+              </div>
+              <div>
+                <div className="font-extrabold text-fg flex items-center gap-1">
+                  {l.step}
+                  {i < impactLevers.length - 1 && <ChevronRight size={14} className="md:hidden text-subtle" />}
                 </div>
-                <div className="eyebrow text-subtle mt-1">{s.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+                <p className="text-sm text-muted leading-relaxed mt-1">{l.detail}</p>
+              </div>
+            </motion.li>
+          ))}
+        </motion.ol>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Reveal>
-            <ChartCard title="Collection Efficiency Index (CEI)" subtitle="Growth tracking at OneCard" badge="HISTORIC TREND">
-              <Bar data={barData} options={barOptions} />
-            </ChartCard>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <ChartCard title="Risk Distribution & Stability" subtitle="Slippage vs. Forward Roll Controls" badge="REAL-TIME RISK">
-              <Doughnut data={doughnutData} options={doughnutOptions} />
-            </ChartCard>
-          </Reveal>
-        </div>
+        {/* Career scope */}
+        <motion.dl
+          variants={stagger(0.07)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-60px' }}
+          className="mt-16 grid grid-cols-2 md:grid-cols-5 rounded-[1.75rem] border border-line bg-surface shadow-soft overflow-hidden"
+        >
+          {careerScope.map((s, i) => (
+            <motion.div
+              key={s.label}
+              variants={fadeUp}
+              className={`p-5 md:p-6 border-line ${i % 2 === 0 ? 'border-r' : ''} md:border-r ${i === careerScope.length - 1 ? 'md:border-r-0 col-span-2 md:col-span-1' : ''} ${
+                i < careerScope.length - 1 ? 'border-b md:border-b-0' : ''
+              }`}
+            >
+              <dt className="sr-only">{s.label}</dt>
+              <dd className="text-2xl md:text-3xl font-extrabold text-fg tabular-nums">{s.value}</dd>
+              <dd className="mt-1 text-xs font-semibold text-subtle leading-snug">{s.label}</dd>
+            </motion.div>
+          ))}
+        </motion.dl>
       </div>
     </section>
   );

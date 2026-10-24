@@ -42,12 +42,6 @@ export const heroPillars = [
   },
 ];
 
-export const headlineStats = [
-  { value: 1.5, decimals: 1, suffix: '%', label: 'Slippage Cut' },
-  { value: 65, suffix: '%', label: 'Efficiency' },
-  { value: 12, suffix: ' Days', label: 'DSO Cut' },
-];
-
 export const competencies = [
   'Treatment Strategy Design',
   'Champion-Challenger Testing',
@@ -109,54 +103,6 @@ export const experience = [
     company: 'Bandhan Bank, Indore',
     summary:
       'Appraised, sanctioned, and disbursed micro-lending and SME credit against borrower eligibility and repayment capacity, covering the full credit lifecycle from origination through delinquency management. Produced weekly, monthly, and quarterly MIS for senior management across the assigned territory.',
-  },
-];
-
-export const labItems = [
-  {
-    key: 'CCTEST',
-    category: 'Strategy Design',
-    label: 'Champion-Challenger Testing',
-    badge: 'Strategy Design',
-    title: 'Champion-Challenger Testing',
-    desc: 'Running parallel tests on channel mix, contact timing, and messaging against a control group, then rolling the winning variant into standing treatment logic.',
-    math: 'Challenger > Champion → Scale',
-  },
-  {
-    key: 'CEI',
-    category: 'AR Metric',
-    label: 'CEI (Efficiency Index)',
-    badge: 'Efficiency Logic',
-    title: 'CEI Analysis',
-    desc: 'Measures the quality of collection performance relative to the collectible base over a specific period, factoring out aging beyond team control.',
-    math: 'Efficiency ÷ Collectible Base',
-  },
-  {
-    key: 'SLIP',
-    category: 'Risk Metric',
-    label: 'Slippage & Roll Analysis',
-    badge: 'Risk Mitigation',
-    title: 'Slippage Control',
-    desc: "Tracking the migration of assets from 'Standard' to 'Delinquent' buckets. We target 'Net Slippage' to account for recovery offsets.",
-    math: 'Gross Slip - Recoveries / Portfolio',
-  },
-  {
-    key: 'DSO',
-    category: 'Cash Flow Metric',
-    label: 'DSO Reduction',
-    badge: 'Cash Flow Metric',
-    title: 'DSO Reduction',
-    desc: 'Tracking Days Sales Outstanding through structured follow-up mechanisms and improved recovery cycles, cutting DSO by 12 days through cycle optimization.',
-    math: 'AR ÷ Credit Sales × Days',
-  },
-  {
-    key: 'PYSQL',
-    category: 'Automation',
-    label: 'SQL & Python',
-    badge: 'Financial Automation',
-    title: 'SQL & Python',
-    desc: 'Writing SQL queries to pull and analyze portfolio data directly, and using Python for supplementary analysis, reducing dependence on standard MIS for test results.',
-    math: 'SELECT bucket, SUM(balance) FROM ar GROUP BY bucket',
   },
 ];
 

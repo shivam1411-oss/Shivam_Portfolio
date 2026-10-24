@@ -139,7 +139,7 @@ export default function CursorReveal() {
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, w, h);
       if (drops.length) {
-        const theme = currentMatrixTheme();
+        const theme = currentMatrixTheme(true);
         // Draw only the cubes inside the revealed area; the rest is masked away anyway.
         matrix.drawRegion(actx, theme, box, glow);
         ctx.drawImage(mask, 0, 0, w, h);
@@ -152,7 +152,7 @@ export default function CursorReveal() {
         for (const d of drops) {
           if (!d.ripple) continue;
           const t = Math.min(d.age / d.life, 1);
-          ctx.strokeStyle = `rgba(${theme.ripple},${0.25 * d.alpha * (1 - t)})`;
+          ctx.strokeStyle = `rgba(${theme.ripple},${theme.rippleAlpha * d.alpha * (1 - t)})`;
           blobPath(ctx, d.x, d.y, d.r * (0.45 + t * 0.6), d.seed + 50);
           ctx.stroke();
         }

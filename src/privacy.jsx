@@ -12,9 +12,10 @@ const sections = [
     title: 'Overview',
     body: (
       <p>
-        This privacy policy applies to Shivam Soni's portfolio website (this site). It explains what information is collected, how it's used, and
-        who it's shared with. This is a personal portfolio, not a commercial product, and the website collects the minimum information needed to
-        provide the features described below. It also sets out who owns the content of the website and the restrictions on copying or reusing it.
+        This privacy policy applies to Shivam Soni's portfolio website (this site) and the <strong>Shivam Soni Android app</strong> (together,
+        "the website and app"). It explains what information is collected, how it's used, and who it's shared with. This is a personal portfolio,
+        not a commercial product, and the website and app collect the minimum information needed to provide the features described below. It
+        also sets out who owns their content and the restrictions on copying or reusing it.
       </p>
     ),
   },
@@ -23,7 +24,7 @@ const sections = [
     body: (
       <>
         <p>
-          The website collects information only when you choose to use the <strong>"Get Resume"</strong> feature:
+          The website and app collect information only when you choose to use the <strong>"Get Resume"</strong> feature:
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
@@ -34,9 +35,45 @@ const sections = [
           </li>
         </ul>
         <p className="mt-3">
-          No other personal information is collected. The website does not use cookies, does not track your browsing activity, and does not collect location
-          data, device identifiers, or analytics of any kind.
+          No other personal information is collected. The website and app do not use cookies, do not track your browsing activity, and do not
+          collect location data, device identifiers, or analytics of any kind.
         </p>
+        <p className="mt-3">
+          <strong>Stored only on your device:</strong> your light/dark theme choice, and a note that you have already seen the welcome screen
+          during the current visit. These stay in your browser or in the app on your device, are never sent anywhere, and can be removed by
+          clearing your browser data, clearing the app's storage, or uninstalling the app.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: 'The Android App',
+    body: (
+      <>
+        <p>
+          The Shivam Soni Android app shows the same portfolio as this website, packaged inside the app. It handles your information in exactly
+          the same way as the website, and only collects anything if you use the "Get Resume" feature.
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>
+            <strong>Permissions:</strong> the app requests internet access only, used to email the resume you request and to open links. It does
+            not access your contacts, camera, microphone, photos, files, location or phone identifiers.
+          </li>
+          <li>
+            <strong>No tracking:</strong> the app contains no analytics, advertising or crash-reporting tools.
+          </li>
+          <li>
+            <strong>Distribution:</strong> the app is currently provided directly as an installation file (APK) rather than through an app store,
+            so no app store collects data about you on Shivam Soni's behalf.
+          </li>
+          <li>
+            <strong>Links to other apps:</strong> contact links open your email, WhatsApp, phone, LinkedIn or GitHub apps, which handle any
+            information under their own privacy policies.
+          </li>
+          <li>
+            <strong>Removing your data:</strong> uninstalling the app deletes everything it stored on your device.
+          </li>
+        </ul>
       </>
     ),
   },
@@ -54,7 +91,7 @@ const sections = [
     body: (
       <>
         <p>
-          To deliver the resume by email, the website sends your name and email address to <strong>EmailJS</strong>, a third-party email delivery service,
+          To deliver the resume by email, the website or app sends your name and email address to <strong>EmailJS</strong>, a third-party email delivery service,
           which processes the request and sends the message. EmailJS's own handling of this data is governed by their privacy policy, available at{' '}
           <a href="https://www.emailjs.com/legal/privacy-policy/" className="underline hover:text-fg" target="_blank" rel="noreferrer">
             emailjs.com/legal/privacy-policy
@@ -62,7 +99,7 @@ const sections = [
           .
         </p>
         <p className="mt-3">
-          No other third parties receive your information. The website does not sell, rent, or share your data with advertisers or data brokers.
+          No other third parties receive your information. The website and app do not sell, rent, or share your data with advertisers or data brokers.
         </p>
       </>
     ),
@@ -72,7 +109,7 @@ const sections = [
     body: (
       <p>
         Shivam Soni does not maintain a database of names or email addresses submitted through this feature. Your information is transmitted directly to
-        EmailJS for the purpose of sending the email and is not separately stored, logged, or retained by this website beyond what EmailJS itself
+        EmailJS for the purpose of sending the email and is not separately stored, logged, or retained by the website or app beyond what EmailJS itself
         retains as part of its standard email delivery logs.
       </p>
     ),
@@ -81,7 +118,7 @@ const sections = [
     title: "Children's Privacy",
     body: (
       <p>
-        This website is not directed at children and is not intended for use by anyone under the age of 13. We do not knowingly collect personal information
+        The website and app are not directed at children and is not intended for use by anyone under the age of 13. We do not knowingly collect personal information
         from children.
       </p>
     ),
@@ -100,7 +137,7 @@ const sections = [
     body: (
       <>
         <p>
-          This website and everything it contains are the exclusive property of <strong>Shivam Soni</strong> and are
+          This website, the Android app and everything they contain are the exclusive property of <strong>Shivam Soni</strong> and are
           protected by applicable copyright, intellectual property and other laws. <strong>All rights are reserved by Shivam Soni.</strong>
         </p>
         <p className="mt-3">This includes, without limitation:</p>
@@ -112,7 +149,7 @@ const sections = [
           <li>The source code, animations, effects, interactive features and the structure and arrangement of the site.</li>
         </ul>
         <p className="mt-3">
-          No ownership or licence of any kind is transferred to you by visiting the website or receiving the resume. Nothing on
+          No ownership or licence of any kind is transferred to you by visiting the website, using the app or receiving the resume. Nothing on
           this site should be read as granting any right to use its content except as expressly permitted below.
         </p>
       </>
@@ -127,9 +164,10 @@ const sections = [
           permission, you may not:
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
-          <li>Copy, reproduce, download, store or republish any content, data, design or code from this website.</li>
-          <li>Clone, mirror, imitate or recreate the website, its design, its animations or its features, whether for personal or commercial use.</li>
-          <li>Modify, adapt, translate or create derivative works based on any part of the website or its content.</li>
+          <li>Copy, reproduce, download, store or republish any content, data, design or code from this website or app.</li>
+          <li>Clone, mirror, imitate or recreate the website or app, their design, animations or features, whether for personal or commercial use.</li>
+          <li>Decompile, reverse-engineer, modify, repackage or redistribute the app or its installation file (APK).</li>
+          <li>Modify, adapt, translate or create derivative works based on any part of the website, the app or their content.</li>
           <li>Distribute, sell, license, rent or otherwise make the content available to any third party.</li>
           <li>
             Use automated tools such as scrapers, crawlers, bots or data-mining software to extract content or data, or use any of it to train
@@ -139,7 +177,7 @@ const sections = [
           <li>Remove, alter or obscure any copyright notice, watermark or other proprietary marking, including the watermark on the resume preview.</li>
         </ul>
         <p className="mt-3">
-          <strong>Permitted use:</strong> you may view the website and read the resume you requested, solely for the purpose of evaluating
+          <strong>Permitted use:</strong> you may view the website, use the app and read the resume you requested, solely for the purpose of evaluating
           Shivam Soni for professional opportunities. You may share a link to the website. Any other use requires written permission, which can
           be requested using the contact details below.
         </p>
@@ -154,7 +192,7 @@ const sections = [
     title: 'Enforcement',
     body: (
       <p>
-        Any unauthorised copying, reproduction or use of this website or its content is a violation of Shivam Soni's rights. Shivam
+        Any unauthorised copying, reproduction or use of this website, the app or their content is a violation of Shivam Soni's rights. Shivam
         Soni reserves the right to take any action available under applicable law, including requesting the removal of copied material,
         seeking injunctive relief and claiming damages, without prior notice.
       </p>
@@ -164,7 +202,7 @@ const sections = [
     title: 'Changes to This Policy',
     body: (
       <p>
-        This policy may be updated occasionally to reflect changes to the website's features. The effective date at the top of this page will always reflect
+        This policy may be updated occasionally to reflect changes to the features of the website or app. The effective date at the top of this page will always reflect
         the most recent version.
       </p>
     ),

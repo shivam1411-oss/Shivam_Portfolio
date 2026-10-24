@@ -14,7 +14,7 @@ const TOKENS = [
 ];
 
 const palettes = {
-  dark: ['#ffffff', '#3fd1bf', '#9196f6', '#fde68a'],
+  dark: ['#3fd1bf', '#9196f6', '#d9b85c'], // no white: tokens pass over text and shouldn't outshine it
   light: ['#0a5c54', '#3a3fb0', '#a67708', '#1f2430'], // deeper so tokens stand out over the light matrix
 };
 
@@ -63,7 +63,8 @@ export default function CodeTrail() {
         age: 0,
         twinkle: rand(0, Math.PI * 2),
         color: colors[(Math.random() * colors.length) | 0],
-        glow: dark ? glow : 0,
+        glow: dark ? glow / 2 : 0,
+        peak: dark ? 0.6 : 1, // dimmer in dark mode so the trail never drowns out the text underneath
       });
       if (!frame) frame = requestAnimationFrame(tick);
     };
@@ -83,7 +84,7 @@ export default function CodeTrail() {
         const t = s.age / s.life;
         const fade = t < 0.15 ? t / 0.15 : 1 - (t - 0.15) / 0.85;
         const flicker = 0.75 + 0.25 * Math.sin(s.twinkle + s.age * 0.35);
-        ctx.globalAlpha = Math.max(0, fade * flicker);
+        ctx.globalAlpha = Math.max(0, fade * flicker * s.peak);
         ctx.fillStyle = s.color;
         ctx.shadowColor = s.color;
         ctx.shadowBlur = s.glow;

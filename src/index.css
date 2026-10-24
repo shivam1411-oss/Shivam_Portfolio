@@ -98,6 +98,16 @@ body {
   }
 }
 
+/* Dark mode: a soft halo in the page colour around text masks the code matrix that the cursor
+   reveals behind it, so words stay crisp. Text on solid cards is unaffected. */
+.dark main :is(h1, h2, h3, p, li, blockquote) {
+  text-shadow: 0 0 6px var(--bg), 0 0 14px var(--bg);
+}
+/* Gradient text is painted as a clipped background, so a shadow would sit on top of it */
+.dark main .text-gradient {
+  text-shadow: none;
+}
+
 /* Soft colour glow. A radial gradient looks like a big blurred circle but costs nothing to draw,
    unlike filter: blur() on a large element. */
 .glow-accent {

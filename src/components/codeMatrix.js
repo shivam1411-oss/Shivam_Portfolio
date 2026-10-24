@@ -20,13 +20,19 @@ const roll = (b) => b.next / b.prev; return accounts.filter(a => a.dpd > 90).map
 `.replace(/\s+/g, '');
 const GLITCH = '01{}[]()<>=+*/;:#$%&|!?'.split('');
 
+// base/max: glyph opacity when unlit / at the brightest point of a stream. glow: allow a halo on stream heads.
 export const matrixThemes = {
-  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, head: '#e8fffb', ripple: '255,255,255' },
-  light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, head: '#0c3b36', ripple: '15,138,126' },
+  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
+  light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, max: 1, head: '#0c3b36', glow: true, ripple: '15,138,126', rippleAlpha: 0.25 },
+  // Behind page content in dark mode: dim enough that body text stays easy to read.
+  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.1, max: 0.42, head: 'rgba(63,209,191,0.6)', glow: false, ripple: '63,209,191', rippleAlpha: 0.12 },
 };
 
-export const currentMatrixTheme = () =>
-  document.documentElement.classList.contains('dark') ? matrixThemes.dark : matrixThemes.light;
+/** `subtle` picks the dimmer palette used behind page content (dark mode only; light mode already reads well). */
+export const currentMatrixTheme = (subtle = false) => {
+  if (!document.documentElement.classList.contains('dark')) return matrixThemes.light;
+  return subtle ? matrixThemes.darkSubtle : matrixThemes.dark;
+};
 
 export const rand = (min, max) => min + Math.random() * (max - min);
 export const randomGlyph = () => GLITCH[(Math.random() * GLITCH.length) | 0];
@@ -73,9 +79,9 @@ export function createMatrix(cell) {
     if (d >= 0 && d < 1) {
       ctx.fillStyle = theme.head;
       ctx.shadowColor = `rgb(${theme.glyph})`;
-      ctx.shadowBlur = glow;
+      ctx.shadowBlur = theme.glow ? glow : 0;
     } else {
-      ctx.fillStyle = `rgba(${theme.glyph},${theme.base + lit * (1 - theme.base)})`;
+      ctx.fillStyle = `rgba(${theme.glyph},${theme.base + lit * (theme.max - theme.base)})`;
       ctx.shadowBlur = 0;
     }
     ctx.fillText(ch, x + s / 2, y + s / 2 + 0.5);
