@@ -7,7 +7,7 @@ import { fadeUp, stagger } from './motion';
 
 export default function ContactModal({ open, onClose, onResume }) {
   return (
-    <Modal open={open} onClose={onClose} label="Contact Shivam">
+    <Modal open={open} onClose={onClose} maxWidth="max-w-xl" label="Contact Shivam">
       <h2 className="text-3xl font-extrabold text-fg mb-2 pr-12">
         Let's <span className="text-gradient">Connect.</span>
       </h2>
