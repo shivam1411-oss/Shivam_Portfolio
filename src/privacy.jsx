@@ -12,9 +12,9 @@ const sections = [
     title: 'Overview',
     body: (
       <p>
-        This privacy policy applies to Shivam Soni's portfolio website (this site) and the accompanying iOS app (together, "the App"). It explains what
-        information is collected, how it's used, and who it's shared with. This is a personal portfolio, not a commercial product, and the App collects
-        the minimum information needed to provide the features described below.
+        This privacy policy applies to Shivam Soni's portfolio website (this site). It explains what information is collected, how it's used, and
+        who it's shared with. This is a personal portfolio, not a commercial product, and the website collects the minimum information needed to
+        provide the features described below. It also sets out who owns the content of the website and the restrictions on copying or reusing it.
       </p>
     ),
   },
@@ -23,7 +23,7 @@ const sections = [
     body: (
       <>
         <p>
-          The App collects information only when you choose to use the <strong>"Get Resume"</strong> feature:
+          The website collects information only when you choose to use the <strong>"Get Resume"</strong> feature:
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
@@ -34,7 +34,7 @@ const sections = [
           </li>
         </ul>
         <p className="mt-3">
-          No other personal information is collected. The App does not use cookies, does not track your browsing activity, and does not collect location
+          No other personal information is collected. The website does not use cookies, does not track your browsing activity, and does not collect location
           data, device identifiers, or analytics of any kind.
         </p>
       </>
@@ -54,7 +54,7 @@ const sections = [
     body: (
       <>
         <p>
-          To deliver the resume by email, the App sends your name and email address to <strong>EmailJS</strong>, a third-party email delivery service,
+          To deliver the resume by email, the website sends your name and email address to <strong>EmailJS</strong>, a third-party email delivery service,
           which processes the request and sends the message. EmailJS's own handling of this data is governed by their privacy policy, available at{' '}
           <a href="https://www.emailjs.com/legal/privacy-policy/" className="underline hover:text-fg" target="_blank" rel="noreferrer">
             emailjs.com/legal/privacy-policy
@@ -62,7 +62,7 @@ const sections = [
           .
         </p>
         <p className="mt-3">
-          No other third parties receive your information. The App does not sell, rent, or share your data with advertisers or data brokers.
+          No other third parties receive your information. The website does not sell, rent, or share your data with advertisers or data brokers.
         </p>
       </>
     ),
@@ -72,7 +72,7 @@ const sections = [
     body: (
       <p>
         Shivam Soni does not maintain a database of names or email addresses submitted through this feature. Your information is transmitted directly to
-        EmailJS for the purpose of sending the email and is not separately stored, logged, or retained by this website or app beyond what EmailJS itself
+        EmailJS for the purpose of sending the email and is not separately stored, logged, or retained by this website beyond what EmailJS itself
         retains as part of its standard email delivery logs.
       </p>
     ),
@@ -81,7 +81,7 @@ const sections = [
     title: "Children's Privacy",
     body: (
       <p>
-        This App is not directed at children and is not intended for use by anyone under the age of 13. We do not knowingly collect personal information
+        This website is not directed at children and is not intended for use by anyone under the age of 13. We do not knowingly collect personal information
         from children.
       </p>
     ),
@@ -96,10 +96,75 @@ const sections = [
     ),
   },
   {
+    title: 'Ownership & Copyright: All Rights Reserved',
+    body: (
+      <>
+        <p>
+          This website and everything it contains are the exclusive property of <strong>Shivam Soni</strong> and are
+          protected by applicable copyright, intellectual property and other laws. <strong>All rights are reserved by Shivam Soni.</strong>
+        </p>
+        <p className="mt-3">This includes, without limitation:</p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>All text, including the professional summary, role descriptions, achievements, quotes and the content of the Analytical Lab.</li>
+          <li>All data, figures, metrics, charts and performance statistics presented on the site.</li>
+          <li>The resume and any document made available for preview or by email.</li>
+          <li>Photographs, images, graphics, icons and the visual design, layout, colour scheme and overall look and feel.</li>
+          <li>The source code, animations, effects, interactive features and the structure and arrangement of the site.</li>
+        </ul>
+        <p className="mt-3">
+          No ownership or licence of any kind is transferred to you by visiting the website or receiving the resume. Nothing on
+          this site should be read as granting any right to use its content except as expressly permitted below.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: 'Prohibited Use: No Copying or Reproduction',
+    body: (
+      <>
+        <p>
+          <strong>Copying of the data or the website, in whole or in part, is strictly prohibited.</strong> Without Shivam Soni's prior written
+          permission, you may not:
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>Copy, reproduce, download, store or republish any content, data, design or code from this website.</li>
+          <li>Clone, mirror, imitate or recreate the website, its design, its animations or its features, whether for personal or commercial use.</li>
+          <li>Modify, adapt, translate or create derivative works based on any part of the website or its content.</li>
+          <li>Distribute, sell, license, rent or otherwise make the content available to any third party.</li>
+          <li>
+            Use automated tools such as scrapers, crawlers, bots or data-mining software to extract content or data, or use any of it to train
+            or feed artificial intelligence or machine-learning systems.
+          </li>
+          <li>Frame or embed the website, or present its content as your own or as associated with anyone other than Shivam Soni.</li>
+          <li>Remove, alter or obscure any copyright notice, watermark or other proprietary marking, including the watermark on the resume preview.</li>
+        </ul>
+        <p className="mt-3">
+          <strong>Permitted use:</strong> you may view the website and read the resume you requested, solely for the purpose of evaluating
+          Shivam Soni for professional opportunities. You may share a link to the website. Any other use requires written permission, which can
+          be requested using the contact details below.
+        </p>
+        <p className="mt-3">
+          Names and trademarks of employers and other organisations mentioned on the site belong to their respective owners and are used only to
+          describe Shivam Soni's professional experience.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: 'Enforcement',
+    body: (
+      <p>
+        Any unauthorised copying, reproduction or use of this website or its content is a violation of Shivam Soni's rights. Shivam
+        Soni reserves the right to take any action available under applicable law, including requesting the removal of copied material,
+        seeking injunctive relief and claiming damages, without prior notice.
+      </p>
+    ),
+  },
+  {
     title: 'Changes to This Policy',
     body: (
       <p>
-        This policy may be updated occasionally to reflect changes to the App's features. The effective date at the top of this page will always reflect
+        This policy may be updated occasionally to reflect changes to the website's features. The effective date at the top of this page will always reflect
         the most recent version.
       </p>
     ),
@@ -153,7 +218,7 @@ function PrivacyPage() {
           transition={{ delay: 0.3 }}
           className="eyebrow text-subtle mb-12"
         >
-          Effective Date: July 27, 2026
+          Effective Date: October 24, 2026
         </motion.p>
 
         <div className="space-y-5 text-muted leading-relaxed">
@@ -166,7 +231,7 @@ function PrivacyPage() {
         </div>
 
         <div className="mt-16 pt-8 border-t border-line text-center">
-          <p className="text-[10px] text-subtle font-bold uppercase tracking-[0.2em]">© 2026 Shivam Soni</p>
+          <p className="text-[10px] text-subtle font-bold uppercase tracking-[0.2em]">© 2026 Shivam Soni. All rights reserved.</p>
         </div>
       </div>
     </MotionConfig>
