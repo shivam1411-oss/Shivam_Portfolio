@@ -182,7 +182,8 @@ export default function Intro({ onEnter, onDone }) {
         }}
       />
 
-      <div data-no-enter className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
+      {/* z-20: the full-screen content below is z-10 and would otherwise swallow clicks on the toggle */}
+      <div data-no-enter className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
         <ThemeToggle />
       </div>
 

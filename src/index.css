@@ -71,6 +71,14 @@ body {
   background: color-mix(in oklab, var(--accent) 25%, transparent);
 }
 
+/* Paused during a theme switch so colours change at once rather than fading element by element */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
 /* Theme switch circle-reveal (View Transitions API) */
 ::view-transition-old(root),
 ::view-transition-new(root) {
