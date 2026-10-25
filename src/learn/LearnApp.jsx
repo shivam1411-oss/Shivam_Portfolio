@@ -19,6 +19,8 @@ import {
   Target,
   XCircle,
 } from 'lucide-react';
+import CodeTrail from '../components/CodeTrail';
+import CursorReveal from '../components/CursorReveal';
 import ThemeToggle from '../components/ThemeToggle';
 import { ease } from '../components/motion';
 import { glossary } from './glossary';
@@ -615,15 +617,20 @@ export default function LearnApp() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="min-h-screen bg-bg">
+      {/* Same background as the portfolio: film grain, code-token cursor trail, and the code matrix the cursor reveals */}
+      <div className="grain" aria-hidden />
+      <CodeTrail />
+      <CursorReveal />
+      {/* No background here, so the matrix (drawn behind the page) shows through */}
+      <div className="min-h-screen">
         <Header route={route} doneCount={doneCount} />
-        {/* Not <main>: the site's dark-mode text halo (.dark main …) is only meant for text over the code matrix */}
-        <div role="main">
+        {/* <main> also gets the site's dark-mode text halo, which keeps words readable over the matrix */}
+        <main>
           {route.view === 'home' && <Home progress={progress} resetAll={resetAll} />}
           {route.view === 'lesson' && <Lesson id={route.id} progress={progress} setDone={setDone} answer={answer} resetQuiz={resetQuiz} />}
           {route.view === 'timeline' && <Timeline />}
           {route.view === 'glossary' && <Glossary />}
-        </div>
+        </main>
         <footer className="border-t border-line mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center justify-between gap-3 text-xs text-subtle">
             <span>Progress is saved in this browser only.</span>
