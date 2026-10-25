@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import ResumeModal from './components/ResumeModal';
 import CursorReveal from './components/CursorReveal';
+import ChatWidget from './components/ChatWidget';
 
 /** The portfolio itself. Loaded as its own chunk so the welcome screen can appear first. */
 export default function Site() {
@@ -35,6 +36,7 @@ export default function Site() {
 
       <ContactModal open={contactOpen} onClose={closeContact} onResume={openResume} />
       <ResumeModal open={resumeOpen} onClose={closeResume} />
+      <ChatWidget />
     </>
   );
 }

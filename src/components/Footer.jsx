@@ -70,7 +70,7 @@ export default function Footer({ onResume }) {
         href="#top"
         aria-label="Back to top"
         whileHover={{ y: -4 }}
-        className="absolute right-6 bottom-8 w-11 h-11 rounded-full border border-line bg-surface flex items-center justify-center text-muted hover:text-fg shadow-soft"
+        className="absolute right-6 bottom-28 w-11 h-11 rounded-full border border-line bg-surface flex items-center justify-center text-muted hover:text-fg shadow-soft"
       >
         <ArrowUp size={18} />
       </motion.a>

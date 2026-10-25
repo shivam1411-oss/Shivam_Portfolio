@@ -26,6 +26,9 @@ jobs:
       - uses: actions/configure-pages@v5
       - run: npm ci
       - run: npm run build
+        env:
+          # Address of the chat Worker (repository variable CHAT_API_URL). Empty = chat widget hidden.
+          VITE_CHAT_API_URL: ${{ vars.CHAT_API_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

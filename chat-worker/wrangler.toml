@@ -1,0 +1,16 @@
+# Cloudflare Worker that answers the portfolio's chat widget with Claude.
+# Deploy: npx wrangler deploy   ·   API key: npx wrangler secret put ANTHROPIC_API_KEY
+name = "shivam-portfolio-chat"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Sites allowed to call the chat: the live site, local development, and the Android app.
+ALLOWED_ORIGINS = "https://shivam1411-oss.github.io,http://localhost:5173,http://localhost:4173,https://localhost"
+
+# Per-visitor limit to keep API costs predictable: 10 messages per minute per IP address.
+[[ratelimits]]
+name = "CHAT_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }
