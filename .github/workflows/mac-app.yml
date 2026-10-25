@@ -1,0 +1,39 @@
+name: Build macOS app
+
+# Builds the desktop app (desktop/) on a Mac and attaches the .dmg to the run as a download.
+# Runs when the app changes in a pull request, or on demand from the Actions tab.
+on:
+  pull_request:
+    paths:
+      - 'desktop/**'
+      - '.github/workflows/mac-app.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dmg:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            desktop/package-lock.json
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_CHAT_API_URL: ${{ vars.CHAT_API_URL }}
+      - run: npm ci
+        working-directory: desktop
+      - run: npm run dist
+        working-directory: desktop
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Shivam-Soni-macOS
+          path: desktop/release/*.dmg
+          if-no-files-found: error

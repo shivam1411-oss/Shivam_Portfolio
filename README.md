@@ -47,6 +47,23 @@ The app icon (code-matrix cubes with "SHIVAM SONI") is drawn by `scripts/app-ico
 swift scripts/app-icon.swift android/app/src/main/res /tmp
 ```
 
+## Mac app
+
+`desktop/` packages the site as a macOS app with [Electron](https://www.electronjs.org). It opens on
+Learn the Code; the **Go** menu switches to the portfolio (⌘1 Learn the Code, ⌘2 Portfolio, ⌘3 Privacy Policy).
+Links to LinkedIn, WhatsApp, email and phone open in your usual apps.
+
+```bash
+npm run desktop   # build the site and open it in the app, to try changes
+npm run mac       # outputs desktop/release/Shivam Soni-1.0.0-universal.dmg (Apple silicon + Intel)
+```
+
+Like the Android app, the site is bundled inside, so rebuild after changing it. The app is signed ad hoc,
+not with an Apple Developer ID: a copy you build yourself opens normally, but a .dmg downloaded from the
+internet (e.g. from the **Build macOS app** workflow in the Actions tab) has to be opened the first time with
+right-click → **Open**, or via **System Settings → Privacy & Security → Open Anyway**. The icon is
+`desktop/build/icon.png`, the Android icon's code-matrix design on the macOS icon grid.
+
 ## AI assistant (chat)
 
 The "Ask my AI" widget answers questions on AR, R2R, collections and automation using Claude.
@@ -61,4 +78,4 @@ npx wrangler deploy                         # prints the Worker URL
 
 Then set the repository variable `CHAT_API_URL` (Settings → Secrets and variables → Actions → Variables)
 to the Worker URL. The site build picks it up; without it the widget stays hidden. For the Android
-app, build with `VITE_CHAT_API_URL=<worker url> npm run apk`.
+app, build with `VITE_CHAT_API_URL=<worker url> npm run apk` (or `npm run mac` for the Mac app).

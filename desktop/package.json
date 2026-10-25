@@ -1,0 +1,47 @@
+{
+  "name": "shivam-soni-desktop",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Shivam Soni's portfolio and Learn the Code course as a macOS app",
+  "author": "Shivam Soni",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "node copy-site.mjs && electron .",
+    "dist": "node copy-site.mjs && electron-builder --mac --universal --publish never"
+  },
+  "devDependencies": {
+    "electron": "44.7.0",
+    "electron-builder": "26.17.0"
+  },
+  "build": {
+    "appId": "com.shivamsoni.desktop",
+    "productName": "Shivam Soni",
+    "copyright": "© Shivam Soni. All rights reserved.",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.cjs"
+    ],
+    "extraResources": [
+      {
+        "from": "site",
+        "to": "site"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.education",
+      "icon": "build/icon.png",
+      "target": [
+        "dmg"
+      ],
+      "identity": "-",
+      "hardenedRuntime": false,
+      "darkModeSupport": true
+    },
+    "dmg": {
+      "title": "Shivam Soni"
+    }
+  }
+}

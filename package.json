@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "desktop": "vite build && cd desktop && npm install && npm start",
+    "mac": "vite build && cd desktop && npm install && npm run dist",
     "apk": "vite build && cap sync android && node scripts/remove-icloud-duplicates.mjs android/app/src && cd android && JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew assembleDebug && mkdir -p ../apk && cp ~/Library/Caches/ShivamPortfolioAndroid/app/outputs/apk/debug/app-debug.apk ../apk/Shivam-Soni-Portfolio.apk"
   },
   "dependencies": {
