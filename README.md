@@ -21,6 +21,14 @@ Pushing to `main` deploys `dist/` to GitHub Pages via `.github/workflows/deploy.
 
 Content lives in `src/data/content.js`; theme colors are CSS variables at the top of `src/index.css`.
 
+## Learn the code
+
+`learn.html` is a beginner course on how this site was built: 18 interactive lessons (React, Tailwind,
+themes, Motion, the canvas effects, performance, the Lab maths, the AI chat, deploying and the Android app),
+each with the real code, a playground and a quiz, plus a timeline of every change and a glossary.
+Progress is saved in the browser. It is not linked from the portfolio and is hidden from search engines;
+open it at `/learn.html` (or `npm run dev` → http://localhost:5173/learn.html). Lessons live in `src/learn/lessons.jsx`.
+
 ## Android app
 
 The site is also packaged as an Android app with [Capacitor](https://capacitorjs.com) (`android/`).

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230f172a%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 font-family=%22Arial, sans-serif%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>SS</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <script>
+      // Apply the saved/system theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+        } catch (e) {}
+      })();
+    </script>
+    <title>Learn the Code | Shivam Soni</title>
+    <meta name="description" content="Interactive beginner lessons on how this portfolio was built: React, Tailwind, animations, canvas effects, performance, the AI chat and deployment." />
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/learn/main.jsx"></script>
+  </body>
+</html>
