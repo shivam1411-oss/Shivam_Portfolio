@@ -9,8 +9,6 @@
     "prebuild": "node scripts/copy-pyodide.mjs",
     "build": "vite build",
     "preview": "vite preview",
-    "desktop": "npm run build && cd desktop && npm install && npm start",
-    "mac": "npm run build && cd desktop && npm install && npm run dist",
     "apk": "npm run build && cap sync android && node scripts/remove-icloud-duplicates.mjs android/app/src && cd android && JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew assembleDebug && mkdir -p ../apk && cp ~/Library/Caches/ShivamPortfolioAndroid/app/outputs/apk/debug/app-debug.apk ../apk/Shivam-Soni-Portfolio.apk"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
 // Copies the Python runtime (Pyodide) from node_modules into public/pyodide so the site serves it
-// itself: no third-party CDN, and it works offline in the Mac and Android apps. Runs before dev and build.
+// itself: no third-party CDN, and it works offline in the Android app. Runs before dev and build.
 import { cpSync, mkdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
