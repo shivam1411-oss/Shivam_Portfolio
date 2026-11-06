@@ -9,7 +9,9 @@ import {
   ChevronDown,
   Circle,
   Clock,
+  ChartColumn,
   Code2,
+  Database,
   FlaskConical,
   GitCommitHorizontal,
   GraduationCap,
@@ -21,6 +23,7 @@ import {
   Search,
   Sparkles,
   SquareTerminal,
+  Table2,
   Target,
   XCircle,
 } from 'lucide-react';
@@ -36,7 +39,7 @@ import { warmUp } from './python/runtime';
 import { timeline } from './timeline';
 import { btn, btnPrimary } from './ui';
 
-const courseIcons = { site: Code2, python: SquareTerminal };
+const courseIcons = { site: Code2, python: SquareTerminal, pandas: Table2, sql: Database, viz: ChartColumn };
 const allLessons = courses.flatMap((c) => c.lessons.map((l) => ({ course: c, lesson: l })));
 
 // ---------------------------------------------------------------- routing and progress

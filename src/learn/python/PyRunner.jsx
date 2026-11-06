@@ -19,7 +19,7 @@ const ERROR_HINTS = {
   AttributeError: 'That value has no such method or attribute. Check the spelling and the type.',
   EOFError: 'The program asked for input() but the Input box ran out of lines. Add a line per input().',
   RecursionError: 'A function kept calling itself without stopping. Check its base case.',
-  ModuleNotFoundError: 'Only Python\'s built-in standard library is available here (math, random, datetime, csv, json, …).',
+  ModuleNotFoundError: 'Available here: Python\'s standard library (math, csv, json, datetime, …) plus pandas, NumPy, sqlite3 and Matplotlib.',
   TimeoutError: 'Press Run again once you have fixed the loop.',
 };
 
@@ -206,13 +206,23 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
             className="m-0 max-h-64 overflow-auto px-4 py-3 bg-[#0a0c0f] font-mono [font-variant-ligatures:none] text-[12.5px] leading-relaxed whitespace-pre-wrap break-words"
           >
             {lines.map((l, i) => (
-              <div key={i} className={l.kind === 'err' ? 'text-amber-300' : 'text-[#d6f5f0]'}>
+              <div key={i} className={l.kind === 'err' ? 'text-amber-300' : l.kind === 'info' ? 'text-white/40 italic' : 'text-[#d6f5f0]'}>
                 {l.text || ' '}
               </div>
             ))}
-            {!lines.length && result && !error && <div className="text-white/40 italic">(nothing was printed)</div>}
+            {!lines.some((l) => l.kind !== 'info') && result && !error && !result.images?.length && (
+              <div className="text-white/40 italic">(nothing was printed)</div>
+            )}
             {running && !lines.length && <div className="text-white/40 italic">Running…</div>}
           </pre>
+
+          {result?.images?.length > 0 && (
+            <div className="px-4 py-3 border-t border-line bg-white space-y-3">
+              {result.images.map((src, i) => (
+                <img key={i} src={`data:image/png;base64,${src}`} alt={`Chart ${i + 1} drawn by the code`} className="max-w-full h-auto mx-auto" />
+              ))}
+            </div>
+          )}
 
           {error && (
             <div className="px-4 py-3 border-t border-line bg-amber-400/10">

@@ -39,6 +39,8 @@ function start() {
     if (data.type === 'ready') return setStatus('ready');
     if (data.type === 'init-error') return setStatus('error', data.message);
     if (!current || data.id !== current.id) return;
+    if (data.type === 'loading') current.onOut('info', `Loading ${data.packages.join(', ')}… (first time only)`);
+    if (data.type === 'start') current.arm();
     if (data.type === 'out' || data.type === 'err') current.onOut(data.type, data.text);
     if (data.type === 'done') finish(data);
   };
@@ -70,7 +72,7 @@ export function stop(reason = 'stopped') {
 
 /**
  * Run `code`. `onOut(kind, text)` receives each printed line as it happens ('out' or 'err').
- * Resolves with { error, results, ms }. Runs are queued so only one program runs at a time.
+ * Resolves with { error, results, images, ms }. Runs are queued so only one program runs at a time.
  */
 export function run(code, { stdin = '', tests = [], onOut = () => {} } = {}) {
   const job = queue.then(
@@ -78,20 +80,12 @@ export function run(code, { stdin = '', tests = [], onOut = () => {} } = {}) {
       new Promise((resolve) => {
         if (!worker) start();
         const id = nextId++;
-        current = { id, onOut, resolve, timer: null };
-        // The clock starts once Python is loaded, so the first download doesn't count.
+        // The clock starts when the worker says the program itself is starting, so downloading
+        // Python or a package like pandas never counts towards the limit.
         const arm = () => {
-          if (current?.id === id) current.timer = setTimeout(() => stop('timeout'), TIME_LIMIT_MS);
+          if (current?.id === id && !current.timer) current.timer = setTimeout(() => stop('timeout'), TIME_LIMIT_MS);
         };
-        if (status === 'ready') arm();
-        else {
-          const off = subscribe(() => {
-            if (status !== 'loading') {
-              off();
-              arm();
-            }
-          });
-        }
+        current = { id, onOut, resolve, timer: null, arm };
         worker.postMessage({ type: 'run', id, code, stdin, tests });
       })
   );

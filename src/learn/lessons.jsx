@@ -1452,8 +1452,30 @@ for (const f of files) cpSync(from + f, to + f);`}</Code>
   "prebuild": "node scripts/copy-pyodide.mjs",
   "build": "vite build",
 }`}</Code>
+        <H>Adding pandas, NumPy, SQLite and Matplotlib</H>
+        <P>
+          The data courses need packages that are not in the npm download. The same script works out everything they depend on from Pyodide's own list (
+          <F>pyodide-lock.json</F>), downloads each file once into <F>node_modules/.cache</F>, and refuses any file whose fingerprint (SHA-256) does not match the list.
+          After that it copies from the cache, so builds stay quick.
+        </P>
+        <Code file="scripts/copy-pyodide.mjs (packages)">{`
+const COURSE_PACKAGES = ['pandas', 'sqlite3', 'matplotlib'];
+// pandas needs numpy, python-dateutil, pytz, six…: 14 packages in all
+for (const name of needed) {
+  const { file_name: file, sha256: expected } = lock[name];
+  if (!cached || sha256(cached) !== expected) {
+    const buf = await download(\`https://cdn.jsdelivr.net/pyodide/v\${version}/full/\${file}\`);
+    if (sha256(buf) !== expected) throw new Error(\`Checksum mismatch for \${file}\`);
+  }
+  cpSync(cached, to + file);
+}`}</Code>
+        <P>
+          In the worker, Python scans each program's <F>import</F> lines and loads only what it needs, the first time it is needed: a program without{' '}
+          <F>import pandas</F> never downloads pandas.
+        </P>
         <Callout title="Why public/pyodide/ is in .gitignore">
-          The files are 12 MB and can always be rebuilt from <F>node_modules</F>, so they are not stored in Git. The exact version is pinned in <F>package-lock.json</F>.
+          The files (about 30 MB with the packages) can always be rebuilt, so they are not stored in Git. The exact versions are pinned by <F>package-lock.json</F> and
+          the checksums in <F>pyodide-lock.json</F>.
         </Callout>
         <H>Finding the files at run time</H>
         <P>
@@ -1481,7 +1503,10 @@ code editor (CodeMirror)      466 KB   when the first code box appears
 Python worker                   3 KB   on the first Run
 pyodide.asm.wasm              8.3 MB   the Python interpreter
 python_stdlib.zip             2.4 MB   the standard library
-pyodide.asm.js + others       1.2 MB`}</Code>
+pyodide.asm.js + others       1.2 MB
+pandas + NumPy + helpers      8.5 MB   only when code imports pandas or numpy
+sqlite3                       0.6 MB   only when code imports sqlite3
+Matplotlib + its parts        9.1 MB   only when code imports matplotlib`}</Code>
       </>
     ),
     quiz: [

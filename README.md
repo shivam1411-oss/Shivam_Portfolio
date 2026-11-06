@@ -30,11 +30,16 @@ each layer linked to the lesson that explains it), then hosts interactive course
   and deploys, with playgrounds, plus a timeline of every change.
 - **Python**: 22 lessons from beginner to advanced (6 modules). Examples run in the browser and 24 exercises
   are checked by tests. There is also a free **Playground**.
+- **Data Analysis with pandas** (14 lessons, NumPy foundations to a monthly portfolio report), **SQL with Python**
+  (6 lessons on SQLite: GROUP BY, JOINs, parameters, window functions, pandas) and **Charts with Matplotlib**
+  (4 lessons). They share made-up collections data in `src/learn/python/datasets.js`, written to `data/` before each run.
 
 Python runs in the browser with [Pyodide](https://pyodide.org) inside a web worker, so nothing is sent to a server
 and a runaway loop can be stopped. `scripts/copy-pyodide.mjs` copies it from `node_modules` into `public/pyodide/`
 before `npm run dev` and `npm run build` (about 12 MB, downloaded only when a Python lesson is opened), so it works
-offline in the Android app. Progress and code are saved in the browser. The page is not linked from the
+offline in the Android app. The same script downloads the pandas, NumPy, sqlite3 and Matplotlib packages (and their
+dependencies) from Pyodide's CDN once, checks each against the SHA-256 in `pyodide-lock.json`, and caches them in
+`node_modules/.cache/pyodide-packages`. Lessons load a package only when their code imports it. Progress and code are saved in the browser. The page is not linked from the
 portfolio and is hidden from search engines; open it at `/learn.html`.
 
 **Adding a course:** write its modules and lessons (see `src/learn/python/` for one with runnable exercises) and add
