@@ -4,3 +4,4 @@ dist
 .claude
 apk/
 *.local
+public/pyodide/

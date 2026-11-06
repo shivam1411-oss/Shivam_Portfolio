@@ -86,7 +86,7 @@ export function Code({ file, children, note }) {
           {copied ? <Check size={13} /> : <Copy size={13} />} {copied ? 'Copied' : 'Copy'}
         </button>
       </figcaption>
-      <pre className="overflow-x-auto p-4 text-[12.5px] leading-relaxed font-mono text-[#d6f5f0]">
+      <pre className="overflow-x-auto p-4 text-[12.5px] leading-relaxed font-mono [font-variant-ligatures:none] text-[#d6f5f0]">
         <code>
           {code.split('\n').map((line, i) => (
             <div key={i}>{line ? highlight(line, i) : ' '}</div>
@@ -185,3 +185,9 @@ export const btn =
   'inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border border-line bg-surface-2 text-fg hover:border-line-strong transition-colors disabled:opacity-50';
 export const btnPrimary =
   'inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-fg text-bg hover:opacity-90 transition-opacity disabled:opacity-50';
+
+// Prose helpers shared by every course's lessons.
+export const P = ({ children }) => <p className="my-4 leading-relaxed text-muted">{children}</p>;
+export const H = ({ children }) => <h3 className="mt-10 mb-3 text-xl font-extrabold text-fg">{children}</h3>;
+export const B = ({ children }) => <b className="text-fg">{children}</b>;
+export const F = ({ children }) => <code className="px-1.5 py-0.5 rounded bg-surface-2 border border-line font-mono text-[0.85em] text-fg">{children}</code>;
