@@ -21,36 +21,29 @@ Pushing to `main` deploys `dist/` to GitHub Pages via `.github/workflows/deploy.
 
 Content lives in `src/data/content.js`; theme colors are CSS variables at the top of `src/index.css`.
 
-## Learn the code
+## Learning Lab
 
-`learn.html` is a beginner course on how this site was built: 18 interactive lessons (React, Tailwind,
-themes, Motion, the canvas effects, performance, the Lab maths, the AI chat, deploying and the Android app),
-each with the real code, a playground and a quiz, plus a timeline of every change and a glossary.
-Progress is saved in the browser. It is not linked from the portfolio and is hidden from search engines;
-open it at `/learn.html` (or `npm run dev` → http://localhost:5173/learn.html). Lessons live in `src/learn/lessons.jsx`.
+`learn.html` hosts interactive courses, each split into modules and lessons with a quiz:
 
-## Android app
+- **Learn the Code**: 18 beginner lessons on how this site was built, with playgrounds, plus a timeline of every change.
+- **Python**: 22 lessons from beginner to advanced (6 modules). Examples run in the browser and 24 exercises
+  are checked by tests. There is also a free **Playground**.
 
-The site is also packaged as an Android app with [Capacitor](https://capacitorjs.com) (`android/`).
+Python runs in the browser with [Pyodide](https://pyodide.org) inside a web worker, so nothing is sent to a server
+and a runaway loop can be stopped. `scripts/copy-pyodide.mjs` copies it from `node_modules` into `public/pyodide/`
+before `npm run dev` and `npm run build` (about 12 MB, downloaded only when a Python lesson is opened), so it works
+offline in the Mac and Android apps. Progress and code are saved in the browser. The page is not linked from the
+portfolio and is hidden from search engines; open it at `/learn.html`.
 
-```bash
-npm run apk   # outputs apk/Shivam-Soni-Portfolio.apk
-```
-
-Uses Android Studio's bundled Java and the SDK in `~/Library/Android/sdk`. Gradle builds in
-`~/Library/Caches/ShivamPortfolioAndroid` because iCloud Drive (which syncs `~/Documents`) breaks builds inside the project. The site is bundled inside
-the APK, so rebuild and reinstall the app after changing the site.
-
-The app icon (code-matrix cubes with "SHIVAM SONI") is drawn by `scripts/app-icon.swift`:
-
-```bash
-swift scripts/app-icon.swift android/app/src/main/res /tmp
-```
+**Adding a course:** write its modules and lessons (see `src/learn/python/` for one with runnable exercises) and add
+an entry to `src/learn/courses.js`. A lesson is `{ id, module, title, minutes, goals, body, exercises?, quiz? }`;
+an exercise is `{ id, title, prompt, starter, tests, hint?, solution?, stdin? }`, where each test is Python code
+with `assert`s run after the learner's code (`OUTPUT` holds what was printed, `SOURCE` the code itself).
 
 ## Mac app
 
 `desktop/` packages the site as a macOS app with [Electron](https://www.electronjs.org). It opens on
-Learn the Code; the **Go** menu switches to the portfolio (⌘1 Learn the Code, ⌘2 Portfolio, ⌘3 Privacy Policy).
+the Learning Lab; the **Go** menu switches to the portfolio (⌘1 Learning Lab, ⌘2 Portfolio, ⌘3 Privacy Policy).
 Links to LinkedIn, WhatsApp, email and phone open in your usual apps.
 
 ```bash
@@ -58,7 +51,7 @@ npm run desktop   # build the site and open it in the app, to try changes
 npm run mac       # outputs desktop/release/Shivam Soni-1.0.0-universal.dmg (Apple silicon + Intel)
 ```
 
-Like the Android app, the site is bundled inside, so rebuild after changing it. The app is signed ad hoc,
+Like the Android app, the site (including Python) is bundled inside, so rebuild after changing it. The app is signed ad hoc,
 not with an Apple Developer ID: a copy you build yourself opens normally, but a .dmg downloaded from the
 internet (e.g. from the **Build macOS app** workflow in the Actions tab) has to be opened the first time with
 right-click → **Open**, or via **System Settings → Privacy & Security → Open Anyway**. The icon is

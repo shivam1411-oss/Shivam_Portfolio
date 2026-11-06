@@ -6,3 +6,4 @@ apk/
 *.local
 desktop/site/
 desktop/release/
+public/pyodide/

@@ -43,4 +43,16 @@ export const glossary = {
   apk: { term: 'APK', def: 'The installable file format for Android apps.' },
   ztest: { term: 'z-test', def: 'A statistics check of whether a difference between two groups is bigger than random luck would explain. |z| ≥ 1.96 means 95% confidence.' },
   reducedmotion: { term: 'Reduced motion', def: 'An accessibility setting some people turn on because animation makes them unwell. The site respects it by switching effects off.' },
+  // Python course
+  python: { term: 'Python', def: 'A popular, readable programming language used for data analysis, automation, web servers and AI.' },
+  pyodide: { term: 'Pyodide', def: 'Python compiled to WebAssembly so it runs inside a web browser. It powers the Run buttons in the Python course; nothing is sent to a server.' },
+  variable: { term: 'Variable', def: 'A name that points to a value, created with =. balance = 5000 stores 5000 under the name balance.' },
+  pyfunction: { term: 'Function (Python)', def: 'A named, reusable block of code defined with def. It takes inputs (parameters) and can send back a result with return.' },
+  list: { term: 'List', def: 'An ordered, changeable collection in square brackets, e.g. [1200, 450, 3000].' },
+  dict: { term: 'Dictionary (dict)', def: 'A collection of key → value pairs in curly braces, e.g. {"id": "ACC1", "dpd": 47}. Looking up a key is instant.' },
+  exception: { term: 'Exception', def: 'An error raised while a program runs, like ValueError or KeyError. It can be caught with try / except.' },
+  module: { term: 'Module', def: 'A file of Python code you can import. Python\'s standard library is a large set of ready-made modules.' },
+  class: { term: 'Class', def: 'A blueprint for objects that bundles data (attributes) with functions that act on it (methods).' },
+  generator: { term: 'Generator', def: 'A function that uses yield to produce values one at a time, only when asked. Good for big or endless sequences.' },
+  decorator: { term: 'Decorator', def: 'A function that wraps another function to add behaviour, applied with @name above a def.' },
 };

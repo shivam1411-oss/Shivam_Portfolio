@@ -1,4 +1,4 @@
-// macOS desktop app: the built site (dist/) in its own window, opening on "Learn the Code".
+// macOS desktop app: the built site (dist/) in its own window, opening on the Learning Lab.
 // Pages are served from a private app:// scheme rather than file://, so ES modules, workers,
 // localStorage and relative links behave exactly as they do on GitHub Pages.
 
@@ -101,7 +101,7 @@ function buildMenu() {
     {
       label: 'Go',
       submenu: [
-        { label: 'Learn the Code', accelerator: 'CmdOrCtrl+1', click: () => go(PAGES.learn) },
+        { label: 'Learning Lab', accelerator: 'CmdOrCtrl+1', click: () => go(PAGES.learn) },
         { label: 'Portfolio', accelerator: 'CmdOrCtrl+2', click: () => go(PAGES.portfolio) },
         { label: 'Privacy Policy', accelerator: 'CmdOrCtrl+3', click: () => go(PAGES.privacy) },
         { type: 'separator' },
