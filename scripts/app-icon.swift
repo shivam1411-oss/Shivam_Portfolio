@@ -2,7 +2,7 @@ import AppKit
 
 // Usage: swift scripts/app-icon.swift android/app/src/main/res <folder-for-preview-pngs>
 // App icon in the site's "cubic code matrix" style: beveled tiles of code with falling teal
-// streams, and "SHIVAM SONI" on a dark plaque in the middle.
+// streams, and "SHIVAM SONI" on three stacked glass plaques with a glossy reflection.
 let resDir = CommandLine.arguments[1]
 let previewDir = CommandLine.arguments[2]
 
@@ -36,7 +36,7 @@ func drawMatrix(_ rect: NSRect) {
             tile.setFill()
             NSBezierPath(roundedRect: t, xRadius: s * 0.12, yRadius: s * 0.12).fill()
             // Bevel: light top-left, dark bottom-right.
-            rgb(0xFFFFFF, 0.07).setFill()
+            rgb(0xFFFFFF, 0.1).setFill()
             NSRect(x: t.minX, y: t.maxY - s * 0.06, width: s, height: s * 0.06).fill()
             NSRect(x: t.minX, y: t.minY, width: s * 0.06, height: s).fill()
             rgb(0x000000, 0.45).setFill()
@@ -58,41 +58,92 @@ func drawMatrix(_ rect: NSRect) {
     }
 }
 
-/// Name plaque centred in `rect`, sized to `width`.
-func drawName(_ rect: NSRect, width: CGFloat) {
-    let fontSize = width * 0.215
+/// One name plaque: `rect` is the plaque, `alpha` fades the back layers, `front` adds the gloss.
+func drawPlaque(_ plaque: NSRect, width: CGFloat, alpha: CGFloat, edge: NSColor, front: Bool) {
+    let fontSize = width * 0.2
     let font = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .heavy)
-    let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.white]
+    let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.white.withAlphaComponent(alpha)]
     let l1 = NSAttributedString(string: "SHIVAM", attributes: attrs)
     let l2 = NSAttributedString(string: "SONI", attributes: attrs)
     let lineH = fontSize * 1.08
-    let padX = width * 0.09
-    let padY = width * 0.07
-    let barH = width * 0.035
-    let plaqueW = max(l1.size().width, l2.size().width) + padX * 2
-    let plaqueH = lineH * 2 + barH + padY * 2.4
-    let plaque = NSRect(x: rect.midX - plaqueW / 2, y: rect.midY - plaqueH / 2, width: plaqueW, height: plaqueH)
+    let radius = width * 0.08
+    let shape = NSBezierPath(roundedRect: plaque, xRadius: radius, yRadius: radius)
 
-    // Soft dark halo so the name lifts off the code behind it.
+    // Dark glass sheet with a soft shadow so each layer lifts off the one behind it.
     NSGraphicsContext.saveGraphicsState()
     let shadow = NSShadow()
-    shadow.shadowColor = rgb(0x000000, 0.8)
-    shadow.shadowBlurRadius = width * 0.12
+    shadow.shadowColor = rgb(0x000000, front ? 0.85 : 0.6)
+    shadow.shadowBlurRadius = width * (front ? 0.1 : 0.06)
+    shadow.shadowOffset = NSSize(width: width * 0.02, height: -width * 0.03)
     shadow.set()
-    rgb(0x0A0F0E, 0.92).setFill()
-    NSBezierPath(roundedRect: plaque, xRadius: width * 0.08, yRadius: width * 0.08).fill()
+    rgb(0x0A0F0E, front ? 0.94 : 0.8).setFill()
+    shape.fill()
     NSGraphicsContext.restoreGraphicsState()
-    let border = NSBezierPath(roundedRect: plaque.insetBy(dx: 0.5, dy: 0.5), xRadius: width * 0.08, yRadius: width * 0.08)
+
+    let border = NSBezierPath(roundedRect: plaque.insetBy(dx: 0.5, dy: 0.5), xRadius: radius, yRadius: radius)
     border.lineWidth = max(1, width * 0.012)
-    teal.withAlphaComponent(0.55).setStroke()
+    edge.withAlphaComponent(front ? 0.75 : alpha * 0.9).setStroke()
     border.stroke()
 
+    let padY = (plaque.height - lineH * 2 - width * 0.035) / 2.4
     let top = plaque.maxY - padY
-    l1.draw(at: NSPoint(x: rect.midX - l1.size().width / 2, y: top - lineH))
-    l2.draw(at: NSPoint(x: rect.midX - l2.size().width / 2, y: top - lineH * 2))
-    let barW = plaqueW - padX * 2
-    let bar = NSRect(x: rect.midX - barW / 2, y: plaque.minY + padY, width: barW, height: barH)
-    NSGradient(starting: teal, ending: indigo)!.draw(in: NSBezierPath(roundedRect: bar, xRadius: barH / 2, yRadius: barH / 2), angle: 0)
+    l1.draw(at: NSPoint(x: plaque.midX - l1.size().width / 2, y: top - lineH))
+    l2.draw(at: NSPoint(x: plaque.midX - l2.size().width / 2, y: top - lineH * 2))
+
+    let padX = width * 0.09
+    let barH = width * 0.035
+    let barW = plaque.width - padX * 2
+    let bar = NSRect(x: plaque.midX - barW / 2, y: plaque.minY + padY, width: barW, height: barH)
+    NSGradient(starting: teal.withAlphaComponent(alpha), ending: indigo.withAlphaComponent(alpha))!
+        .draw(in: NSBezierPath(roundedRect: bar, xRadius: barH / 2, yRadius: barH / 2), angle: 0)
+
+    guard front else { return }
+    // Glass reflection: a diagonal sheen across the upper part and a bright rim along the top edge.
+    NSGraphicsContext.saveGraphicsState()
+    shape.addClip()
+    let sheen = NSBezierPath()
+    sheen.move(to: NSPoint(x: plaque.minX, y: plaque.maxY))
+    sheen.line(to: NSPoint(x: plaque.maxX, y: plaque.maxY))
+    sheen.line(to: NSPoint(x: plaque.maxX, y: plaque.midY + plaque.height * 0.22))
+    sheen.line(to: NSPoint(x: plaque.minX, y: plaque.midY - plaque.height * 0.02))
+    sheen.close()
+    NSGradient(colors: [rgb(0xFFFFFF, 0.28), rgb(0xFFFFFF, 0.05)])!.draw(in: sheen, angle: -70)
+    let streak = NSBezierPath()
+    let sx = plaque.minX + plaque.width * 0.58
+    streak.move(to: NSPoint(x: sx, y: plaque.maxY))
+    streak.line(to: NSPoint(x: sx + plaque.width * 0.12, y: plaque.maxY))
+    streak.line(to: NSPoint(x: sx - plaque.width * 0.2, y: plaque.minY))
+    streak.line(to: NSPoint(x: sx - plaque.width * 0.32, y: plaque.minY))
+    streak.close()
+    rgb(0xFFFFFF, 0.1).setFill()
+    streak.fill()
+    NSGraphicsContext.restoreGraphicsState()
+    let rim = NSBezierPath(roundedRect: plaque.insetBy(dx: width * 0.012, dy: width * 0.012), xRadius: radius * 0.9, yRadius: radius * 0.9)
+    rim.lineWidth = max(0.75, width * 0.008)
+    NSGraphicsContext.saveGraphicsState()
+    NSBezierPath(rect: NSRect(x: plaque.minX, y: plaque.midY + plaque.height * 0.2, width: plaque.width, height: plaque.height)).addClip()
+    rgb(0xFFFFFF, 0.35).setStroke()
+    rim.stroke()
+    NSGraphicsContext.restoreGraphicsState()
+}
+
+/// "SHIVAM SONI" as three stacked glass sheets receding up and to the left, centred in `rect`.
+func drawName(_ rect: NSRect, width: CGFloat) {
+    let fontSize = width * 0.2
+    let font = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .heavy)
+    let textW = NSAttributedString(string: "SHIVAM", attributes: [.font: font]).size().width
+    let plaqueW = textW + width * 0.18
+    let plaqueH = fontSize * 1.08 * 2 + width * 0.035 + width * 0.07 * 2.4
+    let step = width * 0.085
+    // Centre the whole stack (front sheet plus the two offsets) in the safe zone.
+    let fx = rect.midX - plaqueW / 2 + step
+    let fy = rect.midY - plaqueH / 2 - step
+    let layers: [(CGFloat, NSColor)] = [(0.22, indigo), (0.45, indigo.blended(withFraction: 0.5, of: teal)!)]
+    for (i, (alpha, edge)) in layers.enumerated() {
+        let k = CGFloat(2 - i)
+        drawPlaque(NSRect(x: fx - step * k, y: fy + step * k, width: plaqueW, height: plaqueH), width: width, alpha: alpha, edge: edge, front: false)
+    }
+    drawPlaque(NSRect(x: fx, y: fy, width: plaqueW, height: plaqueH), width: width, alpha: 1, edge: teal, front: true)
 }
 
 enum Kind { case background, foreground, square, round, adaptivePreview }

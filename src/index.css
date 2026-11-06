@@ -125,6 +125,38 @@ body {
   background: radial-gradient(closest-side, color-mix(in oklab, var(--accent-2) 22%, transparent), transparent);
 }
 
+/* Glossy reflection on the welcome-screen name; --shine is moved by the gyroscope or mouse */
+.shine-text {
+  --shine-base: color-mix(in oklab, var(--fg) 80%, var(--bg));
+  color: transparent;
+  background-image: linear-gradient(
+    105deg,
+    var(--shine-base) 0%,
+    var(--shine-base) 38%,
+    var(--accent) 44%,
+    #fff 50%,
+    var(--accent-2) 56%,
+    var(--shine-base) 62%,
+    var(--shine-base) 100%
+  );
+  background-size: 300% 100%;
+  background-position: var(--shine, 50%) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+:root:not(.dark) .shine-text {
+  background-image: linear-gradient(
+    105deg,
+    var(--fg) 0%,
+    var(--fg) 38%,
+    var(--accent) 45%,
+    color-mix(in oklab, var(--accent) 50%, var(--accent-2)) 50%,
+    var(--accent-2) 55%,
+    var(--fg) 62%,
+    var(--fg) 100%
+  );
+}
+
 @utility eyebrow {
   font-size: 11px;
   font-weight: 800;

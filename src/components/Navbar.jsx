@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from 'motion/react';
-import { FileText, Menu, X } from 'lucide-react';
+import { Code2, FileText, Menu, X } from 'lucide-react';
 import { navLinks, profile } from '../data/content';
 import ThemeToggle from './ThemeToggle';
 
@@ -76,6 +76,10 @@ export default function Navbar({ onConnect, onResume }) {
                 <span className="relative">{link.label}</span>
               </a>
             ))}
+            <a href="learn.html" className="group relative ml-1 px-4 py-2 eyebrow flex items-center gap-1.5 rounded-lg border border-accent/30 hover:border-accent/60 transition-colors">
+              <Code2 size={13} className="text-accent group-hover:rotate-12 transition-transform" />
+              <span className="text-gradient">Crack the Code</span>
+            </a>
           </div>
 
           <div className="flex items-center gap-2">
@@ -142,6 +146,12 @@ export default function Navbar({ onConnect, onResume }) {
                 >
                   <FileText size={14} /> Get Resume
                 </button>
+                <a
+                  href="learn.html"
+                  className="py-3 text-xs font-extrabold uppercase tracking-widest flex items-center gap-2"
+                >
+                  <Code2 size={14} className="text-accent" /> <span className="text-gradient">Crack the Code</span>
+                </a>
               </div>
             </motion.div>
           )}

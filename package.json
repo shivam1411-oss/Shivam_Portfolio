@@ -9,7 +9,7 @@
     "prebuild": "node scripts/copy-pyodide.mjs",
     "build": "vite build",
     "preview": "vite preview",
-    "apk": "npm run build && cap sync android && node scripts/remove-icloud-duplicates.mjs android/app/src && cd android && JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew assembleDebug && mkdir -p ../apk && cp ~/Library/Caches/ShivamPortfolioAndroid/app/outputs/apk/debug/app-debug.apk ../apk/Shivam-Soni-Portfolio.apk"
+    "apk": "node scripts/bump-android-version.mjs && npm run build && cap sync android && node scripts/remove-icloud-duplicates.mjs android/app/src && cd android && JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew assembleDebug && mkdir -p ../apk && cp ~/Library/Caches/ShivamPortfolioAndroid/app/outputs/apk/debug/app-debug.apk ../apk/Shivam-Soni-Portfolio.apk"
   },
   "dependencies": {
     "@capacitor/android": "^7.6.9",
@@ -35,5 +35,9 @@
     "@vitejs/plugin-react": "^4.7.0",
     "tailwindcss": "^4.3.3",
     "vite": "^6.4.5"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "fsevents@2.3.3": true
   }
 }

@@ -12,8 +12,8 @@ const sections = [
     title: 'Overview',
     body: (
       <p>
-        This privacy policy applies to Shivam Soni's portfolio website (this site) and the <strong>Shivam Soni Android app</strong> (together,
-        "the website and app"). It explains what information is collected, how it's used, and who it's shared with. This is a personal portfolio,
+        This privacy policy applies to Shivam Soni's portfolio website at <strong>shivam-soni.com</strong> (this site), including its{' '}
+        <strong>Learning Lab</strong> ("Crack the Code"), and the <strong>Shivam Soni Android app</strong> (together, "the website and app"). It explains what information is collected, how it's used, and who it's shared with. This is a personal portfolio,
         not a commercial product, and the website and app collect the minimum information needed to provide the features described below. It
         also sets out who owns their content and the restrictions on copying or reusing it.
       </p>
@@ -40,8 +40,9 @@ const sections = [
           collect location data, device identifiers, or analytics of any kind.
         </p>
         <p className="mt-3">
-          <strong>Stored only on your device:</strong> your light/dark theme choice, and a note that you have already seen the welcome screen
-          during the current visit. These stay in your browser or in the app on your device, are never sent anywhere, and can be removed by
+          <strong>Stored only on your device:</strong> your light/dark theme choice, a note that you have already seen the welcome screen
+          during the current visit, and, if you use the Learning Lab, your lesson progress, quiz answers, solved exercises and the code you
+          write there. These stay in your browser or in the app on your device, are never sent anywhere, and can be removed by
           clearing your browser data, clearing the app's storage, or uninstalling the app.
         </p>
       </>
@@ -73,6 +74,32 @@ const sections = [
           </li>
           <li>
             <strong>Removing your data:</strong> uninstalling the app deletes everything it stored on your device.
+          </li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    title: 'Learning Lab ("Crack the Code")',
+    body: (
+      <>
+        <p>
+          The Learning Lab offers free interactive courses on how this site was built and on Python. You don't need an account and you are
+          never asked for any personal information to use it.
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>
+            <strong>Your progress stays with you:</strong> completed lessons, quiz answers, solved exercises and code you type in the editors are
+            saved only in your browser or the app on your device. They are never uploaded, and Shivam Soni cannot see them.
+          </li>
+          <li>
+            <strong>Python runs on your device:</strong> code you run in the Python exercises is executed entirely inside your browser or the
+            app. The Python engine is served from this site itself, not from a third-party service, and your code and its output are never sent
+            anywhere.
+          </li>
+          <li>
+            <strong>Starting over:</strong> clearing your browser data for this site, clearing the app's storage, or uninstalling the app removes
+            your saved progress and code.
           </li>
         </ul>
       </>
@@ -138,7 +165,23 @@ const sections = [
           .
         </p>
         <p className="mt-3">
-          Messages you type into the AI assistant are handled by Cloudflare and Anthropic, as described in the AI Assistant section below.
+          Messages you type into the AI assistant are handled by Cloudflare and Anthropic, as described in the AI Assistant section above.
+        </p>
+        <p className="mt-3">
+          <strong>Hosting and fonts:</strong> the website is hosted on <strong>GitHub Pages</strong>, and its fonts are loaded from{' '}
+          <strong>Google Fonts</strong>. Like any website host, these services receive standard technical information, such as your IP
+          address and browser type, when your browser requests the site's pages or fonts, and may keep it in their logs under their own privacy
+          policies (
+          <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" className="underline hover:text-fg" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+          ,{' '}
+          <a href="https://policies.google.com/privacy" className="underline hover:text-fg" target="_blank" rel="noreferrer">
+            Google
+          </a>
+          ). Shivam Soni does not receive or use this information.
+        </p>
+        <p className="mt-3">
           No other third parties receive your information. The website and app do not sell, rent, or share your data with advertisers or data brokers.
         </p>
       </>
@@ -158,7 +201,7 @@ const sections = [
     title: "Children's Privacy",
     body: (
       <p>
-        The website and app are not directed at children and is not intended for use by anyone under the age of 13. We do not knowingly collect personal information
+        The website and app are not directed at children and are not intended for use by anyone under the age of 13. We do not knowingly collect personal information
         from children.
       </p>
     ),
@@ -183,6 +226,7 @@ const sections = [
         <p className="mt-3">This includes, without limitation:</p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>All text, including the professional summary, role descriptions, achievements, quotes and the content of the Analytical Lab.</li>
+          <li>All Learning Lab courses, lessons, explanations, quizzes, coding exercises, diagrams and interactive examples.</li>
           <li>All data, figures, metrics, charts and performance statistics presented on the site.</li>
           <li>The resume and any document made available for preview or by email.</li>
           <li>Photographs, images, graphics, icons and the visual design, layout, colour scheme and overall look and feel.</li>
@@ -218,7 +262,9 @@ const sections = [
         </ul>
         <p className="mt-3">
           <strong>Permitted use:</strong> you may view the website, use the app and read the resume you requested, solely for the purpose of evaluating
-          Shivam Soni for professional opportunities. You may share a link to the website. Any other use requires written permission, which can
+          Shivam Soni for professional opportunities. You may also use the Learning Lab for your own personal, non-commercial learning,
+          including writing and running practice code in its exercises; this does not permit republishing or redistributing its lessons or
+          materials. You may share a link to the website. Any other use requires written permission, which can
           be requested using the contact details below.
         </p>
         <p className="mt-3">
@@ -296,7 +342,7 @@ function PrivacyPage() {
           transition={{ delay: 0.3 }}
           className="eyebrow text-subtle mb-12"
         >
-          Effective Date: October 25, 2026
+          Effective Date: November 6, 2026
         </motion.p>
 
         <div className="space-y-5 text-muted leading-relaxed">

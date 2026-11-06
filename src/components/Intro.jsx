@@ -97,6 +97,50 @@ function Decode({ text, delay = 0, className }) {
   );
 }
 
+/**
+ * A glossy highlight that slides across the name as the phone tilts (gyroscope), or follows the
+ * mouse on a computer. Writes a CSS variable straight to the element, so it never re-renders React.
+ */
+function useTiltShine(ref) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || reduceMotion()) return undefined;
+    let target = 50;
+    let pos = 50;
+    let frame = 0;
+    const clamp = (v) => Math.max(-20, Math.min(120, v));
+    const loop = () => {
+      pos += (target - pos) * 0.12;
+      el.style.setProperty('--shine', `${pos.toFixed(2)}%`);
+      frame = Math.abs(target - pos) > 0.05 ? requestAnimationFrame(loop) : 0;
+    };
+    const aim = (v) => {
+      target = clamp(v);
+      if (!frame) frame = requestAnimationFrame(loop);
+    };
+    // Tilt is measured from how the phone was being held (the baseline), which slowly follows the
+    // phone so the shine settles back to the middle. gamma = left/right tilt, beta = front/back.
+    let base = null;
+    const onTilt = (e) => {
+      if (e.gamma == null) return;
+      const beta = e.beta ?? 0;
+      if (!base) base = { g: e.gamma, b: beta };
+      base.g += (e.gamma - base.g) * 0.02;
+      base.b += (beta - base.b) * 0.02;
+      aim(50 + (e.gamma - base.g) * 2 + (beta - base.b) * 0.8);
+    };
+    const onMouse = (e) => aim((e.clientX / window.innerWidth) * 140 - 20);
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    window.addEventListener('deviceorientation', onTilt);
+    if (finePointer) window.addEventListener('mousemove', onMouse);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('deviceorientation', onTilt);
+      window.removeEventListener('mousemove', onMouse);
+    };
+  }, [ref]);
+}
+
 const quoteParts = [
   { t: 'Where ' },
   { t: 'finance', hl: true },
@@ -112,6 +156,8 @@ const quoteParts = [
  */
 export default function Intro({ onEnter, onDone }) {
   const [leaving, setLeaving] = useState(false);
+  const nameRef = useRef(null);
+  useTiltShine(nameRef);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const r = useMotionValue(0);
@@ -206,7 +252,7 @@ export default function Intro({ onEnter, onDone }) {
           <img src={profile.photo} alt="" className="w-full h-full object-cover" />
         </motion.div>
 
-        <h1 className="font-mono font-semibold text-[2.6rem] leading-none sm:text-7xl md:text-8xl tracking-tight text-fg mb-4 sm:mb-5">
+        <h1 ref={nameRef} className="shine-text font-mono font-semibold text-[2.6rem] leading-none sm:text-7xl md:text-8xl tracking-tight mb-4 sm:mb-5">
           <Decode text={profile.name.toUpperCase()} delay={0.2} />
         </h1>
 
