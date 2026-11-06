@@ -6,7 +6,8 @@ import { Playground, btn } from '../ui';
 // Widgets for the "Learning Lab & Python" module.
 
 const ROUTES = [
-  { hash: '#/', view: 'hub', shows: 'The Learning Lab home: every course with its progress.' },
+  { hash: '#/', view: 'landing', shows: 'The landing page: the portfolio taken apart into its layers.' },
+  { hash: '#/courses', view: 'hub', shows: 'Every course with its progress.' },
   { hash: '#/c/python', view: 'course', course: 'python', shows: 'The Python course outline: its 6 modules and 22 lessons.' },
   { hash: '#/c/python/loops', view: 'lesson', course: 'python', lesson: 'loops', shows: 'One lesson: explanation, runnable examples, exercises, quiz.' },
   { hash: '#/c/site/canvas', view: 'lesson', course: 'site', lesson: 'canvas', shows: 'A "Learn the Code" lesson, same page layout.' },

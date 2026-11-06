@@ -30,6 +30,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import { ease } from '../components/motion';
 import { courseById, courses, lessonHash, lessonKey } from './courses';
 import { glossary } from './glossary';
+import Landing from './Landing';
 import PyRunner from './python/PyRunner';
 import { warmUp } from './python/runtime';
 import { timeline } from './timeline';
@@ -53,7 +54,8 @@ const parseHash = () => {
     if (lesson) return { view: 'lesson', course: courseById.site, lesson };
   }
   if (view === 'timeline' || view === 'glossary' || view === 'playground') return { view };
-  return { view: 'hub' };
+  if (view === 'courses') return { view: 'hub' };
+  return { view: 'landing' };
 };
 
 function useRoute() {
@@ -160,7 +162,7 @@ function Eyebrow({ children }) {
 function Header({ route, progress }) {
   const done = allLessons.filter(({ course, lesson }) => progress.done[lessonKey(course, lesson)]).length;
   const links = [
-    { hash: '#/', label: 'Courses', Icon: LibraryBig, active: ['hub', 'course', 'lesson', 'timeline'].includes(route.view) },
+    { hash: '#/courses', label: 'Courses', Icon: LibraryBig, active: ['hub', 'course', 'lesson', 'timeline'].includes(route.view) },
     { hash: '#/playground', label: 'Playground', Icon: SquareTerminal, active: route.view === 'playground' },
     { hash: '#/glossary', label: 'Glossary', Icon: ListTree, active: route.view === 'glossary' },
   ];
@@ -304,7 +306,7 @@ function CourseHome({ course, progress, resetCourse }) {
   const s = courseStats(course, progress);
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
-      <a href="#/" className="inline-flex items-center gap-1.5 text-sm font-bold text-muted hover:text-fg">
+      <a href="#/courses" className="inline-flex items-center gap-1.5 text-sm font-bold text-muted hover:text-fg">
         <ArrowLeft size={15} /> All courses
       </a>
       <section className="relative mt-6">
@@ -885,6 +887,7 @@ export default function LearnApp() {
         <Header route={route} progress={progress} />
         {/* <main> also gets the site's dark-mode text halo, which keeps words readable over the matrix */}
         <main>
+          {route.view === 'landing' && <Landing progress={progress} />}
           {route.view === 'hub' && <Hub progress={progress} />}
           {route.view === 'course' && <CourseHome course={route.course} progress={progress} resetCourse={resetCourse} />}
           {route.view === 'lesson' && (

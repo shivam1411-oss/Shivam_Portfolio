@@ -1190,7 +1190,7 @@ jobs:
     body: () => (
       <>
         <P>
-          The learning page started as one course (this one). To add Python, it became a <B>Learning Lab</B>: a home page listing courses, where every course has modules,
+          The learning page started as one course (this one). To add Python, it became a <B>Learning Lab</B>: a landing page, a page listing courses, and inside every course its modules,
           lessons, exercises and quizzes. The trick is that the page code never mentions a specific course. It reads them all from one list.
         </P>
         <Code file="src/learn/courses.js" note="To add a third course, write its lessons and add one more entry to this list. The home page, menus and progress bars pick it up automatically.">{`
@@ -1218,7 +1218,8 @@ const parseHash = () => {
   // Links from before there were several courses: #/lesson/<id>
   if (view === 'lesson') { /* open that lesson in 'Learn the Code' */ }
   if (view === 'timeline' || view === 'glossary' || view === 'playground') return { view };
-  return { view: 'hub' };
+  if (view === 'courses') return { view: 'hub' };     // the course list
+  return { view: 'landing' };                          // anything else: the landing page
 };`}</Code>
         <H>Keeping your old progress</H>
         <P>
