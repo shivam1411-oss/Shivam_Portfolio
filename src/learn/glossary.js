@@ -58,4 +58,9 @@ export const glossary = {
   wasm: { term: 'WebAssembly', def: 'A compact, fast format that browsers can run besides JavaScript. Programs written in languages like C can be compiled to it; that is how Python runs in the browser.' },
   webworker: { term: 'Web worker', def: 'JavaScript running on a separate thread from the page. It cannot touch the page directly and talks to it by sending messages, so heavy work there never freezes the screen.' },
   cdn: { term: 'CDN', def: 'Content delivery network: public servers that host common files (like libraries) so many websites can load them from one place.' },
+  numpy: { term: 'NumPy', def: 'The Python library for fast maths on whole arrays of numbers at once. pandas is built on it.' },
+  pandas: { term: 'pandas', def: 'The most widely used Python library for tables of data (DataFrames): reading files, cleaning, filtering, grouping, joining and time series.' },
+  dataframe: { term: 'DataFrame', def: 'A pandas table: named columns of equal length that share a row index, like a spreadsheet you control with code.' },
+  sql: { term: 'SQL', def: 'Structured Query Language: the standard way to ask a database for data (SELECT … FROM … WHERE …). Used by almost every company.' },
+  matplotlib: { term: 'Matplotlib', def: 'Python\'s standard charting library. A figure holds one or more axes, and you draw lines, bars and points on the axes.' },
 };

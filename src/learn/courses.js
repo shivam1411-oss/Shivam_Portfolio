@@ -1,4 +1,7 @@
 import { lessons as siteLessons, modules as siteModules } from './lessons';
+import { pandasCourse } from './data/pandas';
+import { sqlCourse } from './data/sql';
+import { vizCourse } from './data/viz';
 import { pythonCourse } from './python/course';
 
 // Every course in the Learning Lab. To add one, create its modules and lessons (see python/ for an
@@ -18,6 +21,10 @@ export const courses = [
     extras: [{ hash: '#/timeline', label: 'What changed, in order' }],
   },
   pythonCourse,
+  // Industry data skills, built on the Python course (pandas, NumPy, SQLite and Matplotlib run in the browser)
+  pandasCourse,
+  sqlCourse,
+  vizCourse,
 ];
 
 export const courseById = Object.fromEntries(courses.map((c) => [c.id, c]));
