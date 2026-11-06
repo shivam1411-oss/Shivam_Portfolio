@@ -42,3 +42,6 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          # GitHub can queue and sync slowly on busy days; the default 10 minutes has timed out.
+          timeout: 1800000
