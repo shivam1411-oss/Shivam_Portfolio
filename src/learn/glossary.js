@@ -55,4 +55,7 @@ export const glossary = {
   class: { term: 'Class', def: 'A blueprint for objects that bundles data (attributes) with functions that act on it (methods).' },
   generator: { term: 'Generator', def: 'A function that uses yield to produce values one at a time, only when asked. Good for big or endless sequences.' },
   decorator: { term: 'Decorator', def: 'A function that wraps another function to add behaviour, applied with @name above a def.' },
+  wasm: { term: 'WebAssembly', def: 'A compact, fast format that browsers can run besides JavaScript. Programs written in languages like C can be compiled to it; that is how Python runs in the browser.' },
+  webworker: { term: 'Web worker', def: 'JavaScript running on a separate thread from the page. It cannot touch the page directly and talks to it by sending messages, so heavy work there never freezes the screen.' },
+  cdn: { term: 'CDN', def: 'Content delivery network: public servers that host common files (like libraries) so many websites can load them from one place.' },
 };

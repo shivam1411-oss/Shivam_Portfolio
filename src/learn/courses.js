@@ -10,7 +10,7 @@ export const courses = [
     title: 'Learn the Code',
     tagline: 'How this portfolio was built, change by change',
     blurb:
-      'React, Tailwind, animations, canvas effects, performance, the AI chat, deploying and the Android app, explained from zero with the real code and playgrounds.',
+      'React, Tailwind, animations, canvas effects, performance, the AI chat, deploying, the Android app, and how Python was made to run in this Learning Lab, explained from zero with the real code and playgrounds.',
     levels: 'Beginner',
     icon: 'site',
     modules: siteModules,
