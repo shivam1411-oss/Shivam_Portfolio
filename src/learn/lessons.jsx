@@ -2,6 +2,8 @@ import { Callout, Code, Term } from './ui';
 import { ComponentTree, DataToUI, MotionPlayground, PropsPlayground, StateCalculator, Steps, ThemeDecider, TokenEditor } from './widgets/basics';
 import { BlurVsGradient, BreakpointPreview, ChunkTimeline, DecodeDemo, DeviceInspector, MaskDemo, MatrixMini, StorageInspector } from './widgets/effects';
 import { ChatFlow, MaskPhone, ZTestStepper } from './widgets/features';
+import { RouteExplorer, ThreadDemo } from './widgets/lab';
+import PyRunner from './python/PyRunner';
 
 // Every lesson explains one part of how the portfolio was built, with the real code, a playground and a quiz.
 // `commits` link a lesson to the changes in the timeline (src/learn/timeline.js).
@@ -13,6 +15,7 @@ export const modules = [
   { id: 'speed', title: 'Speed & devices', blurb: 'Making it fast on phones and laying it out for every screen.' },
   { id: 'features', title: 'Features', blurb: 'The Analytical Lab maths, contact pop-up, resume and AI chat.' },
   { id: 'shipping', title: 'Shipping it', blurb: 'Git, automatic deploys to GitHub Pages, and the Android app.' },
+  { id: 'python-lab', title: 'Learning Lab & Python', blurb: 'How the course pages work, and how Python was made to run, get tested and deploy in the browser.' },
 ];
 
 const P = ({ children }) => <p className="my-4 leading-relaxed text-muted">{children}</p>;
@@ -1176,6 +1179,332 @@ jobs:
       },
     ],
   },
+  // ---------------------------------------------------------------- Learning Lab & Python
+  {
+    id: 'learning-lab',
+    module: 'python-lab',
+    title: 'How the Learning Lab is organised',
+    minutes: 9,
+    commits: ['e5f1b85', '1db9d8c'],
+    goals: ['How one page holds several courses', 'How the address after # picks what to show', 'How progress is saved per course, and how old progress was kept'],
+    body: () => (
+      <>
+        <P>
+          The learning page started as one course (this one). To add Python, it became a <B>Learning Lab</B>: a home page listing courses, where every course has modules,
+          lessons, exercises and quizzes. The trick is that the page code never mentions a specific course. It reads them all from one list.
+        </P>
+        <Code file="src/learn/courses.js" note="To add a third course, write its lessons and add one more entry to this list. The home page, menus and progress bars pick it up automatically.">{`
+export const courses = [
+  {
+    id: 'site',
+    title: 'Learn the Code',
+    modules: siteModules,
+    lessons: siteLessons,
+    extras: [{ hash: '#/timeline', label: 'What changed, in order' }],
+  },
+  pythonCourse,    // id: 'python', 6 modules, 22 lessons
+];
+export const lessonHash = (course, lesson) => \`#/c/\${course.id}/\${lesson.id}\`;`}</Code>
+        <H>Addresses after the #</H>
+        <P>
+          The whole Lab is one HTML file. The part of the address after <F>#</F> (the "hash") decides what to show, and changing it does not reload the page. A small
+          function, <F>parseHash</F>, turns the hash into a <Term id="state">state</Term> object that the app draws.
+        </P>
+        <RouteExplorer />
+        <Code file="src/learn/LearnApp.jsx">{`
+const parseHash = () => {
+  const [view, a, b] = window.location.hash.replace(/^#\\/?/, '').split('/');
+  if (view === 'c' && courseById[a]) { /* a course, or one of its lessons */ }
+  // Links from before there were several courses: #/lesson/<id>
+  if (view === 'lesson') { /* open that lesson in 'Learn the Code' */ }
+  if (view === 'timeline' || view === 'glossary' || view === 'playground') return { view };
+  return { view: 'hub' };
+};`}</Code>
+        <H>Keeping your old progress</H>
+        <P>
+          Progress lives in <Term id="localstorage">localStorage</Term> under the key <F>learn-progress</F>. Before the Lab, a finished lesson was saved as just{' '}
+          <F>big-picture</F>. With two courses, ids could clash, so keys now include the course: <F>site/big-picture</F>, <F>python/loops</F>. When the page loads it quietly
+          renames old keys, so nothing you finished was lost.
+        </P>
+        <Code file="src/learn/LearnApp.jsx">{`
+// Progress from the single-course version used bare lesson ids;
+// those belong to "Learn the Code".
+const withCourse = (obj = {}) => Object.fromEntries(
+  Object.entries(obj).map(([k, v]) => [k.includes('/') ? k : \`site/\${k}\`, v]));`}</Code>
+        <Callout title="A lesson completes itself">
+          A lesson is marked done the moment every quiz answer is right <B>and</B> every coding exercise is solved. You can still tick or untick it yourself.
+        </Callout>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'What do you need to change to add a new course to the Lab?',
+        options: ['Rewrite LearnApp.jsx', 'Write its lessons and add one entry to src/learn/courses.js', 'Create a new HTML page', 'Change the deploy workflow'],
+        answer: 1,
+        why: 'The pages are generic: they draw whatever courses the list contains.',
+      },
+      {
+        q: 'Why are progress keys like "python/loops" instead of just "loops"?',
+        options: ['It looks nicer', 'So two courses can have lessons with the same id without mixing up progress', 'GitHub requires it', 'It is faster'],
+        answer: 1,
+        why: 'Including the course id makes every key unique across courses.',
+      },
+    ],
+  },
+  {
+    id: 'python-browser',
+    module: 'python-lab',
+    title: 'Running Python in the browser',
+    minutes: 12,
+    commits: ['1db9d8c'],
+    goals: ['What Pyodide and WebAssembly are', 'Why Python runs in a web worker, and how messages flow', 'How Stop, the time limit and input() work'],
+    body: () => (
+      <>
+        <P>
+          Browsers only run <Term id="js">JavaScript</Term> and <Term id="wasm">WebAssembly</Term>. <Term id="pyodide">Pyodide</Term> is the real Python interpreter (the
+          same C code you would install on a laptop) compiled to WebAssembly, plus Python's standard library. Nothing is sent to a server: your code runs on your device.
+        </P>
+        <H>Why a web worker?</H>
+        <P>
+          A page has one main thread that draws the screen and reacts to clicks. If Python ran there, a long or endless loop would freeze everything. So Python runs in a{' '}
+          <Term id="webworker">web worker</Term>: a separate thread that can only talk to the page by sending messages. Try it:
+        </P>
+        <ThreadDemo />
+        <H>The conversation between page and worker</H>
+        <Steps
+          title="What happens when you press Run"
+          steps={[
+            { label: 'Start', body: 'runtime.js creates the worker once and sends "init" with the address of the Python files. The worker loads Pyodide (about 12 MB the first time, cached after) and replies "ready".', code: "worker.postMessage({ type: 'init', indexURL })" },
+            { label: 'Run', body: 'PyRunner sends your code, the Input box text and, for exercises, the tests. Only one program runs at a time; others wait in a queue.', code: "worker.postMessage({ type: 'run', id, code, stdin, tests })" },
+            { label: 'Output', body: 'Every line Python prints is sent back straight away, so long programs show progress as they go.', code: "postMessage({ id, type: 'out', text })" },
+            { label: 'Done', body: 'When the program ends the worker sends any error (type, message and line number) and the test results. The page shows them with a plain-English hint.', code: "postMessage({ id, type: 'done', error, results, ms })" },
+          ]}
+        />
+        <H>Running your code safely</H>
+        <P>Inside the worker, a few lines of Python wrap your code so every run starts fresh and errors come back as plain data:</P>
+        <Code file="src/learn/python/worker.js (Python helpers)">{`
+FILENAME = "<your code>"
+
+def _exec(code, ns):
+    try:
+        exec(compile(code, FILENAME, "exec"), ns)   # ns = a brand-new namespace
+        return None
+    except BaseException as e:
+        return _error(e)          # {"type", "message", "line", "text"}
+    finally:
+        sys.stdout.flush()        # show a last line printed with end=""
+
+def _input(prompt=""):
+    value = _real_input(prompt)   # reads the next line of the Input box
+    print(value)                  # echo it, as a terminal would
+    return value`}</Code>
+        <H>Stop and the 15-second limit</H>
+        <P>
+          A worker cannot be interrupted politely in the middle of a loop, but it can be <B>terminated</B>. Stop throws the whole worker away and starts a fresh one; a
+          timer does the same automatically after 15 seconds.
+        </P>
+        <Code file="src/learn/python/runtime.js">{`
+export function stop(reason = 'stopped') {
+  worker.terminate();          // kill the thread, endless loop and all
+  worker = null;
+  finish({ error: { type: reason === 'timeout' ? 'TimeoutError' : 'Stopped', ... } });
+  start();                     // a fresh worker, ready for the next run
+}`}</Code>
+        <Callout title="Only the standard library">
+          Pyodide can load extra packages like pandas, but each is many megabytes. The course sticks to Python's built-in library (math, statistics, csv, json, datetime…),
+          which is already inside the 12 MB download.
+        </Callout>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'Why does Python run in a web worker instead of on the page?',
+        options: ['Workers run Python faster', 'So a long or endless program cannot freeze the page', 'Browsers forbid WebAssembly on pages', 'To send code to a server'],
+        answer: 1,
+        why: 'The worker is a separate thread; the page keeps drawing and reacting while Python runs.',
+      },
+      {
+        q: 'How does the Stop button end an endless loop?',
+        options: ['It sends Python a KeyboardInterrupt', 'It terminates the worker and starts a new one', 'It reloads the page', 'It waits for the loop to finish'],
+        answer: 1,
+        why: 'worker.terminate() ends the thread immediately; a fresh worker replaces it.',
+      },
+      {
+        q: 'Where does your Python code actually run?',
+        options: ['On a GitHub server', 'On a Cloudflare Worker', 'In your own browser, on your device', 'On Anthropic\'s servers'],
+        answer: 2,
+        why: 'Pyodide is downloaded once and runs locally; no code leaves the device.',
+      },
+    ],
+  },
+  {
+    id: 'python-tests',
+    module: 'python-lab',
+    title: 'How exercises are checked',
+    minutes: 10,
+    commits: ['1db9d8c'],
+    goals: ['How an exercise is described as data', 'How tests use OUTPUT and SOURCE', 'How every solution and starter was verified before going live'],
+    body: () => (
+      <>
+        <P>
+          Every Python exercise is a plain object: what to ask, the starting code, the tests, a hint and a model solution. The tests are small pieces of Python with{' '}
+          <F>assert</F>, run straight after your code in the same namespace, so they can call your functions and read your variables.
+        </P>
+        <Code file="src/learn/python/lessons-advanced.jsx (shortened)">{`
+{
+  id: 'bucket-fn',
+  title: 'Bucket as a function',
+  starter: py\`
+def bucket(dpd):
+    return "Current"
+\`,
+  tests: [
+    { name: 'bucket(0) == "Current"',
+      code: py\`assert bucket(0) == "Current", f"got {bucket(0)!r}"\` },
+  ],
+  hint: 'Use if / elif with return in each branch...',
+  solution: py\`...\`,
+}`}</Code>
+        <P>
+          The message after the comma in <F>assert</F> is what you see when a test fails, which is why each one says what it got. Try a tiny exercise built the same way:
+        </P>
+        <PyRunner
+          title="Double it"
+          code={'def double(x):\n    return x\n'}
+          tests={[
+            { name: 'double(2) == 4', code: 'assert double(2) == 4, f"got {double(2)!r}"' },
+            { name: 'double(-3) == -6', code: 'assert double(-3) == -6, f"got {double(-3)!r}"' },
+          ]}
+          hint="Return x * 2."
+          solution={'def double(x):\n    return x * 2\n'}
+        />
+        <H>OUTPUT and SOURCE</H>
+        <P>
+          Some exercises are about what you <B>print</B>, so the worker keeps everything printed in a variable called <F>OUTPUT</F> for the tests. A few re-run your code
+          with other values, so the code itself is available as <F>SOURCE</F>.
+        </P>
+        <Code file="the DPD bucket test (lessons-beginner.jsx)" note="Your code sets dpd = 45. The test swaps that line for other values and runs your code again, so a hard-coded answer cannot pass.">{`
+def bucket_for(value):
+    ns = {}
+    with contextlib.redirect_stdout(io.StringIO()):     # hide the extra prints
+        exec(re.sub(r"(?m)^dpd\\s*=.*$", f"dpd = {value}", SOURCE, count=1), ns)
+    return ns.get("bucket")
+
+expected = {0: "Current", 30: "1-30", 60: "31-60", 61: "61-90", 120: "90+"}
+assert {v: bucket_for(v) for v in expected} == expected`}</Code>
+        <H>Testing the tests</H>
+        <P>Before anything went live, two checks ran on all 24 exercises:</P>
+        <Steps
+          title="How the course was verified"
+          steps={[
+            { label: 'In Python', body: 'A script pulled every exercise out of the lesson files and ran it in Python 3.13 (the same version as Pyodide): each model solution must pass every test, and each starter must fail at least one, so nobody passes without writing code. Result: 0 problems.' },
+            { label: 'In a real browser', body: 'Playwright opened all 22 Python lessons with the real Pyodide, pressed Run on every example (only the one meant to show an error may fail), and for every exercise pressed Check on the starter (must fail), then Show solution and Check again (must pass). Result: 0 problems, no console errors.' },
+            { label: 'The details', body: 'The same run checked Stop on an endless loop, input() with the Input box, code surviving a reload, a lesson completing itself, old links and old progress, and that a 390px-wide phone screen never scrolls sideways.' },
+          ]}
+        />
+      </>
+    ),
+    quiz: [
+      {
+        q: 'When does a test fail?',
+        options: ['When it prints something', 'When its assert condition is False or the code raises an error', 'When it takes more than 1 ms', 'Never'],
+        answer: 1,
+        why: 'assert raises AssertionError on False; any other error also fails the test.',
+      },
+      {
+        q: 'Why must every starter fail at least one test?',
+        options: ['To make exercises harder', 'So the exercise cannot be "passed" without writing any code', 'Because Python requires it', 'To save time'],
+        answer: 1,
+        why: 'If the starting code already passed, the exercise would teach nothing.',
+      },
+    ],
+  },
+  {
+    id: 'python-deploy',
+    module: 'python-lab',
+    title: 'Shipping Python with the site',
+    minutes: 9,
+    commits: ['1db9d8c'],
+    goals: ['Why Python is hosted on your own site instead of a CDN', 'What scripts/copy-pyodide.mjs does and when it runs', 'How the deploy includes it, and what visitors download'],
+    body: () => (
+      <>
+        <P>
+          The usual way to use Pyodide is to load it from a <Term id="cdn">CDN</Term> (a public file server). While building the course, the CDN turned out to be blocked
+          from the build machine. Instead of fighting that, Python is now <B>served from your own site</B>, which has real advantages: no third-party server to trust or go
+          down, and it works offline in the Android app.
+        </P>
+        <H>Copying Python into the site</H>
+        <P>
+          Pyodide is installed as an ordinary <Term id="npm">npm</Term> package. A small script copies the five files the browser needs from <F>node_modules</F> into{' '}
+          <F>public/pyodide/</F>, and Vite copies <F>public/</F> into <F>dist/</F> as-is.
+        </P>
+        <Code file="scripts/copy-pyodide.mjs">{`
+const from = '../node_modules/pyodide/';
+const to = '../public/pyodide/';
+const files = ['pyodide.mjs', 'pyodide.asm.js', 'pyodide.asm.wasm',
+               'python_stdlib.zip', 'pyodide-lock.json'];
+for (const f of files) cpSync(from + f, to + f);`}</Code>
+        <Code file="package.json" note='npm automatically runs a script called "prebuild" before "build" (and "predev" before "dev"), so nobody has to remember the copy step, including GitHub Actions.'>{`
+"scripts": {
+  "predev": "node scripts/copy-pyodide.mjs",
+  "dev": "vite",
+  "prebuild": "node scripts/copy-pyodide.mjs",
+  "build": "vite build",
+}`}</Code>
+        <Callout title="Why public/pyodide/ is in .gitignore">
+          The files are 12 MB and can always be rebuilt from <F>node_modules</F>, so they are not stored in Git. The exact version is pinned in <F>package-lock.json</F>.
+        </Callout>
+        <H>Finding the files at run time</H>
+        <P>
+          The site lives in a sub-folder on GitHub Pages, so the worker is told where Python is relative to the page itself, not to the domain. This works locally, on
+          GitHub Pages and inside the Android app without any change.
+        </P>
+        <Code file="src/learn/python/runtime.js">{`
+// pyodide/ sits next to learn.html (copied there by scripts/copy-pyodide.mjs)
+worker.postMessage({ type: 'init', indexURL: new URL('pyodide/', document.baseURI).href });`}</Code>
+        <H>The deploy, step by step</H>
+        <Steps
+          title="From merge to live Python"
+          steps={[
+            { label: 'Merge', body: 'Pull request #26 was merged into main, which starts the "Deploy to GitHub Pages" workflow.' },
+            { label: 'npm ci', body: 'GitHub installs the exact versions in package-lock.json, including pyodide 0.29.5 and the CodeMirror editor.' },
+            { label: 'prebuild', body: 'npm runs scripts/copy-pyodide.mjs first, copying Python into public/pyodide/.', code: 'Copied Pyodide 0.29.5 → public/pyodide/' },
+            { label: 'vite build', body: 'Vite builds the site. The Learning Lab, the Python worker and the code editor become separate files, and public/pyodide/ is copied into dist/pyodide/.' },
+            { label: 'Live', body: 'dist/ is uploaded to GitHub Pages. Run #18 finished with success in about 40 seconds.' },
+          ]}
+        />
+        <H>What visitors download</H>
+        <Code file="sizes (approximate)" note="Visiting the portfolio downloads none of this. Python files load only when someone opens a Python lesson or the Playground, and the browser caches them.">{`
+learn page (all lessons)      245 KB   when you open learn.html
+code editor (CodeMirror)      466 KB   when the first code box appears
+Python worker                   3 KB   on the first Run
+pyodide.asm.wasm              8.3 MB   the Python interpreter
+python_stdlib.zip             2.4 MB   the standard library
+pyodide.asm.js + others       1.2 MB`}</Code>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'When does scripts/copy-pyodide.mjs run?',
+        options: ['Only when you run it by hand', 'Automatically before npm run dev and npm run build', 'When a visitor opens the page', 'Once a day on GitHub'],
+        answer: 1,
+        why: 'npm runs "predev" and "prebuild" scripts automatically before "dev" and "build".',
+      },
+      {
+        q: 'Why are the Python files not committed to Git?',
+        options: ['They are secret', 'They are large and can be rebuilt from node_modules at any time', 'GitHub forbids WebAssembly', 'They change every day'],
+        answer: 1,
+        why: 'package-lock.json pins the version, and the copy step recreates them on every build.',
+      },
+      {
+        q: 'Does visiting the portfolio home page download Python?',
+        options: ['Yes, always', 'No: Python loads only when a Python lesson or the Playground is opened', 'Only on phones', 'Only in dark mode'],
+        answer: 1,
+        why: 'The Python files are fetched by the worker, which starts only when needed.',
+      },
+    ],
+  },
+
 ];
 
 export const lessonById = Object.fromEntries(lessons.map((l) => [l.id, l]));

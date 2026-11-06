@@ -25,7 +25,8 @@ Content lives in `src/data/content.js`; theme colors are CSS variables at the to
 
 `learn.html` hosts interactive courses, each split into modules and lessons with a quiz:
 
-- **Learn the Code**: 18 beginner lessons on how this site was built, with playgrounds, plus a timeline of every change.
+- **Learn the Code**: 22 beginner lessons on how this site was built, including how the Python course runs, is tested
+  and deploys, with playgrounds, plus a timeline of every change.
 - **Python**: 22 lessons from beginner to advanced (6 modules). Examples run in the browser and 24 exercises
   are checked by tests. There is also a free **Playground**.
 
