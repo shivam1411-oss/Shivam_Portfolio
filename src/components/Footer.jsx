@@ -59,6 +59,9 @@ export default function Footer({ onResume }) {
             <span className="absolute left-0 bottom-0 h-[2px] w-full bg-line" />
             <span className="absolute left-0 bottom-0 h-[2px] w-full bg-gradient-to-r from-accent to-accent-2 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
           </button>
+          <a href="learn.html" className="text-xs font-extrabold uppercase tracking-widest text-gradient hover:opacity-80 transition-opacity">
+            Crack the Code → see how this site was built
+          </a>
           <a href="privacy.html" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
             Privacy Policy
           </a>
