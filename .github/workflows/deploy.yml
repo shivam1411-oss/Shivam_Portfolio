@@ -41,7 +41,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
+        # Note: deploy-pages allows at most 10 minutes (its default). If GitHub is slow and it times
+        # out, the live site keeps the previous version; use "Re-run failed jobs" on the run.
         uses: actions/deploy-pages@v5
-        with:
-          # GitHub can queue and sync slowly on busy days; the default 10 minutes has timed out.
-          timeout: 1800000
