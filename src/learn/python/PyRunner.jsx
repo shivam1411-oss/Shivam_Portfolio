@@ -78,6 +78,31 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
   const [trace, setTrace] = useState(null); // a step-through recording, while it is open
   const [stepLine, setStepLine] = useState(null);
   const outRef = useRef(null);
+  const boxRef = useRef(null);
+  const [near, setNear] = useState(() => !('IntersectionObserver' in window));
+
+  // Start downloading Python (about 12 MB the first time) once this code box is close to the screen,
+  // so the first Run is quick without slowing down the initial page load.
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el || !('IntersectionObserver' in window)) return undefined;
+    let timer;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          setNear(true); // load the code editor
+          timer = setTimeout(warmUp, 600);
+        }
+      },
+      { rootMargin: '300px 0px' }
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      clearTimeout(timer);
+    };
+  }, []);
   const isExercise = !!tests?.length;
   const usesInput = stdin !== undefined || /\binput\s*\(/.test(code);
 
@@ -142,7 +167,7 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
   const allPassed = results?.length && results.every((r) => r.passed);
 
   return (
-    <div className={`my-6 rounded-2xl border overflow-hidden shadow-soft ${isExercise ? 'border-accent/40' : 'border-line'} bg-surface`}>
+    <div ref={boxRef} className={`my-6 rounded-2xl border overflow-hidden shadow-soft ${isExercise ? 'border-accent/40' : 'border-line'} bg-surface`}>
       <div className="flex flex-wrap items-center gap-2 px-4 py-2.5 border-b border-line bg-surface-2/60">
         {isExercise ? <FlaskConical size={15} className="text-accent" /> : <Terminal size={15} className="text-accent" />}
         <span className="eyebrow text-accent">{isExercise ? 'Exercise' : 'Run it'}</span>
@@ -158,9 +183,17 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
       </div>
 
       <div onFocus={warmUp}>
-        <Suspense fallback={<pre className="m-0 p-4 bg-[#0d1014] text-[#d6f5f0] font-mono [font-variant-ligatures:none] text-[13px] whitespace-pre-wrap">{code}</pre>}>
-          <Editor value={code} onChange={change} onRun={() => execute(isExercise)} highlightLine={trace ? stepLine : null} />
-        </Suspense>
+        {(() => {
+          const plain = <pre className="m-0 p-4 bg-[#0d1014] text-[#d6f5f0] font-mono [font-variant-ligatures:none] text-[13px] whitespace-pre-wrap">{code}</pre>;
+          // The editor (about 190 KB) loads only when the box is near the screen; until then the code shows as text.
+          return near ? (
+            <Suspense fallback={plain}>
+              <Editor value={code} onChange={change} onRun={() => execute(isExercise)} highlightLine={trace ? stepLine : null} />
+            </Suspense>
+          ) : (
+            plain
+          );
+        })()}
       </div>
 
       {usesInput && (

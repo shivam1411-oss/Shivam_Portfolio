@@ -3,21 +3,14 @@ import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ChevronDown, Circ
 import { Code, btn } from '../ui';
 import PyRunner from '../python/PyRunner';
 import ReactRunner from '../react/LazyReactRunner';
-import { JqlSandbox } from '../jira/widgets';
-import { ClusterLab } from '../k8s/widgets';
 import { LEVELS } from './util';
-import { pythonKb } from './python';
-import { pandasKb } from './pandas';
-import { sqlKb } from './sql';
-import { vizKb } from './viz';
-import { siteKb } from './site';
-import { reactKb } from './react';
-import { jiraKb } from './jira';
-import { k8sKb } from './k8s';
+import { kbLoaders } from './data';
+import { kbCatalog } from '../catalog';
 
 const Editor = lazy(() => import('../python/Editor'));
-
-export const knowledgeBases = { site: siteKb, python: pythonKb, pandas: pandasKb, sql: sqlKb, viz: vizKb, react: reactKb, jira: jiraKb, k8s: k8sKb };
+// The Jira and Kubernetes playgrounds load only when a topic that uses them is opened.
+const JqlSandbox = lazy(() => import('../jira/widgets').then((m) => ({ default: m.JqlSandbox })));
+const ClusterLab = lazy(() => import('../k8s/widgets').then((m) => ({ default: m.ClusterLab })));
 
 // ---------------------------------------------------------------- progress ("I understand this")
 
@@ -112,12 +105,22 @@ function Example({ topic, courseId }) {
   if (run && lang === 'python') return <PyRunner code={code} title="Try it" storageKey={`kb-code:${courseId}/${topic.id}`} />;
   if (run && lang === 'jsx') return <ReactRunner code={code} title="Try it" storageKey={`kb-code:${courseId}/${topic.id}`} />;
   if (run && lang === 'html') return <HtmlRunner code={code} />;
-  if (run && lang === 'jql') return <JqlSandbox initial={code} />;
+  const loading = <div className="my-4 p-6 rounded-2xl border border-line bg-surface text-sm text-muted">Loading the playground…</div>;
+  if (run && lang === 'jql')
+    return (
+      <Suspense fallback={loading}>
+        <JqlSandbox initial={code} />
+      </Suspense>
+    );
   if (run && lang === 'yaml')
-    return topic.setup ? (
+    return (
+      <Suspense fallback={loading}>
+        {topic.setup ? (
       <ClusterLab title="Practice cluster" setup={code} suggestions={topic.suggestions || []} hint="This cluster already runs the YAML shown in the lesson. Type a command or click a suggestion." />
     ) : (
       <ClusterLab title="Practice cluster" yaml={code} suggestions={topic.suggestions || []} hint="Edit the manifest, then run kubectl apply -f manifest.yaml." />
+        )}
+      </Suspense>
     );
   return <Code file={LANG_LABEL[lang] || 'Example'} note={note}>{code}</Code>;
 }
@@ -242,10 +245,10 @@ function KbHub({ courses, icons, understood }) {
       </section>
       <div className="mt-10 grid gap-5 md:grid-cols-2">
         {courses.map((c) => {
-          const kb = knowledgeBases[c.id];
+          const kb = kbCatalog[c.id];
           if (!kb) return null;
           const Icon = icons[c.icon] || BookOpen;
-          const done = kb.topics.filter((t) => understood[`${c.id}/${t.id}`]).length;
+          const done = kb.topics.filter((id) => understood[`${c.id}/${id}`]).length;
           return (
             <a key={c.id} href={`#/kb/${c.id}`} className="group p-6 rounded-[1.75rem] bg-surface border border-line hover:border-accent/50 shadow-soft transition-colors">
               <div className="flex items-center gap-3">
@@ -278,7 +281,38 @@ function KbHub({ courses, icons, understood }) {
 }
 
 function KbCourse({ course, topicId, understood, toggleUnderstood }) {
-  const kb = knowledgeBases[course.id];
+  const [kb, setKb] = useState(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let live = true;
+    kbLoaders[course.id]().then(
+      (data) => live && setKb(data),
+      () => live && setFailed(true)
+    );
+    return () => {
+      live = false;
+    };
+  }, [course.id]);
+  if (failed)
+    return (
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+        <p className="text-muted">The knowledge base could not be downloaded. Check your connection, or the site may have just been updated.</p>
+        <button type="button" className={`${btn} mt-4`} onClick={() => window.location.reload()}>
+          <RotateCcw size={15} /> Reload
+        </button>
+      </div>
+    );
+  if (!kb)
+    return (
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-16" aria-busy="true">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-fg">{course.title}</h1>
+        <p className="mt-4 text-muted">Loading the knowledge base…</p>
+      </div>
+    );
+  return <KbTopics course={course} kb={kb} topicId={topicId} understood={understood} toggleUnderstood={toggleUnderstood} />;
+}
+
+function KbTopics({ course, kb, topicId, understood, toggleUnderstood }) {
   const [level, setLevel] = useState(() => kb.topics.find((t) => t.id === topicId)?.level || 'all');
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(() => new Set(topicId ? [topicId] : []));
@@ -391,6 +425,6 @@ function KbCourse({ course, topicId, understood, toggleUnderstood }) {
 /** #/kb lists every course's knowledge base; #/kb/<course>[/<topic>] shows one. */
 export default function KnowledgeBase({ course, topicId, courses, icons }) {
   const [understood, toggle] = useUnderstood();
-  if (course && knowledgeBases[course.id]) return <KbCourse key={course.id} course={course} topicId={topicId} understood={understood} toggleUnderstood={toggle} />;
+  if (course && kbLoaders[course.id]) return <KbCourse key={course.id} course={course} topicId={topicId} understood={understood} toggleUnderstood={toggle} />;
   return <KbHub courses={courses} icons={icons} understood={understood} />;
 }

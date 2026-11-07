@@ -4,9 +4,9 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/copy-pyodide.mjs",
+    "predev": "node scripts/copy-pyodide.mjs && node scripts/gen-learn-catalog.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/copy-pyodide.mjs",
+    "prebuild": "node scripts/copy-pyodide.mjs && node scripts/gen-learn-catalog.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "apk": "node scripts/bump-android-version.mjs && npm run build && cap sync android && node scripts/remove-icloud-duplicates.mjs android/app/src && cd android && JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew assembleDebug && mkdir -p ../apk && cp ~/Library/Caches/ShivamPortfolioAndroid/app/outputs/apk/debug/app-debug.apk ../apk/Shivam-Soni-Portfolio.apk"
