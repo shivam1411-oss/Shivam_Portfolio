@@ -1,5 +1,6 @@
 import { B, Callout, F, H, P, Term } from '../ui';
 import PyRunner from '../python/PyRunner';
+import { useState } from 'react';
 import { py } from '../python/lessons-beginner';
 
 // "Data Analysis with pandas": NumPy foundations, then the pandas skills analyst roles ask for most
@@ -7,6 +8,7 @@ import { py } from '../python/lessons-beginner';
 // collections dataset in data/ (see python/datasets.js).
 
 const modules = [
+  { id: 'pd-start', title: 'Start here', level: 'Beginner', blurb: 'Everything you already do in Excel, translated into pandas.' },
   { id: 'numpy', title: 'NumPy foundations', level: 'Intermediate', blurb: 'Fast maths on whole arrays at once: the engine underneath pandas.' },
   { id: 'frames', title: 'DataFrames', level: 'Intermediate', blurb: 'Series and DataFrames, reading a CSV, and getting to know a dataset.' },
   { id: 'select', title: 'Selecting and sorting', level: 'Intermediate', blurb: 'Columns, rows, filters, loc and iloc, sorting and ranking.' },
@@ -24,7 +26,182 @@ const DATA_NOTE = (
   </Callout>
 );
 
+// Everyday Excel actions and their pandas equivalents, each runnable on the sample data.
+const EXCEL_TASKS = [
+  { id: 'open', label: 'Open a file', excel: 'File → Open accounts.csv, then scroll to look at it.', code: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")   # open the file
+print(acc.head())                         # look at the first 5 rows
+print(acc.shape, "rows and columns")
+` },
+  { id: 'filter', label: 'Filter', excel: 'Data → Filter, then tick only rows where DPD is greater than 60.', code: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")
+late = acc[acc["dpd"] > 60]          # keep rows where the condition is True
+print(late[["account_id", "city", "dpd"]])
+` },
+  { id: 'sort', label: 'Sort', excel: 'Data → Sort by Balance, largest to smallest.', code: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")
+print(acc.sort_values("balance", ascending=False)[["account_id", "balance"]].head())
+` },
+  { id: 'formula', label: 'Formula column', excel: 'Type =G2/F2 in a new column and drag it down to every row.', code: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")
+acc["utilisation"] = acc["balance"] / acc["credit_limit"]   # one line fills every row
+print(acc[["account_id", "balance", "credit_limit", "utilisation"]].round(2).head())
+` },
+  { id: 'sumif', label: 'SUMIF / COUNTIF', excel: '=SUMIF(D:D, "Card", G:G) for each product, and COUNTIF for the count.', code: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")
+print(acc.groupby("product")["balance"].sum())     # SUMIF for every product at once
+print(acc["product"].value_counts())               # COUNTIF
+` },
+  { id: 'vlookup', label: 'VLOOKUP', excel: '=VLOOKUP(B2, Accounts!A:I, 9, FALSE) to bring each payment\'s agent across.', code: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")
+pay = pd.read_csv("data/payments.csv")
+pay = pay.merge(acc[["account_id", "agent"]], on="account_id", how="left")   # look up agent
+print(pay[["payment_id", "account_id", "amount", "agent"]].head())
+` },
+  { id: 'pivot', label: 'Pivot table', excel: 'Insert → PivotTable: City in Rows, Product in Columns, Sum of Balance in Values.', code: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")
+print(acc.pivot_table(index="city", columns="product", values="balance", aggfunc="sum", fill_value=0))
+` },
+  { id: 'dupes', label: 'Remove duplicates', excel: 'Data → Remove Duplicates on the Account ID column.', code: py`
+import pandas as pd
+
+raw = pd.read_csv("data/accounts_raw.csv")
+print(len(raw), "rows before")
+clean = raw.drop_duplicates(subset="account_id")
+print(len(clean), "rows after")
+` },
+];
+
+function ExcelTranslator() {
+  const [task, setTask] = useState(EXCEL_TASKS[1]);
+  return (
+    <div className="my-6">
+      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Excel tasks">
+        {EXCEL_TASKS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={t.id === task.id}
+            onClick={() => setTask(t)}
+            className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${
+              t.id === task.id ? 'bg-accent text-bg border-accent' : 'bg-surface border-line text-muted hover:text-fg'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+      <div className="mt-4 p-4 rounded-2xl bg-[#107c41]/10 border border-[#107c41]/30 text-sm">
+        <span className="font-extrabold text-[#107c41] dark:text-[#4ade80]">In Excel: </span>
+        <span className="text-fg">{task.excel}</span>
+      </div>
+      <PyRunner key={task.id} code={task.code} title={`In pandas: ${task.label}`} />
+    </div>
+  );
+}
+
 const lessons = [
+  // ---------------------------------------------------------------- Start here
+  {
+    id: 'pd-excel',
+    module: 'pd-start',
+    title: 'From Excel to pandas',
+    minutes: 12,
+    goals: ['See how everyday Excel actions map to pandas', 'Run your first pandas commands on real-looking data', 'Know what pandas adds: repeatable, bigger, faster'],
+    body: () => (
+      <>
+        <P>
+          If you use Excel, you already know most of what pandas does. A <Term id="dataframe">DataFrame</Term> is a sheet, a column is a <Term id="series">Series</Term>, and
+          each click you make in Excel (filter, sort, SUMIF, VLOOKUP, pivot table) becomes one line of code. The difference: the code remembers every step, so next month's
+          report is one click instead of an afternoon.
+        </P>
+        {DATA_NOTE}
+        <H>Pick something you do in Excel</H>
+        <ExcelTranslator />
+        <H>Why bother, if Excel works?</H>
+        <ul className="my-4 pl-5 list-disc text-muted space-y-1.5 marker:text-accent">
+          <li>
+            <B>Repeatable:</B> the same steps run identically every month, with no copy-paste slips.
+          </li>
+          <li>
+            <B>Bigger:</B> pandas handles millions of rows that would freeze a spreadsheet.
+          </li>
+          <li>
+            <B>Traceable:</B> anyone can read exactly how a number was calculated.
+          </li>
+        </ul>
+        <Callout title="How to use this course">
+          Run every example, change a number or a column name, and run it again. Use <B>Step through</B> to watch what each line does. You cannot break anything.
+        </Callout>
+      </>
+    ),
+    exercises: [
+      {
+        id: 'pd-first-report',
+        title: 'Your first pandas report',
+        prompt:
+          'Do three Excel jobs in pandas: (1) Filter: set overdue to the accounts with dpd over 30. (2) Sort: sort overdue by balance, largest first. (3) SUMIF: set by_product to the total balance of overdue accounts per product.',
+        starter: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")
+
+overdue = None      # 1. filter dpd > 30, then 2. sort by balance (largest first)
+by_product = None   # 3. total balance per product (of the overdue accounts)
+
+print(overdue)
+print(by_product)
+`,
+        tests: [
+          { name: 'overdue has only accounts over 30 DPD', code: py`
+import pandas as pd
+assert isinstance(overdue, pd.DataFrame), f"overdue is {type(overdue).__name__}"
+n = int((pd.read_csv("data/accounts.csv")["dpd"] > 30).sum())
+assert (overdue["dpd"] > 30).all() and len(overdue) == n, f"{len(overdue)} rows; expected {n} with dpd > 30"
+` },
+          { name: 'overdue is sorted by balance, largest first', code: py`assert overdue["balance"].is_monotonic_decreasing, "sort with sort_values('balance', ascending=False)"` },
+          { name: 'by_product totals the overdue balances', code: py`
+import pandas as pd
+a = pd.read_csv("data/accounts.csv")
+ref = a[a["dpd"] > 30].groupby("product")["balance"].sum()
+assert by_product.sort_index().tolist() == ref.tolist(), f"got {by_product.to_dict()}"
+` },
+        ],
+        hint: 'overdue = acc[acc["dpd"] > 30].sort_values("balance", ascending=False); by_product = overdue.groupby("product")["balance"].sum()',
+        solution: py`
+import pandas as pd
+
+acc = pd.read_csv("data/accounts.csv")
+
+overdue = acc[acc["dpd"] > 30].sort_values("balance", ascending=False)
+by_product = overdue.groupby("product")["balance"].sum()
+
+print(overdue)
+print(by_product)
+`,
+      },
+    ],
+    quiz: [
+      { q: 'Which pandas tool does the job of SUMIF?', options: ['sort_values', 'groupby(...).sum()', 'merge', 'read_csv'], answer: 1, why: 'groupby splits rows by a column and sums each group, like SUMIF for every category at once.' },
+      { q: 'Which pandas tool replaces VLOOKUP?', options: ['merge', 'pivot_table', 'fillna', 'head'], answer: 0, why: 'merge brings in columns from another table by matching a key, like VLOOKUP but for whole rows.' },
+    ],
+  },
+
   // ---------------------------------------------------------------- NumPy
   {
     id: 'np-arrays',

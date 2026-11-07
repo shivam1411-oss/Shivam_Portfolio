@@ -102,7 +102,7 @@ export function Callout({ tone = 'tip', title, children }) {
   const warn = tone === 'warn';
   const Icon = warn ? TriangleAlert : Lightbulb;
   return (
-    <div className={`my-5 flex gap-3 p-4 rounded-2xl border ${warn ? 'bg-amber-400/10 border-amber-400/30' : 'bg-accent/10 border-accent/25'}`}>
+    <div className={`my-5 flex gap-3 p-4 rounded-2xl border ${warn ? 'bg-[color-mix(in_oklab,#f59e0b_10%,var(--surface))] border-amber-400/30' : 'bg-[color-mix(in_oklab,var(--accent)_10%,var(--surface))] border-accent/25'}`}>
       <Icon size={18} className={`shrink-0 mt-0.5 ${warn ? 'text-amber-500' : 'text-accent'}`} />
       <div className="text-sm leading-relaxed text-fg">
         {title && <div className="font-extrabold mb-1">{title}</div>}

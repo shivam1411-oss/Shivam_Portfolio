@@ -1,9 +1,9 @@
 // Runs Python (Pyodide) off the main thread, so a slow or endless program never freezes the page.
 import { datasets } from './datasets';
 
-// Messages in:  { type: 'init', indexURL }  ·  { type: 'run', id, code, stdin, tests }
+// Messages in:  { type: 'init', indexURL }  ·  { type: 'run', id, code, stdin, tests, trace? }
 // Messages out: { type: 'ready' | 'init-error' }  ·  { id, type: 'loading', packages }  ·  { id, type: 'start' }
-//               { id, type: 'out' | 'err', text }  ·  { id, type: 'done', error, results, images, ms }
+//               { id, type: 'out' | 'err', text }  ·  { id, type: 'done', error, results, images, steps?, ms }
 
 // Helpers run inside Python: they compile the learner's code under a friendly file name, keep each
 // run in a fresh namespace, echo input() like a terminal does, and turn errors into plain data.
@@ -70,6 +70,70 @@ def _figures():
     plt.close("all")
     return images
 
+class _TooManySteps(Exception):
+    pass
+
+def _show(value):
+    """A short, readable description of a value for the step-through view."""
+    kind = type(value).__name__
+    if kind == "DataFrame":
+        return f"DataFrame {value.shape[0]} rows × {value.shape[1]} columns", kind
+    if kind in ("Series", "ndarray"):
+        text = repr(value.tolist() if hasattr(value, "tolist") else value)
+        return (text if len(text) <= 70 else text[:67] + "…"), kind
+    text = repr(value)
+    return (text if len(text) <= 70 else text[:67] + "…"), kind
+
+def _variables(names):
+    """Name, short value and type of each variable worth showing to a learner."""
+    out = []
+    for name, value in list(names.items()):
+        if name.startswith("_") or name in ("OUTPUT", "SOURCE") or type(value).__name__ == "module":
+            continue
+        if isinstance(value, type):
+            out.append([name, f"class {value.__name__}", "class"])
+        elif callable(value):
+            out.append([name, f"function {getattr(value, '__name__', name)}()", "function"])
+        else:
+            out.append([name, *_show(value)])
+    return out
+
+def _trace(code, ns, limit=300):
+    """Run code one line at a time, recording the line, the variables and the output so far."""
+    import contextlib
+    steps = []
+    printed = io.StringIO()
+
+    def tracer(frame, event, arg):
+        if frame.f_code.co_filename != FILENAME:
+            return None  # never step inside Python or library code
+        if event in ("line", "return"):
+            step = {"line": frame.f_lineno, "event": event, "scope": frame.f_code.co_name,
+                    "vars": _variables(frame.f_locals), "out": printed.getvalue()}
+            if event == "return" and frame.f_code.co_name != "<module>":
+                step["returned"] = _show(arg)[0]
+            steps.append(step)
+            if len(steps) >= limit:
+                raise _TooManySteps()
+        return tracer
+
+    error = None
+    truncated = False
+    try:
+        compiled = compile(code, FILENAME, "exec")
+        with contextlib.redirect_stdout(printed):
+            sys.settrace(tracer)
+            try:
+                exec(compiled, ns)
+            finally:
+                sys.settrace(None)
+    except _TooManySteps:
+        truncated = True
+    except BaseException as e:
+        error = _error(e)
+    steps.append({"line": None, "event": "end", "scope": "<module>", "vars": _variables(ns), "out": printed.getvalue()})
+    return {"steps": steps, "error": error, "truncated": truncated}
+
 def _check(code, ns):
     try:
         exec(compile(code, "<test>", "exec"), ns)
@@ -93,6 +157,7 @@ async function init(indexURL) {
   pyodide = await loadPyodide({ indexURL });
   await pyodide.runPythonAsync(HELPERS);
   py = {
+    trace: pyodide.globals.get('_trace'),
     dict: pyodide.globals.get('dict'),
     exec: pyodide.globals.get('_exec'),
     check: pyodide.globals.get('_check'),
@@ -132,7 +197,7 @@ async function loadPackagesFor(id, sources) {
   py.setup(pyodide.toPy(list));
 }
 
-async function run({ id, code, stdin = '', tests = [] }) {
+async function run({ id, code, stdin = '', tests = [], trace = false }) {
   await loadPackagesFor(id, [code, ...tests.map((t) => t.code)]);
   // Fresh copies of the sample data every run, even if earlier code changed or deleted them.
   pyodide.FS.mkdirTree('data');
@@ -153,6 +218,13 @@ async function run({ id, code, stdin = '', tests = [] }) {
   py.newRun();
   const ns = py.dict();
   ns.set('__name__', '__main__');
+  if (trace) {
+    const traced = toJs(py.trace(code, ns));
+    ns.destroy();
+    py.figures().destroy(); // charts are not shown while stepping
+    postMessage({ id, type: 'done', error: traced.error, steps: traced.steps, truncated: traced.truncated, ms: Math.round(performance.now() - started) });
+    return;
+  }
   const error = toJs(py.exec(code, ns));
 
   let results = null;

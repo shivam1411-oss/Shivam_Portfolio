@@ -31,7 +31,8 @@ import CodeTrail from '../components/CodeTrail';
 import CursorReveal from '../components/CursorReveal';
 import ThemeToggle from '../components/ThemeToggle';
 import { ease } from '../components/motion';
-import { courseById, courses, lessonHash, lessonKey } from './courses';
+import { courseById, courses, learningPath, lessonHash, lessonKey } from './courses';
+import { BigIdea, Mistakes, Questions, Recap, WordsToKnow } from './LessonGuide';
 import { glossary } from './glossary';
 import Landing from './Landing';
 import PyRunner from './python/PyRunner';
@@ -276,7 +277,33 @@ function Hub({ progress }) {
         </motion.div>
       </section>
 
-      <section aria-label="Courses" className="mt-12 grid gap-6 md:grid-cols-2">
+      <section aria-label="Recommended path" className="mt-10 p-5 md:p-6 rounded-[1.75rem] bg-surface border border-line shadow-soft">
+        <div className="eyebrow text-accent">New here? Follow this path</div>
+        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {learningPath.map(({ course: id, why }, i) => {
+            const c = courseById[id];
+            const st = courseStats(c, progress);
+            return (
+              <li key={id}>
+                <a href={`#/c/${id}`} className="group block h-full p-4 rounded-2xl border border-line hover:border-accent/50 transition-colors">
+                  <span className="flex items-center gap-2">
+                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold ${st.done === st.total ? 'bg-accent text-bg' : 'bg-accent/15 text-accent'}`}>
+                      {st.done === st.total ? <Check size={14} /> : i + 1}
+                    </span>
+                    <span className="font-extrabold text-fg group-hover:text-accent">{c.title}</span>
+                  </span>
+                  <span className="mt-2 block text-xs text-muted leading-relaxed">{why}</span>
+                  <span className="mt-2 block text-[11px] font-bold text-subtle">
+                    {st.done}/{st.total} lessons
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+
+      <section aria-label="Courses" className="mt-6 grid gap-6 md:grid-cols-2">
         {courses.map((c, i) => (
           <CourseCard key={c.id} course={c} progress={progress} index={i} />
         ))}
@@ -322,6 +349,29 @@ function CourseHome({ course, progress, resetCourse }) {
           <p className="mt-3 text-xl font-semibold text-gradient inline-block">{course.tagline}</p>
           <p className="mt-4 text-lg text-muted max-w-2xl leading-relaxed">{course.blurb}</p>
         </motion.div>
+
+        {course.audience && (
+          <div className="mt-8 grid md:grid-cols-3 gap-3 max-w-5xl">
+            <div className="p-4 rounded-2xl bg-surface border border-line">
+              <div className="eyebrow text-subtle mb-1">Who it is for</div>
+              <p className="text-sm text-fg leading-relaxed">{course.audience}</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-surface border border-line">
+              <div className="eyebrow text-subtle mb-1">You will need</div>
+              <p className="text-sm text-fg leading-relaxed">{course.needs}</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-surface border border-line">
+              <div className="eyebrow text-subtle mb-1">You will be able to</div>
+              <ul className="space-y-1">
+                {course.outcomes.map((o) => (
+                  <li key={o} className="flex gap-2 text-sm text-fg leading-snug">
+                    <Check size={14} className="text-accent shrink-0 mt-0.5" /> {o}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -593,6 +643,7 @@ function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz })
   const done = !!progress.done[key];
   const [navOpen, setNavOpen] = useState(false);
   const Body = lesson.body;
+  const { guide } = lesson;
   const quiz = lesson.quiz || [];
   const exercises = lesson.exercises || [];
 
@@ -689,15 +740,23 @@ function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz })
             </ul>
           </div>
 
+          {guide?.idea && <BigIdea text={guide.idea} />}
+          {guide?.terms?.length > 0 && <WordsToKnow ids={guide.terms} />}
+
           <div className="mt-6">
             <Body />
           </div>
+
+          {guide?.mistakes?.length > 0 && <Mistakes items={guide.mistakes} />}
+          {guide?.faq?.length > 0 && <Questions items={guide.faq} />}
 
           {exercises.length > 0 && <Practice course={course} lesson={lesson} progress={progress} solve={solve} />}
 
           {quiz.length > 0 && (
             <Quiz key={key} quiz={quiz} answers={progress.answers[key]} onAnswer={(qi, oi) => answer(key, qi, oi)} onReset={() => resetQuiz(key)} />
           )}
+
+          {guide?.recap?.length > 0 && <Recap items={guide.recap} />}
 
           <AnimatePresence>
             {complete && (

@@ -72,9 +72,10 @@ export function stop(reason = 'stopped') {
 
 /**
  * Run `code`. `onOut(kind, text)` receives each printed line as it happens ('out' or 'err').
+ * With `trace`, the program runs line by line and resolves with { error, steps, truncated } instead.
  * Resolves with { error, results, images, ms }. Runs are queued so only one program runs at a time.
  */
-export function run(code, { stdin = '', tests = [], onOut = () => {} } = {}) {
+export function run(code, { stdin = '', tests = [], onOut = () => {}, trace = false } = {}) {
   const job = queue.then(
     () =>
       new Promise((resolve) => {
@@ -86,7 +87,7 @@ export function run(code, { stdin = '', tests = [], onOut = () => {} } = {}) {
           if (current?.id === id && !current.timer) current.timer = setTimeout(() => stop('timeout'), TIME_LIMIT_MS);
         };
         current = { id, onOut, resolve, timer: null, arm };
-        worker.postMessage({ type: 'run', id, code, stdin, tests });
+        worker.postMessage({ type: 'run', id, code, stdin, tests, trace });
       })
   );
   queue = job.catch(() => {});
