@@ -1,9 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import {
   ArrowLeft,
   ArrowRight,
+  Atom,
+  BookMarked,
   BookOpen,
+  Boxes,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -22,6 +25,7 @@ import {
   RotateCcw,
   Search,
   Sparkles,
+  SquareKanban,
   SquareTerminal,
   Table2,
   Target,
@@ -31,16 +35,19 @@ import CodeTrail from '../components/CodeTrail';
 import CursorReveal from '../components/CursorReveal';
 import ThemeToggle from '../components/ThemeToggle';
 import { ease } from '../components/motion';
-import { courseById, courses, learningPath, lessonHash, lessonKey } from './courses';
+import { courseById, courses, learningPaths, lessonHash, lessonKey } from './courses';
 import { BigIdea, Mistakes, Questions, Recap, WordsToKnow } from './LessonGuide';
 import { glossary } from './glossary';
 import Landing from './Landing';
 import PyRunner from './python/PyRunner';
+import ReactRunner from './react/LazyReactRunner';
 import { warmUp } from './python/runtime';
 import { timeline } from './timeline';
 import { btn, btnPrimary } from './ui';
 
-const courseIcons = { site: Code2, python: SquareTerminal, pandas: Table2, sql: Database, viz: ChartColumn };
+const KnowledgeBase = lazy(() => import('./kb/KnowledgeBase'));
+
+const courseIcons = { site: Code2, python: SquareTerminal, pandas: Table2, sql: Database, viz: ChartColumn, react: Atom, jira: SquareKanban, k8s: Boxes };
 const allLessons = courses.flatMap((c) => c.lessons.map((l) => ({ course: c, lesson: l })));
 
 // ---------------------------------------------------------------- routing and progress
@@ -58,6 +65,7 @@ const parseHash = () => {
     if (lesson) return { view: 'lesson', course: courseById.site, lesson };
   }
   if (view === 'timeline' || view === 'glossary' || view === 'playground') return { view };
+  if (view === 'kb') return { view: 'kb', course: courseById[a] || null, topic: courseById[a] ? b : null };
   if (view === 'courses') return { view: 'hub' };
   return { view: 'landing' };
 };
@@ -167,12 +175,13 @@ function Header({ route, progress }) {
   const done = allLessons.filter(({ course, lesson }) => progress.done[lessonKey(course, lesson)]).length;
   const links = [
     { hash: '#/courses', label: 'Courses', Icon: LibraryBig, active: ['hub', 'course', 'lesson', 'timeline'].includes(route.view) },
+    { hash: '#/kb', label: 'Knowledge', Icon: BookMarked, active: route.view === 'kb' },
     { hash: '#/playground', label: 'Playground', Icon: SquareTerminal, active: route.view === 'playground' },
     { hash: '#/glossary', label: 'Glossary', Icon: ListTree, active: route.view === 'glossary' },
   ];
   return (
     <header className="sticky top-0 z-30 glass border-b border-line">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center gap-2 sm:gap-3">
         <a href="#/" className="flex items-center gap-2.5 shrink-0">
           <span className="w-9 h-9 rounded-xl bg-fg text-bg flex items-center justify-center">
             <GraduationCap size={18} />
@@ -182,12 +191,12 @@ function Header({ route, progress }) {
             <span className="block text-[11px] text-subtle font-semibold">Interactive courses</span>
           </span>
         </a>
-        <nav className="flex-1 flex justify-center gap-1">
+        <nav className="flex-1 min-w-0 flex justify-center gap-0.5 sm:gap-1">
           {links.map(({ hash, label, Icon, active }) => (
             <a
               key={hash}
               href={hash}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-colors ${active ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg'}`}
+              className={`flex items-center gap-1.5 px-1.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-colors ${active ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg'}`}
             >
               <Icon size={15} className="hidden sm:block" />
               {label}
@@ -262,7 +271,7 @@ function Hub({ progress }) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
       <section className="relative">
-        <div className="glow-accent absolute -top-24 -left-24 w-[36rem] h-[36rem] opacity-70 -z-10" />
+        <div className="glow-accent absolute -top-24 -left-24 w-[min(36rem,100vw)] h-[min(36rem,100vw)] opacity-70 -z-10" />
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
           <Eyebrow>
             Learning Lab · {courses.length} courses · {allLessons.length} lessons
@@ -277,31 +286,37 @@ function Hub({ progress }) {
         </motion.div>
       </section>
 
-      <section aria-label="Recommended path" className="mt-10 p-5 md:p-6 rounded-[1.75rem] bg-surface border border-line shadow-soft">
-        <div className="eyebrow text-accent">New here? Follow this path</div>
-        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {learningPath.map(({ course: id, why }, i) => {
-            const c = courseById[id];
-            const st = courseStats(c, progress);
-            return (
-              <li key={id}>
-                <a href={`#/c/${id}`} className="group block h-full p-4 rounded-2xl border border-line hover:border-accent/50 transition-colors">
-                  <span className="flex items-center gap-2">
-                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold ${st.done === st.total ? 'bg-accent text-bg' : 'bg-accent/15 text-accent'}`}>
-                      {st.done === st.total ? <Check size={14} /> : i + 1}
+      {learningPaths.map((path, pi) => (
+        <section key={path.id} aria-label={`Recommended path: ${path.title}`} className={`${pi === 0 ? 'mt-10' : 'mt-6'} p-5 md:p-6 rounded-[1.75rem] bg-surface border border-line shadow-soft`}>
+          <div className="eyebrow text-accent">{path.id === 'data' ? 'New here? Follow this path' : path.title}</div>
+          <p className="mt-1 text-sm text-muted">
+            {path.id === 'data' ? `${path.title}: ` : ''}
+            {path.blurb}
+          </p>
+          <ol className={`mt-4 grid gap-3 sm:grid-cols-2 ${path.steps.length >= 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-3'}`}>
+            {path.steps.map(({ course: id, why }, i) => {
+              const c = courseById[id];
+              const st = courseStats(c, progress);
+              return (
+                <li key={id}>
+                  <a href={`#/c/${id}`} className="group block h-full p-4 rounded-2xl border border-line hover:border-accent/50 transition-colors">
+                    <span className="flex items-center gap-2">
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold ${st.done === st.total ? 'bg-accent text-bg' : 'bg-accent/15 text-accent'}`}>
+                        {st.done === st.total ? <Check size={14} /> : i + 1}
+                      </span>
+                      <span className="font-extrabold text-fg group-hover:text-accent">{c.title}</span>
                     </span>
-                    <span className="font-extrabold text-fg group-hover:text-accent">{c.title}</span>
-                  </span>
-                  <span className="mt-2 block text-xs text-muted leading-relaxed">{why}</span>
-                  <span className="mt-2 block text-[11px] font-bold text-subtle">
-                    {st.done}/{st.total} lessons
-                  </span>
-                </a>
-              </li>
-            );
-          })}
-        </ol>
-      </section>
+                    <span className="mt-2 block text-xs text-muted leading-relaxed">{why}</span>
+                    <span className="mt-2 block text-[11px] font-bold text-subtle">
+                      {st.done}/{st.total} lessons
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))}
 
       <section aria-label="Courses" className="mt-6 grid gap-6 md:grid-cols-2">
         {courses.map((c, i) => (
@@ -309,7 +324,12 @@ function Hub({ progress }) {
         ))}
       </section>
 
-      <section aria-label="Tools and reference" className="mt-6 grid gap-6 md:grid-cols-3">
+      <section aria-label="Tools and reference" className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <a href="#/kb" className="p-6 rounded-[1.75rem] border border-accent/40 bg-accent/5 hover:border-accent transition-colors">
+          <BookMarked className="text-accent" size={22} />
+          <div className="mt-3 font-extrabold text-fg">Knowledge base</div>
+          <p className="mt-1 text-sm text-muted">Every course from beginner to expert, with runnable examples and real-world uses beyond collections.</p>
+        </a>
         <a href="#/playground" className="p-6 rounded-[1.75rem] border border-line hover:border-accent/40 transition-colors">
           <SquareTerminal className="text-accent" size={22} />
           <div className="mt-3 font-extrabold text-fg">Python playground</div>
@@ -340,7 +360,7 @@ function CourseHome({ course, progress, resetCourse }) {
         <ArrowLeft size={15} /> All courses
       </a>
       <section className="relative mt-6">
-        <div className="glow-accent absolute -top-24 -left-24 w-[36rem] h-[36rem] opacity-70 -z-10" />
+        <div className="glow-accent absolute -top-24 -left-24 w-[min(36rem,100vw)] h-[min(36rem,100vw)] opacity-70 -z-10" />
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
           <Eyebrow>
             {course.levels} · {s.total} lessons · {roundMinutes(s.minutes)}
@@ -400,6 +420,19 @@ function CourseHome({ course, progress, resetCourse }) {
             )}
           </div>
         </motion.div>
+        <a
+          href={`#/kb/${course.id}`}
+          className="mt-3 flex items-center gap-4 p-5 rounded-2xl border border-accent/40 bg-surface hover:border-accent shadow-soft max-w-2xl transition-colors group"
+        >
+          <span className="w-11 h-11 rounded-2xl bg-accent/15 text-accent flex items-center justify-center shrink-0">
+            <BookMarked size={20} />
+          </span>
+          <span className="flex-1">
+            <span className="block font-extrabold text-fg group-hover:text-accent">{course.title} knowledge base</span>
+            <span className="block text-sm text-muted">Beginner → Intermediate → Advanced → Expert. Look anything up, run the examples, check yourself.</span>
+          </span>
+          <ArrowRight size={18} className="text-subtle group-hover:text-accent shrink-0" />
+        </a>
       </section>
 
       <section className="mt-16 grid gap-6 md:grid-cols-2">
@@ -556,6 +589,29 @@ function Quiz({ quiz, answers = {}, onAnswer, onReset }) {
   );
 }
 
+// Each exercise names its kind of runner; Python is the default.
+const RUNNERS = { python: PyRunner, react: ReactRunner };
+
+function ExerciseRunner({ ex, exKey, passed, onPass }) {
+  if (ex.kind && ex.kind !== 'python' && ex.kind !== 'react') {
+    const Custom = ex.component; // JQL, Kubernetes…: the exercise brings its own interactive checker
+    return <Custom ex={ex} storageKey={`ex:${exKey}`} passed={passed} onPass={onPass} />;
+  }
+  const Runner = RUNNERS[ex.kind || 'python'];
+  return (
+    <Runner
+      code={ex.starter}
+      tests={ex.tests}
+      stdin={ex.stdin}
+      hint={ex.hint}
+      solution={ex.solution}
+      storageKey={`${ex.kind === 'react' ? 'react' : 'py'}-code:${exKey}`}
+      passed={passed}
+      onPass={onPass}
+    />
+  );
+}
+
 function Practice({ course, lesson, progress, solve }) {
   const key = lessonKey(course, lesson);
   const solvedCount = lesson.exercises.filter((e) => progress.solved[`${key}/${e.id}`]).length;
@@ -581,16 +637,7 @@ function Practice({ course, lesson, progress, solve }) {
               {i + 1}. {ex.title}
             </div>
             <p className="mt-1 text-sm text-muted leading-relaxed">{ex.prompt}</p>
-            <PyRunner
-              code={ex.starter}
-              tests={ex.tests}
-              stdin={ex.stdin}
-              hint={ex.hint}
-              solution={ex.solution}
-              storageKey={`py-code:${exKey}`}
-              passed={!!progress.solved[exKey]}
-              onPass={() => solve(exKey)}
-            />
+            <ExerciseRunner ex={ex} exKey={exKey} passed={!!progress.solved[exKey]} onPass={() => solve(exKey)} />
           </div>
         );
       })}
@@ -966,6 +1013,11 @@ export default function LearnApp() {
           {route.view === 'playground' && <Playground />}
           {route.view === 'timeline' && <Timeline />}
           {route.view === 'glossary' && <Glossary />}
+          {route.view === 'kb' && (
+            <Suspense fallback={<div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-muted">Loading the knowledge base…</div>}>
+              <KnowledgeBase key={route.course?.id || 'hub'} course={route.course} topicId={route.topic} courses={courses} icons={courseIcons} />
+            </Suspense>
+          )}
         </main>
         <footer className="border-t border-line mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center justify-between gap-3 text-xs text-subtle">

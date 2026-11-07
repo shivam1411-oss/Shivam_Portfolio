@@ -3,9 +3,13 @@ import { pandasCourse } from './data/pandas';
 import { sqlCourse } from './data/sql';
 import { vizCourse } from './data/viz';
 import { pythonCourse } from './python/course';
+import { reactCourse } from './react/course';
+import { jiraCourse } from './jira/course';
+import { k8sCourse } from './k8s/course';
 import { pandasGuide, sqlGuide, vizGuide } from './guides/data';
 import { pythonGuide } from './guides/python';
 import { siteGuide } from './guides/site';
+import { jiraGuide, k8sGuide, reactGuide } from './guides/tech';
 
 // Every course in the Learning Lab. To add one, create its modules and lessons (see python/ for an
 // example with runnable code), a beginner guide in guides/, and an entry here; the hub, navigation
@@ -72,15 +76,54 @@ export const courses = [
     },
     vizGuide
   ),
+  // Technology and delivery skills
+  withGuide(
+    {
+      ...reactCourse,
+      audience: 'Beginners who want to build interactive web pages, and anyone curious how this portfolio works.',
+      needs: 'Nothing required. A little HTML helps; JavaScript is explained as you go.',
+      outcomes: ['Write components with props and state', 'Build lists, forms and live filters', 'Load data with effects and build a small dashboard'],
+    },
+    reactGuide
+  ),
+  withGuide(
+    {
+      ...jiraCourse,
+      audience: 'Anyone joining a team that tracks work in Jira: analysts, testers, developers and managers.',
+      needs: 'Nothing. Everything runs on a practice project here, no Jira account needed.',
+      outcomes: ['Create and move work items on a board', 'Plan a sprint from velocity', 'Write JQL searches, dashboards and automation rules'],
+    },
+    jiraGuide
+  ),
+  withGuide(
+    {
+      ...k8sCourse,
+      audience: 'Beginners who want to know how modern apps are deployed and kept running.',
+      needs: 'Nothing. A simulated cluster runs in your browser; the Learn the Code deploy lessons are a helpful warm-up.',
+      outcomes: ['Explain containers, pods, nodes and the control plane', 'Write Deployment, Service and ConfigMap YAML', 'Scale, update and roll back an app with kubectl'],
+    },
+    k8sGuide
+  ),
 ];
 
-// The suggested order for someone starting from zero.
+// Suggested orders for someone starting from zero.
 export const learningPath = [
   { course: 'python', why: 'The foundation: how to write and read Python.' },
   { course: 'pandas', why: 'Turn spreadsheets into repeatable analysis.' },
   { course: 'sql', why: 'Get data out of databases.' },
   { course: 'viz', why: 'Present the results clearly.' },
   { course: 'site', why: 'Anytime: see how a real website and this Lab are built.' },
+];
+
+export const techPath = [
+  { course: 'react', why: 'Build the interfaces people use.' },
+  { course: 'jira', why: 'Plan and track the work as a team.' },
+  { course: 'k8s', why: 'Ship it and keep it running.' },
+];
+
+export const learningPaths = [
+  { id: 'data', title: 'Data track', blurb: 'From your first line of Python to finished reports.', steps: learningPath },
+  { id: 'tech', title: 'Technology track', blurb: 'How software is built, planned and shipped.', steps: techPath },
 ];
 
 export const courseById = Object.fromEntries(courses.map((c) => [c.id, c]));
