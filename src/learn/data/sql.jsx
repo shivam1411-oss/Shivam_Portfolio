@@ -25,12 +25,142 @@ def _rows(sql, params=()):
 `;
 
 const modules = [
-  { id: 'sql-basics', title: 'Querying', level: 'Beginner', blurb: 'SELECT, filters, sorting, aggregates and GROUP BY.' },
+  { id: 'sql-basics', title: 'Querying', level: 'Beginner', blurb: 'What a database is, then SELECT, filters, sorting, aggregates and GROUP BY.' },
   { id: 'sql-more', title: 'Joining and changing data', level: 'Intermediate', blurb: 'JOINs, safe parameters, inserts, updates and transactions.' },
   { id: 'sql-pro', title: 'Advanced SQL with pandas', level: 'Advanced', blurb: 'CTEs, window functions and moving results into pandas.' },
 ];
 
 const lessons = [
+  {
+    id: 'sql-tables',
+    module: 'sql-basics',
+    title: 'Databases, tables and rows',
+    minutes: 12,
+    goals: ['Understand what a database, a table, a row and a column are', 'Create a table and add rows with plain SQL', 'See how a primary key and NULL keep data honest'],
+    body: () => (
+      <>
+        <P>
+          A <B>database</B> is an organised store of data, and it keeps that data in <Term id="table">tables</Term>. A table looks like a spreadsheet, with one big
+          difference: every column has a fixed meaning and type, and the database enforces rules so bad data cannot sneak in. <Term id="sql">SQL</Term> is the language you
+          use to build tables and ask them questions.
+        </P>
+        <H>Build a table by hand</H>
+        <PyRunner
+          code={py`
+import sqlite3
+
+con = sqlite3.connect(":memory:")       # a brand-new, empty database (in memory)
+
+con.execute("""
+    CREATE TABLE accounts (
+        account_id TEXT PRIMARY KEY,    -- unique for every row
+        city       TEXT,
+        balance    INTEGER,
+        dpd        INTEGER
+    )
+""")
+
+con.execute("INSERT INTO accounts VALUES ('A1001', 'Pune', 37700, 0)")
+con.executemany("INSERT INTO accounts VALUES (?, ?, ?, ?)", [
+    ("A1002", "Indore", 106400, 0),
+    ("A1010", "Nashik", 127200, 47),
+])
+
+for row in con.execute("SELECT * FROM accounts"):
+    print(row)
+`}
+        />
+        <P>
+          <F>CREATE TABLE</F> describes the columns and their types (<F>TEXT</F>, <F>INTEGER</F>, <F>REAL</F> for decimals). <F>INSERT INTO</F> adds rows. Each row comes back
+          to Python as a tuple. Press <B>Step through</B> to watch it happen line by line.
+        </P>
+        <H>Rules that protect the data</H>
+        <PyRunner
+          code={py`
+import sqlite3
+
+con = sqlite3.connect(":memory:")
+con.execute("CREATE TABLE accounts (account_id TEXT PRIMARY KEY, city TEXT, balance INTEGER)")
+con.execute("INSERT INTO accounts VALUES ('A1001', 'Pune', 37700)")
+
+try:
+    con.execute("INSERT INTO accounts VALUES ('A1001', 'Delhi', 5000)")   # same id again
+except sqlite3.IntegrityError as e:
+    print("Refused:", e)
+
+con.execute("INSERT INTO accounts (account_id, city) VALUES ('A1002', 'Indore')")  # no balance given
+print(con.execute("SELECT * FROM accounts").fetchall())          # None = NULL, no value
+print(con.execute("SELECT COUNT(*) FROM accounts WHERE balance IS NULL").fetchone())
+`}
+        />
+        <Callout title="NULL is not zero">
+          <F>NULL</F> means "no value": not 0 and not empty text. Test for it with <F>IS NULL</F>, because <F>balance = NULL</F> is never true.
+        </Callout>
+        <Callout title="Shortcut used in later lessons">
+          From the next lesson on, each example fills a database from the sample CSV files with one pandas line, <F>to_sql</F>, so you can focus on the queries.
+        </Callout>
+      </>
+    ),
+    exercises: [
+      {
+        id: 'sql-create',
+        title: 'Your first table',
+        prompt:
+          'Create a table agents with columns name (TEXT, PRIMARY KEY), team (TEXT) and target (INTEGER). Insert the three agents from the list with executemany and ? placeholders, then set count to the number of rows (from SELECT COUNT(*)).',
+        starter: py`
+import sqlite3
+
+con = sqlite3.connect(":memory:")
+agents = [("Kiran", "Field", 500000), ("Neha", "Tele", 350000), ("Amit", "Field", 450000)]
+
+# create the table and insert the rows here
+
+count = None
+print(count)
+`,
+        tests: [
+          { name: 'agents has columns name, team, target', code: py`
+cols = [(r[1], r[2].upper(), r[5]) for r in con.execute("PRAGMA table_info(agents)")]
+assert [c[0] for c in cols] == ["name", "team", "target"], f"columns {cols}"
+assert [c[1] for c in cols] == ["TEXT", "TEXT", "INTEGER"], f"types {[c[1] for c in cols]}"
+assert cols[0][2] == 1, "name should be the PRIMARY KEY"
+` },
+          { name: 'the three agents are in the table', code: py`
+rows = sorted(con.execute("SELECT name, team, target FROM agents").fetchall())
+assert rows == sorted(agents), f"rows {rows}"
+` },
+          { name: 'count == 3', code: py`assert count == 3, f"got {count!r}"` },
+          { name: 'the primary key refuses a duplicate name', code: py`
+import sqlite3
+try:
+    con.execute("INSERT INTO agents VALUES ('Kiran', 'Tele', 1)")
+except sqlite3.IntegrityError:
+    pass
+else:
+    raise AssertionError("a duplicate name was accepted; is name the PRIMARY KEY?")
+` },
+        ],
+        hint: 'con.execute("CREATE TABLE agents (name TEXT PRIMARY KEY, team TEXT, target INTEGER)"); con.executemany("INSERT INTO agents VALUES (?, ?, ?)", agents); count = con.execute("SELECT COUNT(*) FROM agents").fetchone()[0]',
+        solution: py`
+import sqlite3
+
+con = sqlite3.connect(":memory:")
+agents = [("Kiran", "Field", 500000), ("Neha", "Tele", 350000), ("Amit", "Field", 450000)]
+
+con.execute("CREATE TABLE agents (name TEXT PRIMARY KEY, team TEXT, target INTEGER)")
+con.executemany("INSERT INTO agents VALUES (?, ?, ?)", agents)
+
+count = con.execute("SELECT COUNT(*) FROM agents").fetchone()[0]
+print(count)
+`,
+      },
+    ],
+    quiz: [
+      { q: 'In a table of accounts, what is one row?', options: ['One column of balances', 'One account', 'The whole database', 'One query'], answer: 1, why: 'Each row is one item (one account); each column is one property of it.' },
+      { q: 'What does a PRIMARY KEY guarantee?', options: ['The column is sorted', 'Every row has a different value in it', 'It is a number', 'It cannot be read'], answer: 1, why: 'It identifies each row uniquely, so duplicates are refused.' },
+      { q: 'How do you find rows where balance has no value?', options: ['balance = NULL', 'balance = 0', 'balance IS NULL', "balance = ''"], answer: 2, why: 'NULL is never equal to anything, so SQL uses IS NULL.' },
+    ],
+  },
   {
     id: 'sql-select',
     module: 'sql-basics',

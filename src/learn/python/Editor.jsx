@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { EditorView, basicSetup } from 'codemirror';
-import { keymap } from '@codemirror/view';
-import { Prec } from '@codemirror/state';
+import { Decoration, keymap } from '@codemirror/view';
+import { Prec, StateEffect, StateField } from '@codemirror/state';
 import { indentWithTab } from '@codemirror/commands';
 import { HighlightStyle, indentUnit, syntaxHighlighting } from '@codemirror/language';
 import { python } from '@codemirror/lang-python';
@@ -25,6 +25,7 @@ const theme = EditorView.theme(
     '.cm-matchingBracket': { backgroundColor: 'rgba(63,209,191,0.2)', outline: 'none' },
     '.cm-tooltip': { backgroundColor: '#181b21', border: '1px solid rgba(255,255,255,0.1)', color: '#ecedef' },
     '.cm-tooltip-autocomplete > ul > li[aria-selected]': { backgroundColor: 'rgba(63,209,191,0.25)', color: '#fff' },
+    '.cm-step-line': { backgroundColor: 'rgba(252,210,141,0.16)', boxShadow: 'inset 3px 0 0 #fcd28d' },
     '.cm-foldPlaceholder': { backgroundColor: 'transparent', border: 'none', color: '#5eead4' },
   },
   { dark: true }
@@ -41,8 +42,24 @@ const highlight = HighlightStyle.define([
   { tag: t.self, color: '#f9a8d4' },
 ]);
 
-/** CodeMirror editor for Python. Ctrl/Cmd+Enter calls onRun. */
-export default function Editor({ value, onChange, onRun, label = 'Python code' }) {
+// Step-through: the line about to run gets a highlighted background.
+const setStepLine = StateEffect.define();
+const stepLine = StateField.define({
+  create: () => Decoration.none,
+  update(deco, tr) {
+    for (const e of tr.effects) {
+      if (e.is(setStepLine)) {
+        if (!e.value || e.value > tr.state.doc.lines) return Decoration.none;
+        return Decoration.set([Decoration.line({ class: 'cm-step-line' }).range(tr.state.doc.line(e.value).from)]);
+      }
+    }
+    return tr.docChanged ? Decoration.none : deco.map(tr.changes);
+  },
+  provide: (f) => EditorView.decorations.from(f),
+});
+
+/** CodeMirror editor for Python. Ctrl/Cmd+Enter calls onRun; `highlightLine` marks a line for step-through. */
+export default function Editor({ value, onChange, onRun, label = 'Python code', highlightLine = null }) {
   const host = useRef(null);
   const view = useRef(null);
   const callbacks = useRef({ onChange, onRun });
@@ -65,6 +82,7 @@ export default function Editor({ value, onChange, onRun, label = 'Python code' }
           ])
         ),
         basicSetup,
+        stepLine,
         keymap.of([indentWithTab]), // Esc, then Tab, moves focus out of the editor
         indentUnit.of('    '),
         python(),
@@ -85,6 +103,16 @@ export default function Editor({ value, onChange, onRun, label = 'Python code' }
     const v = view.current;
     if (v && v.state.doc.toString() !== value) v.dispatch({ changes: { from: 0, to: v.state.doc.length, insert: value } });
   }, [value]);
+
+  useEffect(() => {
+    const v = view.current;
+    if (!v) return;
+    const effects = [setStepLine.of(highlightLine)];
+    if (highlightLine && highlightLine <= v.state.doc.lines) {
+      effects.push(EditorView.scrollIntoView(v.state.doc.line(highlightLine).from, { y: 'nearest' }));
+    }
+    v.dispatch({ effects });
+  }, [highlightLine]);
 
   return <div ref={host} className="text-left [&_.cm-editor]:max-h-[28rem]" />;
 }

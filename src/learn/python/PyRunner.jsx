@@ -1,8 +1,9 @@
 import { Suspense, lazy, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { CheckCircle2, CircleAlert, Eye, FlaskConical, Keyboard, Lightbulb, Loader2, Play, RotateCcw, Square, Terminal, XCircle } from 'lucide-react';
+import { CheckCircle2, CircleAlert, Eye, FlaskConical, Footprints, Keyboard, Lightbulb, Loader2, Play, RotateCcw, Square, Terminal, XCircle } from 'lucide-react';
 import { getStatus, getStatusError, run, stop, subscribe, warmUp } from './runtime';
 import { btn, btnPrimary } from '../ui';
+import StepThrough from './StepThrough';
 
 const Editor = lazy(() => import('./Editor'));
 
@@ -74,6 +75,8 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
   const [result, setResult] = useState(null);
   const [running, setRunning] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [trace, setTrace] = useState(null); // a step-through recording, while it is open
+  const [stepLine, setStepLine] = useState(null);
   const outRef = useRef(null);
   const isExercise = !!tests?.length;
   const usesInput = stdin !== undefined || /\binput\s*\(/.test(code);
@@ -84,6 +87,7 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
 
   const change = (v) => {
     setCode(v);
+    setTrace(null); // the recording no longer matches the code
     writeSaved(storageKey, v);
   };
 
@@ -110,6 +114,21 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
     setResult({ ...res, checked: withTests });
     setRunning(false);
     if (withTests && !res.error && res.results?.every((r) => r.passed)) onPass?.();
+  };
+
+  /** Run the code line by line and open the step-through panel. */
+  const stepThrough = async () => {
+    if (running) return;
+    setRunning(true);
+    setTrace(null);
+    setResult(null);
+    setLines([]);
+    const res = await run(code, { stdin: input, trace: true, onOut: (kind, text) => kind === 'info' && setLines([{ kind, text }]) });
+    setRunning(false);
+    if (res.steps) {
+      setLines([]);
+      setTrace(res);
+    } else setResult({ ...res, checked: false }); // e.g. Python could not load
   };
 
   const reset = () => {
@@ -140,7 +159,7 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
 
       <div onFocus={warmUp}>
         <Suspense fallback={<pre className="m-0 p-4 bg-[#0d1014] text-[#d6f5f0] font-mono [font-variant-ligatures:none] text-[13px] whitespace-pre-wrap">{code}</pre>}>
-          <Editor value={code} onChange={change} onRun={() => execute(isExercise)} />
+          <Editor value={code} onChange={change} onRun={() => execute(isExercise)} highlightLine={trace ? stepLine : null} />
         </Suspense>
       </div>
 
@@ -166,6 +185,11 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
         ) : (
           <button type="button" onClick={() => execute(false)} className={isExercise ? btn : btnPrimary} title="Ctrl/⌘ + Enter">
             <Play size={14} /> Run
+          </button>
+        )}
+        {!running && (
+          <button type="button" onClick={stepThrough} className={`${btn} !px-3`} title="Run one line at a time and watch the variables change">
+            <Footprints size={14} /> Step through
           </button>
         )}
         {isExercise && !running && (
@@ -197,7 +221,9 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
         )}
       </AnimatePresence>
 
-      {(lines.length > 0 || result || running) && (
+      {trace && <StepThrough trace={trace} onLine={setStepLine} onClose={() => setTrace(null)} />}
+
+      {!trace && (lines.length > 0 || result || running) && (
         <div className="border-t border-line">
           <pre
             ref={outRef}
