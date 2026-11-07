@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
 import { ArrowRight, BookOpen, Boxes, Code2, Database, Layers, Palette, Rocket, Sparkles, SquareTerminal } from 'lucide-react';
 import { ease } from '../components/motion';
-import { courseById, courses } from './courses';
+import { courseById, courses } from './catalog';
 import { timeline } from './timeline';
 import { btn, btnPrimary } from './ui';
 

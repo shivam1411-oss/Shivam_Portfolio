@@ -1,0 +1,1479 @@
+{
+ "courses": [
+  {
+   "id": "site",
+   "title": "Learn the Code",
+   "tagline": "How this portfolio was built, change by change",
+   "blurb": "React, Tailwind, animations, canvas effects, performance, the AI chat, deploying, the Android app, and how Python was made to run in this Learning Lab, explained from zero with the real code and playgrounds.",
+   "levels": "Beginner",
+   "icon": "site",
+   "audience": "Anyone curious how a modern website is built, with no coding experience needed.",
+   "needs": "Nothing. Every term is explained as you go.",
+   "outcomes": [
+    "Read and change the site's code with confidence",
+    "Explain React, Tailwind, canvas animation and deployment",
+    "Know how the AI chat and in-browser Python work"
+   ],
+   "extras": [
+    {
+     "hash": "#/timeline",
+     "label": "What changed, in order"
+    }
+   ],
+   "modules": [
+    {
+     "id": "foundations",
+     "title": "Foundations",
+     "blurb": "How the site is put together: React, components, state and data files."
+    },
+    {
+     "id": "look",
+     "title": "Look & feel",
+     "blurb": "Styling with Tailwind, light and dark themes, and animations."
+    },
+    {
+     "id": "effects",
+     "title": "The effects",
+     "blurb": "The code matrix, cursor trail, welcome screen and water reveal."
+    },
+    {
+     "id": "speed",
+     "title": "Speed & devices",
+     "blurb": "Making it fast on phones and laying it out for every screen."
+    },
+    {
+     "id": "features",
+     "title": "Features",
+     "blurb": "The Analytical Lab maths, contact pop-up, resume and AI chat."
+    },
+    {
+     "id": "shipping",
+     "title": "Shipping it",
+     "blurb": "Git, automatic deploys to GitHub Pages, and the Android app."
+    },
+    {
+     "id": "python-lab",
+     "title": "Learning Lab & Python",
+     "blurb": "How the course pages work, and how Python was made to run, get tested and deploy in the browser."
+    }
+   ],
+   "lessons": [
+    {
+     "id": "big-picture",
+     "module": "foundations",
+     "title": "From one HTML file to a React app",
+     "minutes": 8,
+     "exercises": []
+    },
+    {
+     "id": "components",
+     "module": "foundations",
+     "title": "Components and props",
+     "minutes": 8,
+     "exercises": []
+    },
+    {
+     "id": "state",
+     "module": "foundations",
+     "title": "State and hooks",
+     "minutes": 10,
+     "exercises": []
+    },
+    {
+     "id": "data",
+     "module": "foundations",
+     "title": "Content lives in data files",
+     "minutes": 6,
+     "exercises": []
+    },
+    {
+     "id": "styling",
+     "module": "look",
+     "title": "Tailwind and CSS variables",
+     "minutes": 8,
+     "exercises": []
+    },
+    {
+     "id": "themes",
+     "module": "look",
+     "title": "Light and dark themes",
+     "minutes": 10,
+     "exercises": []
+    },
+    {
+     "id": "animation",
+     "module": "look",
+     "title": "Animations with Motion",
+     "minutes": 8,
+     "exercises": []
+    },
+    {
+     "id": "canvas",
+     "module": "effects",
+     "title": "Canvas and the animation loop",
+     "minutes": 12,
+     "exercises": []
+    },
+    {
+     "id": "welcome",
+     "module": "effects",
+     "title": "The welcome screen",
+     "minutes": 7,
+     "exercises": []
+    },
+    {
+     "id": "reveal",
+     "module": "effects",
+     "title": "The water-droplet reveal",
+     "minutes": 9,
+     "exercises": []
+    },
+    {
+     "id": "performance",
+     "module": "speed",
+     "title": "Making it fast on phones",
+     "minutes": 10,
+     "exercises": []
+    },
+    {
+     "id": "splitting",
+     "module": "speed",
+     "title": "Loading less up front",
+     "minutes": 6,
+     "exercises": []
+    },
+    {
+     "id": "responsive",
+     "module": "speed",
+     "title": "One layout for every screen",
+     "minutes": 6,
+     "exercises": []
+    },
+    {
+     "id": "lab",
+     "module": "features",
+     "title": "The Analytical Lab maths",
+     "minutes": 10,
+     "exercises": []
+    },
+    {
+     "id": "contact",
+     "module": "features",
+     "title": "Contact, resume and email",
+     "minutes": 7,
+     "exercises": []
+    },
+    {
+     "id": "chat",
+     "module": "features",
+     "title": "The AI chat and its Worker",
+     "minutes": 12,
+     "exercises": []
+    },
+    {
+     "id": "deploy",
+     "module": "shipping",
+     "title": "Git, GitHub Actions and Pages",
+     "minutes": 9,
+     "exercises": []
+    },
+    {
+     "id": "android",
+     "module": "shipping",
+     "title": "The Android app",
+     "minutes": 6,
+     "exercises": []
+    },
+    {
+     "id": "learning-lab",
+     "module": "python-lab",
+     "title": "How the Learning Lab is organised",
+     "minutes": 9,
+     "exercises": []
+    },
+    {
+     "id": "python-browser",
+     "module": "python-lab",
+     "title": "Running Python in the browser",
+     "minutes": 12,
+     "exercises": []
+    },
+    {
+     "id": "python-tests",
+     "module": "python-lab",
+     "title": "How exercises are checked",
+     "minutes": 10,
+     "exercises": []
+    },
+    {
+     "id": "python-deploy",
+     "module": "python-lab",
+     "title": "Shipping Python with the site",
+     "minutes": 9,
+     "exercises": []
+    }
+   ]
+  },
+  {
+   "id": "python",
+   "title": "Python",
+   "tagline": "From your first print() to decorators and a real project",
+   "blurb": "Learn Python by writing it. Every lesson has examples you can edit and run in the browser, exercises that are checked by tests, and a quiz. Examples use collections and finance data, so the skills transfer straight to work.",
+   "levels": "Beginner → Advanced",
+   "icon": "python",
+   "audience": "Complete beginners, and Excel users who want to automate their work.",
+   "needs": "Nothing. Start at lesson 1 and run every example.",
+   "outcomes": [
+    "Write Python programs with variables, loops, functions and classes",
+    "Read and write files, CSV and JSON",
+    "Test your code and structure a small project"
+   ],
+   "usesPython": true,
+   "modules": [
+    {
+     "id": "start",
+     "title": "Getting started",
+     "level": "Beginner",
+     "blurb": "Printing, variables, numbers and text: the building blocks of every program."
+    },
+    {
+     "id": "flow",
+     "title": "Decisions and loops",
+     "level": "Beginner",
+     "blurb": "Make programs choose with if, repeat with for and while, and talk to the user."
+    },
+    {
+     "id": "collections",
+     "title": "Collections",
+     "level": "Beginner",
+     "blurb": "Lists, tuples, sets and dictionaries: storing many values and finding things fast."
+    },
+    {
+     "id": "functions",
+     "title": "Functions",
+     "level": "Intermediate",
+     "blurb": "Package code into reusable functions, pass data in and out, and handle errors."
+    },
+    {
+     "id": "organising",
+     "title": "Organising code",
+     "level": "Intermediate",
+     "blurb": "The standard library, files, CSV and JSON, and your own classes."
+    },
+    {
+     "id": "advanced",
+     "title": "Advanced Python",
+     "level": "Advanced",
+     "blurb": "Inheritance, dataclasses, generators, decorators, type hints and testing, then a project."
+    }
+   ],
+   "lessons": [
+    {
+     "id": "hello",
+     "module": "start",
+     "title": "Hello, Python",
+     "minutes": 8,
+     "exercises": [
+      {
+       "id": "two-lines"
+      }
+     ]
+    },
+    {
+     "id": "variables",
+     "module": "start",
+     "title": "Variables and types",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "profile"
+      }
+     ]
+    },
+    {
+     "id": "numbers",
+     "module": "start",
+     "title": "Numbers and maths",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "interest"
+      }
+     ]
+    },
+    {
+     "id": "strings",
+     "module": "start",
+     "title": "Working with text",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "initials"
+      }
+     ]
+    },
+    {
+     "id": "conditions",
+     "module": "flow",
+     "title": "Making decisions with if",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "bucket"
+      }
+     ]
+    },
+    {
+     "id": "loops",
+     "module": "flow",
+     "title": "Repeating with loops",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "totals"
+      },
+      {
+       "id": "fizzbuzz"
+      }
+     ]
+    },
+    {
+     "id": "input",
+     "module": "flow",
+     "title": "Talking to the user",
+     "minutes": 8,
+     "exercises": [
+      {
+       "id": "emi-message"
+      }
+     ]
+    },
+    {
+     "id": "lists",
+     "module": "collections",
+     "title": "Lists",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "top-balances"
+      }
+     ]
+    },
+    {
+     "id": "tuples-sets",
+     "module": "collections",
+     "title": "Tuples and sets",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "called-paid"
+      }
+     ]
+    },
+    {
+     "id": "dicts",
+     "module": "collections",
+     "title": "Dictionaries",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "count-channels"
+      }
+     ]
+    },
+    {
+     "id": "comprehensions",
+     "module": "collections",
+     "title": "Comprehensions",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "comp"
+      }
+     ]
+    },
+    {
+     "id": "functions",
+     "module": "functions",
+     "title": "Writing functions",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "emi"
+      },
+      {
+       "id": "bucket-fn"
+      }
+     ]
+    },
+    {
+     "id": "more-functions",
+     "module": "functions",
+     "title": "More about functions",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "sort-args"
+      }
+     ]
+    },
+    {
+     "id": "errors",
+     "module": "functions",
+     "title": "Handling errors",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "parse-amount"
+      }
+     ]
+    },
+    {
+     "id": "modules",
+     "module": "organising",
+     "title": "Modules and the standard library",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "dates-stats"
+      }
+     ]
+    },
+    {
+     "id": "files",
+     "module": "organising",
+     "title": "Files, CSV and JSON",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "csv-totals"
+      }
+     ]
+    },
+    {
+     "id": "classes",
+     "module": "organising",
+     "title": "Classes and objects",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "account-class"
+      }
+     ]
+    },
+    {
+     "id": "inheritance",
+     "module": "advanced",
+     "title": "Inheritance, dataclasses and properties",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "dataclass-loan"
+      }
+     ]
+    },
+    {
+     "id": "generators",
+     "module": "advanced",
+     "title": "Iterators and generators",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "fib-chunks"
+      }
+     ]
+    },
+    {
+     "id": "decorators",
+     "module": "advanced",
+     "title": "Closures and decorators",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "count-calls"
+      }
+     ]
+    },
+    {
+     "id": "typing-testing",
+     "module": "advanced",
+     "title": "Type hints and testing",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "phone"
+      }
+     ]
+    },
+    {
+     "id": "project",
+     "module": "advanced",
+     "title": "Project: a collections report",
+     "minutes": 20,
+     "exercises": [
+      {
+       "id": "report"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pandas",
+   "title": "Data Analysis with pandas",
+   "tagline": "The library most Python data work runs on, practised on collections data",
+   "blurb": "NumPy foundations, then the pandas skills analyst roles ask for most: reading and exploring, selecting, cleaning, groupby, pivot tables, merges and time series, ending in a monthly portfolio report. Best after Python modules 1–4. Loads pandas (about 8 MB) the first time.",
+   "levels": "Intermediate → Advanced",
+   "icon": "pandas",
+   "audience": "Analysts who work in Excel and want to do the same work faster and repeatably in Python.",
+   "needs": "Python modules 1–4 (variables to functions). Excel experience helps.",
+   "outcomes": [
+    "Load, clean and explore real data files",
+    "Filter, group, pivot and join tables",
+    "Build a monthly portfolio report with one function"
+   ],
+   "usesPython": true,
+   "modules": [
+    {
+     "id": "pd-start",
+     "title": "Start here",
+     "level": "Beginner",
+     "blurb": "Everything you already do in Excel, translated into pandas."
+    },
+    {
+     "id": "numpy",
+     "title": "NumPy foundations",
+     "level": "Intermediate",
+     "blurb": "Fast maths on whole arrays at once: the engine underneath pandas."
+    },
+    {
+     "id": "frames",
+     "title": "DataFrames",
+     "level": "Intermediate",
+     "blurb": "Series and DataFrames, reading a CSV, and getting to know a dataset."
+    },
+    {
+     "id": "select",
+     "title": "Selecting and sorting",
+     "level": "Intermediate",
+     "blurb": "Columns, rows, filters, loc and iloc, sorting and ranking."
+    },
+    {
+     "id": "clean",
+     "title": "Cleaning data",
+     "level": "Intermediate",
+     "blurb": "Missing values, wrong types, messy text and duplicates."
+    },
+    {
+     "id": "transform",
+     "title": "Transform, group and reshape",
+     "level": "Advanced",
+     "blurb": "New columns, buckets, groupby, pivot tables and crosstabs."
+    },
+    {
+     "id": "combine",
+     "title": "Combining data and time",
+     "level": "Advanced",
+     "blurb": "Joining tables like SQL, and working with dates and monthly trends."
+    },
+    {
+     "id": "pd-project",
+     "title": "Project",
+     "level": "Advanced",
+     "blurb": "A full portfolio report from raw files, the way it is done at work."
+    }
+   ],
+   "lessons": [
+    {
+     "id": "pd-excel",
+     "module": "pd-start",
+     "title": "From Excel to pandas",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "pd-first-report"
+      }
+     ]
+    },
+    {
+     "id": "np-arrays",
+     "module": "numpy",
+     "title": "Arrays and vectorised maths",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "np-interest"
+      }
+     ]
+    },
+    {
+     "id": "np-masks",
+     "module": "numpy",
+     "title": "Boolean masks, np.where and np.select",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "np-buckets"
+      }
+     ]
+    },
+    {
+     "id": "pd-basics",
+     "module": "frames",
+     "title": "Series and DataFrames",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "pd-first-frame"
+      }
+     ]
+    },
+    {
+     "id": "pd-reading",
+     "module": "frames",
+     "title": "Reading and exploring data",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "pd-explore"
+      }
+     ]
+    },
+    {
+     "id": "pd-select",
+     "module": "select",
+     "title": "Selecting rows and columns",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "pd-filters"
+      }
+     ]
+    },
+    {
+     "id": "pd-sort",
+     "module": "select",
+     "title": "Sorting, ranking and top N",
+     "minutes": 8,
+     "exercises": [
+      {
+       "id": "pd-topn"
+      }
+     ]
+    },
+    {
+     "id": "pd-missing",
+     "module": "clean",
+     "title": "Missing values",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "pd-fill"
+      }
+     ]
+    },
+    {
+     "id": "pd-tidy",
+     "module": "clean",
+     "title": "Types, text and duplicates",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "pd-clean-all"
+      }
+     ]
+    },
+    {
+     "id": "pd-columns",
+     "module": "transform",
+     "title": "New columns, buckets and apply",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "pd-bucket-cut"
+      }
+     ]
+    },
+    {
+     "id": "pd-groupby",
+     "module": "transform",
+     "title": "groupby: split, apply, combine",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "pd-agent-summary"
+      }
+     ]
+    },
+    {
+     "id": "pd-reshape",
+     "module": "transform",
+     "title": "Pivot tables, crosstabs and melt",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "pd-pivot-roll"
+      }
+     ]
+    },
+    {
+     "id": "pd-merge",
+     "module": "combine",
+     "title": "Merging tables (SQL joins in pandas)",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "pd-join"
+      }
+     ]
+    },
+    {
+     "id": "pd-time",
+     "module": "combine",
+     "title": "Dates and time series",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "pd-monthly"
+      }
+     ]
+    },
+    {
+     "id": "pd-project",
+     "module": "pd-project",
+     "title": "Project: the monthly portfolio report",
+     "minutes": 20,
+     "exercises": [
+      {
+       "id": "pd-report"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sql",
+   "title": "SQL with Python",
+   "tagline": "The skill analyst job postings ask for most, on a real database",
+   "blurb": "Write real SQL against a SQLite database of collections data: SELECT and GROUP BY, JOINs, safe parameters and transactions, CTEs and window functions, then hand results to pandas. Best after Python modules 1–4.",
+   "levels": "Beginner → Advanced",
+   "icon": "sql",
+   "audience": "Anyone who needs data from a database, the most-requested skill in analyst roles.",
+   "needs": "Python lessons 1–6 help but are not required for the SQL itself.",
+   "outcomes": [
+    "Write SELECT, GROUP BY and JOIN queries",
+    "Change data safely with parameters and transactions",
+    "Use window functions and move results into pandas"
+   ],
+   "usesPython": true,
+   "modules": [
+    {
+     "id": "sql-basics",
+     "title": "Querying",
+     "level": "Beginner",
+     "blurb": "What a database is, then SELECT, filters, sorting, aggregates and GROUP BY."
+    },
+    {
+     "id": "sql-more",
+     "title": "Joining and changing data",
+     "level": "Intermediate",
+     "blurb": "JOINs, safe parameters, inserts, updates and transactions."
+    },
+    {
+     "id": "sql-pro",
+     "title": "Advanced SQL with pandas",
+     "level": "Advanced",
+     "blurb": "CTEs, window functions and moving results into pandas."
+    }
+   ],
+   "lessons": [
+    {
+     "id": "sql-tables",
+     "module": "sql-basics",
+     "title": "Databases, tables and rows",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "sql-create"
+      }
+     ]
+    },
+    {
+     "id": "sql-select",
+     "module": "sql-basics",
+     "title": "Your first queries",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "sql-first"
+      }
+     ]
+    },
+    {
+     "id": "sql-group",
+     "module": "sql-basics",
+     "title": "Aggregates, GROUP BY and CASE",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "sql-product"
+      }
+     ]
+    },
+    {
+     "id": "sql-joins",
+     "module": "sql-more",
+     "title": "JOINs",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "sql-city"
+      }
+     ]
+    },
+    {
+     "id": "sql-safe",
+     "module": "sql-more",
+     "title": "Parameters, changes and transactions",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "sql-add-payment"
+      }
+     ]
+    },
+    {
+     "id": "sql-window",
+     "module": "sql-pro",
+     "title": "CTEs and window functions",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "sql-top-per-product"
+      }
+     ]
+    },
+    {
+     "id": "sql-pandas",
+     "module": "sql-pro",
+     "title": "SQL and pandas together",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "sql-monthly-agent"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "viz",
+   "title": "Charts with Matplotlib",
+   "tagline": "Turn analysis into charts that make a point",
+   "blurb": "Python's standard charting library: figures and axes, choosing the right chart, rupee and percentage axes, plotting from pandas, multi-chart dashboards and report-ready visuals. Best after the first pandas modules. Loads Matplotlib (about 9 MB) the first time.",
+   "levels": "Beginner → Intermediate",
+   "icon": "viz",
+   "audience": "Anyone who presents numbers in reports or slides.",
+   "needs": "Python basics; the later lessons use a little pandas.",
+   "outcomes": [
+    "Draw line, bar, histogram and scatter charts",
+    "Format axes in ₹ and %",
+    "Design report charts that make one clear point"
+   ],
+   "usesPython": true,
+   "modules": [
+    {
+     "id": "viz-basics",
+     "title": "Drawing charts",
+     "level": "Beginner",
+     "blurb": "Figures and axes, the core chart types, and choosing the right one."
+    },
+    {
+     "id": "viz-present",
+     "title": "Charts for reports",
+     "level": "Intermediate",
+     "blurb": "Plotting straight from pandas, several charts in one figure, and charts that make a point."
+    }
+   ],
+   "lessons": [
+    {
+     "id": "viz-first",
+     "module": "viz-basics",
+     "title": "Figures, axes and your first chart",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "viz-bar"
+      }
+     ]
+    },
+    {
+     "id": "viz-choose",
+     "module": "viz-basics",
+     "title": "Choosing the right chart",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "viz-cei"
+      }
+     ]
+    },
+    {
+     "id": "viz-pandas",
+     "module": "viz-present",
+     "title": "Plotting from pandas and multiple charts",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "viz-dashboard"
+      }
+     ]
+    },
+    {
+     "id": "viz-story",
+     "module": "viz-present",
+     "title": "Charts that make a point",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "viz-highlight"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "react",
+   "title": "React",
+   "tagline": "Build interactive web interfaces, live in your browser",
+   "blurb": "The library behind this portfolio. Write components, props, state, lists, forms and effects with a live preview that updates as you type, and exercises checked by clicking and typing in what you build. Uses React 19.",
+   "levels": "Beginner → Intermediate",
+   "icon": "react",
+   "audience": "Beginners who want to build interactive web pages, and anyone curious how this portfolio works.",
+   "needs": "Nothing required. A little HTML helps; JavaScript is explained as you go.",
+   "outcomes": [
+    "Write components with props and state",
+    "Build lists, forms and live filters",
+    "Load data with effects and build a small dashboard"
+   ],
+   "modules": [
+    {
+     "id": "react-basics",
+     "title": "Components",
+     "level": "Beginner",
+     "blurb": "What React is, JSX, and building a page from small components with props."
+    },
+    {
+     "id": "react-interactive",
+     "title": "Making it interactive",
+     "level": "Beginner",
+     "blurb": "State and events, lists and conditions, and forms that react as you type."
+    },
+    {
+     "id": "react-real",
+     "title": "Real apps",
+     "level": "Intermediate",
+     "blurb": "Effects and loading data, then a complete mini dashboard."
+    }
+   ],
+   "lessons": [
+    {
+     "id": "r-intro",
+     "module": "react-basics",
+     "title": "Your first component",
+     "minutes": 10,
+     "exercises": [
+      {
+       "id": "r-first"
+      }
+     ]
+    },
+    {
+     "id": "r-props",
+     "module": "react-basics",
+     "title": "Components and props",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "r-badges"
+      }
+     ]
+    },
+    {
+     "id": "r-state",
+     "module": "react-interactive",
+     "title": "State and events",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "r-promise"
+      }
+     ]
+    },
+    {
+     "id": "r-lists",
+     "module": "react-interactive",
+     "title": "Lists, keys and conditions",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "r-overdue"
+      }
+     ]
+    },
+    {
+     "id": "r-forms",
+     "module": "react-interactive",
+     "title": "Forms and controlled inputs",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "r-search"
+      }
+     ]
+    },
+    {
+     "id": "r-effects",
+     "module": "react-real",
+     "title": "Effects and loading data",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "r-loader"
+      }
+     ]
+    },
+    {
+     "id": "r-project",
+     "module": "react-real",
+     "title": "Project: a collections mini-dashboard",
+     "minutes": 18,
+     "exercises": [
+      {
+       "id": "r-dashboard"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jira",
+   "title": "Jira",
+   "tagline": "Plan, track and report on work like a real delivery team",
+   "blurb": "Work items, boards and workflows, Scrum sprints and velocity, JQL from the first search to functions and dates, then dashboards and automation. Practise on a working JQL engine and a sample project.",
+   "levels": "Beginner → Intermediate",
+   "icon": "jira",
+   "audience": "Anyone joining a team that tracks work in Jira: analysts, testers, developers and managers.",
+   "needs": "Nothing. Everything runs on a practice project here, no Jira account needed.",
+   "outcomes": [
+    "Create and move work items on a board",
+    "Plan a sprint from velocity",
+    "Write JQL searches, dashboards and automation rules"
+   ],
+   "modules": [
+    {
+     "id": "jira-basics",
+     "title": "Working in Jira",
+     "level": "Beginner",
+     "blurb": "Projects and work items, boards and workflows, and Scrum sprints."
+    },
+    {
+     "id": "jira-jql",
+     "title": "Finding work with JQL",
+     "level": "Intermediate",
+     "blurb": "Jira Query Language from the first search to functions, dates and sorting."
+    },
+    {
+     "id": "jira-team",
+     "title": "Running a team",
+     "level": "Intermediate",
+     "blurb": "Filters, dashboards, burndowns and automation rules."
+    }
+   ],
+   "lessons": [
+    {
+     "id": "j-intro",
+     "module": "jira-basics",
+     "title": "Projects and work items",
+     "minutes": 10,
+     "exercises": []
+    },
+    {
+     "id": "j-board",
+     "module": "jira-basics",
+     "title": "Boards and workflows",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "j-finish"
+      }
+     ]
+    },
+    {
+     "id": "j-scrum",
+     "module": "jira-basics",
+     "title": "Scrum: backlog, sprints and estimates",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "j-plan"
+      }
+     ]
+    },
+    {
+     "id": "j-jql",
+     "module": "jira-jql",
+     "title": "Searching with JQL",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "jql-bugs"
+      },
+      {
+       "id": "jql-review"
+      }
+     ]
+    },
+    {
+     "id": "j-jql-pro",
+     "module": "jira-jql",
+     "title": "Functions, dates and sorting",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "jql-mine"
+      },
+      {
+       "id": "jql-triage"
+      },
+      {
+       "id": "jql-recent"
+      }
+     ]
+    },
+    {
+     "id": "j-reports",
+     "module": "jira-team",
+     "title": "Filters, dashboards and automation",
+     "minutes": 12,
+     "exercises": []
+    }
+   ]
+  },
+  {
+   "id": "k8s",
+   "title": "Kubernetes",
+   "tagline": "Run apps in containers that scale, heal and update themselves",
+   "blurb": "Containers and pods, Deployments that heal themselves, Services, configuration and resources, zero-downtime rollouts and rollbacks. Practise real kubectl commands and YAML on a simulated 3-node cluster you can watch.",
+   "levels": "Beginner → Intermediate",
+   "icon": "k8s",
+   "audience": "Beginners who want to know how modern apps are deployed and kept running.",
+   "needs": "Nothing. A simulated cluster runs in your browser; the Learn the Code deploy lessons are a helpful warm-up.",
+   "outcomes": [
+    "Explain containers, pods, nodes and the control plane",
+    "Write Deployment, Service and ConfigMap YAML",
+    "Scale, update and roll back an app with kubectl"
+   ],
+   "modules": [
+    {
+     "id": "k8s-basics",
+     "title": "Containers and pods",
+     "level": "Beginner",
+     "blurb": "Why containers, what Kubernetes does, and your first pod."
+    },
+    {
+     "id": "k8s-apps",
+     "title": "Running apps",
+     "level": "Intermediate",
+     "blurb": "Deployments that heal themselves, Services that route traffic, configuration and resources."
+    },
+    {
+     "id": "k8s-ops",
+     "title": "Operating apps",
+     "level": "Intermediate",
+     "blurb": "Zero-downtime updates, rollbacks and a complete deployment."
+    }
+   ],
+   "lessons": [
+    {
+     "id": "k-intro",
+     "module": "k8s-basics",
+     "title": "Containers and why Kubernetes",
+     "minutes": 10,
+     "exercises": []
+    },
+    {
+     "id": "k-pods",
+     "module": "k8s-basics",
+     "title": "Pods",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "k-pod"
+      }
+     ]
+    },
+    {
+     "id": "k-deploy",
+     "module": "k8s-apps",
+     "title": "Deployments and self-healing",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "k-deployment"
+      },
+      {
+       "id": "k-heal"
+      }
+     ]
+    },
+    {
+     "id": "k-services",
+     "module": "k8s-apps",
+     "title": "Services and networking",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "k-service"
+      }
+     ]
+    },
+    {
+     "id": "k-config",
+     "module": "k8s-apps",
+     "title": "Configuration and resources",
+     "minutes": 12,
+     "exercises": [
+      {
+       "id": "k-configmap"
+      }
+     ]
+    },
+    {
+     "id": "k-rollout",
+     "module": "k8s-ops",
+     "title": "Rolling updates and rollbacks",
+     "minutes": 14,
+     "exercises": [
+      {
+       "id": "k-ship"
+      }
+     ]
+    },
+    {
+     "id": "k-project",
+     "module": "k8s-ops",
+     "title": "Project: deploy the portfolio",
+     "minutes": 18,
+     "exercises": [
+      {
+       "id": "k-full"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "kb": {
+  "site": {
+   "intro": "Web development from \"how does a web page reach my screen?\" to security, rendering strategies and architecture. Runnable examples show a live page you can edit; others come from real projects like shops, blogs, portfolios and dashboards.",
+   "topics": [
+    "how-the-web-works",
+    "html",
+    "css",
+    "javascript",
+    "devtools-git",
+    "responsive",
+    "modern-js",
+    "npm-build",
+    "git-ci",
+    "hosting",
+    "accessibility",
+    "performance",
+    "seo",
+    "animation",
+    "web-apis",
+    "security",
+    "rendering-strategies",
+    "browser-pipeline",
+    "testing-quality",
+    "architecture"
+   ]
+  },
+  "python": {
+   "intro": "Everything you need to know about Python, from your first print() to how professionals write fast, tested, production code. Every example runs in your browser.",
+   "topics": [
+    "what-is-python",
+    "variables-types",
+    "strings",
+    "if-else",
+    "lists-loops",
+    "dicts-sets",
+    "functions",
+    "errors",
+    "files",
+    "comprehensions",
+    "classes",
+    "generators",
+    "decorators",
+    "modules-packages",
+    "testing",
+    "performance",
+    "concurrency",
+    "internals",
+    "typing-advanced",
+    "production"
+   ]
+  },
+  "pandas": {
+   "intro": "pandas from the first table to production-grade pipelines. Examples use movies, shops, weather, sport and stock prices, and every one runs in your browser.",
+   "topics": [
+    "what-is-pandas",
+    "first-look",
+    "selecting",
+    "filtering",
+    "sort-new-columns",
+    "io",
+    "missing",
+    "groupby",
+    "merge",
+    "dates",
+    "reshape",
+    "vectorise",
+    "text-categories",
+    "windows",
+    "multiindex",
+    "memory-speed",
+    "copy-on-write",
+    "chaining",
+    "validation",
+    "beyond"
+   ]
+  },
+  "sql": {
+   "intro": "SQL from your first SELECT to query plans, data modelling and warehouses. Examples use books, schools, shops and flights, and every runnable one uses a real SQLite database in your browser.",
+   "topics": [
+    "what-is-a-database",
+    "select-where",
+    "aggregates",
+    "having-distinct",
+    "changing-data",
+    "joins",
+    "nulls",
+    "ctes",
+    "case-dates",
+    "constraints",
+    "window-functions",
+    "indexes",
+    "transactions",
+    "recursive",
+    "views-injection",
+    "optimisation",
+    "modelling",
+    "isolation",
+    "dialects-json",
+    "scaling"
+   ]
+  },
+  "viz": {
+   "intro": "Data visualisation from your first line chart to honest, publication-quality graphics. Examples cover weather, sport, health, music and markets, and every chart is drawn in your browser.",
+   "topics": [
+    "why-charts",
+    "bar-charts",
+    "line-charts",
+    "labels",
+    "histograms",
+    "fig-axes",
+    "scatter",
+    "formatting-axes",
+    "colour",
+    "pandas-plot",
+    "annotations",
+    "distributions",
+    "small-multiples",
+    "heatmaps",
+    "styling",
+    "honesty",
+    "uncertainty",
+    "big-data-plots",
+    "interactive",
+    "chart-system"
+   ]
+  },
+  "react": {
+   "intro": "React from your first component to concurrent rendering and Server Components. Examples cover to-do lists, shops, quizzes, weather and chat, and the runnable ones show a live preview as you type.",
+   "topics": [
+    "what-is-react",
+    "jsx",
+    "props",
+    "state-events",
+    "lists-conditions",
+    "forms",
+    "effects",
+    "lifting-state",
+    "reducer",
+    "context",
+    "custom-hooks",
+    "performance",
+    "refs",
+    "routing-structure",
+    "testing",
+    "rendering-model",
+    "concurrent",
+    "react-19",
+    "server-components",
+    "state-at-scale"
+   ]
+  },
+  "jira": {
+   "intro": "Jira from your first work item to running many teams at scale. Examples come from software, marketing, HR, events and IT support, because Jira is used far beyond engineering.",
+   "topics": [
+    "what-is-jira",
+    "types-fields",
+    "good-work-items",
+    "boards",
+    "workflows",
+    "scrum-in-jira",
+    "estimation",
+    "kanban-flow",
+    "jql-basics",
+    "filters-dashboards",
+    "advanced-jql",
+    "automation",
+    "reports",
+    "configuration",
+    "releases-links",
+    "scaling-agile",
+    "administration",
+    "rest-api",
+    "metrics",
+    "service-management"
+   ]
+  },
+  "k8s": {
+   "intro": "Kubernetes from \"what is a container?\" to security, scheduling and GitOps. Examples cover web shops, APIs, databases, batch jobs and streaming. Where you see a practice cluster, type real kubectl commands.",
+   "topics": [
+    "containers",
+    "what-k8s-does",
+    "pods",
+    "kubectl",
+    "yaml-anatomy",
+    "deployments",
+    "services",
+    "config-secrets",
+    "namespaces-resources",
+    "probes",
+    "ingress-gateway",
+    "storage",
+    "jobs-daemonsets",
+    "autoscaling",
+    "helm-kustomize",
+    "scheduling",
+    "security",
+    "observability",
+    "internals",
+    "gitops"
+   ]
+  }
+ }
+}

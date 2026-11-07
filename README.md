@@ -63,8 +63,12 @@ cluster, JQL runs in the sandbox), key points, a real-world use from outside col
 Readers can search, filter by level and mark topics as understood (saved in the browser). A topic is
 `{ id, level, title, summary, body, code, lang, run?, points, realWorld, check, lesson? }`.
 
+**Loading speed:** the Lab loads a small catalogue (`src/learn/catalog.generated.json`, written by
+`scripts/gen-learn-catalog.mjs` before every dev start and build) and downloads each course's lessons and each
+knowledge base only when opened. Python and the code editor start loading when a code box nears the screen.
+
 **Adding a course:** write its modules and lessons (see `src/learn/python/` for one with runnable exercises) and add
-an entry to `src/learn/courses.js`, with a beginner guide in `src/learn/guides/` and a knowledge base in `src/learn/kb/`. A lesson is `{ id, module, title, minutes, goals, body, exercises?, quiz? }`;
+`src/learn/content/<id>.js`, list it in `src/learn/courses.js` and `src/learn/catalog.js`, with a beginner guide in `src/learn/guides/` and a knowledge base in `src/learn/kb/`. A lesson is `{ id, module, title, minutes, goals, body, exercises?, quiz? }`;
 an exercise is `{ id, title, prompt, starter, tests, hint?, solution?, stdin? }`, where each test is Python code
 with `assert`s run after the learner's code (`OUTPUT` holds what was printed, `SOURCE` the code itself). React
 exercises set `kind: 'react'` with JavaScript tests; Jira and Kubernetes exercises set their own `kind` and `component`.

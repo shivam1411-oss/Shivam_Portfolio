@@ -35,13 +35,12 @@ import CodeTrail from '../components/CodeTrail';
 import CursorReveal from '../components/CursorReveal';
 import ThemeToggle from '../components/ThemeToggle';
 import { ease } from '../components/motion';
-import { courseById, courses, learningPaths, lessonHash, lessonKey } from './courses';
+import { courseById, courses, learningPaths, lessonHash, lessonKey, loadCourse, loadedCourse, prefetchCourse } from './catalog';
 import { BigIdea, Mistakes, Questions, Recap, WordsToKnow } from './LessonGuide';
 import { glossary } from './glossary';
 import Landing from './Landing';
 import PyRunner from './python/PyRunner';
 import ReactRunner from './react/LazyReactRunner';
-import { warmUp } from './python/runtime';
 import { timeline } from './timeline';
 import { btn, btnPrimary } from './ui';
 
@@ -222,6 +221,8 @@ function CourseCard({ course, progress, index }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease, delay: 0.1 + index * 0.08 }}
+      onPointerEnter={() => prefetchCourse(course.id)}
+      onFocus={() => prefetchCourse(course.id)}
       className="flex flex-col p-6 md:p-7 rounded-[1.75rem] bg-surface border border-line shadow-soft"
     >
       <div className="flex items-start justify-between gap-4">
@@ -354,6 +355,7 @@ function Hub({ progress }) {
 
 function CourseHome({ course, progress, resetCourse }) {
   const s = courseStats(course, progress);
+  useEffect(() => prefetchCourse(course.id), [course.id]);
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
       <a href="#/courses" className="inline-flex items-center gap-1.5 text-sm font-bold text-muted hover:text-fg">
@@ -681,6 +683,63 @@ function LessonNav({ course, currentId, progress, onPick }) {
   );
 }
 
+/** A course's full lessons, loaded on demand (each course is its own download). */
+function useFullCourse(id) {
+  const [state, setState] = useState(() => ({ id, course: loadedCourse(id), error: null }));
+  useEffect(() => {
+    let live = true;
+    const ready = loadedCourse(id);
+    if (ready) {
+      setState({ id, course: ready, error: null });
+      return undefined;
+    }
+    setState({ id, course: null, error: null });
+    loadCourse(id).then(
+      (course) => live && setState({ id, course, error: null }),
+      (error) => live && setState({ id, course: null, error })
+    );
+    return () => {
+      live = false;
+    };
+  }, [id]);
+  return state.id === id ? state : { course: loadedCourse(id), error: null };
+}
+
+function LessonPage({ course, lesson, ...rest }) {
+  const { course: full, error } = useFullCourse(course.id);
+  if (error)
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+        <h1 className="text-3xl font-extrabold text-fg">{lesson.title}</h1>
+        <p className="mt-4 text-muted">This lesson could not be downloaded. Check your connection, or the site may have just been updated.</p>
+        <button type="button" className={`${btnPrimary} mt-6`} onClick={() => window.location.reload()}>
+          <RotateCcw size={15} /> Reload
+        </button>
+      </div>
+    );
+  if (!full)
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12 grid lg:grid-cols-[17rem_1fr] gap-10" aria-busy="true">
+        <aside className="hidden lg:block space-y-3">
+          {course.lessons.slice(0, 8).map((l) => (
+            <div key={l.id} className="h-4 rounded bg-surface-2 animate-pulse" />
+          ))}
+        </aside>
+        <article className="min-w-0 max-w-3xl">
+          <div className="eyebrow text-accent">{course.title}</div>
+          <h1 className="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight text-fg leading-tight">{lesson.title}</h1>
+          <p className="mt-6 text-muted">Loading the lesson…</p>
+          <div className="mt-6 space-y-3">
+            {[90, 75, 85, 60].map((w) => (
+              <div key={w} className="h-4 rounded bg-surface-2 animate-pulse" style={{ width: `${w}%` }} />
+            ))}
+          </div>
+        </article>
+      </div>
+    );
+  return <Lesson course={full} lesson={full.lessons.find((l) => l.id === lesson.id)} {...rest} />;
+}
+
 function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz }) {
   const key = lessonKey(course, lesson);
   const index = course.lessons.indexOf(lesson);
@@ -708,11 +767,7 @@ function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz })
   useEffect(() => {
     setNavOpen(false);
     wasComplete.current = complete;
-    // Start loading Python in the background so the first Run is quick.
-    if (course.usesPython) {
-      const t = setTimeout(warmUp, 1500);
-      return () => clearTimeout(t);
-    }
+    // Python starts loading when a code box comes near the screen (see PyRunner), not on page open.
     return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
@@ -1000,7 +1055,7 @@ export default function LearnApp() {
           {route.view === 'hub' && <Hub progress={progress} />}
           {route.view === 'course' && <CourseHome course={route.course} progress={progress} resetCourse={resetCourse} />}
           {route.view === 'lesson' && (
-            <Lesson
+            <LessonPage
               course={route.course}
               lesson={route.lesson}
               progress={progress}
