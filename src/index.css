@@ -270,3 +270,18 @@ body {
     animation: none;
   }
 }
+
+/* Learning Lab: plain default styles inside the live React preview, where learners' own components
+   render (the site's CSS reset would otherwise leave headings, lists and buttons unstyled). */
+.react-preview { font-family: var(--font-sans); font-size: 14px; line-height: 1.5; }
+.react-preview h1 { font-size: 1.6em; font-weight: 800; margin: 0 0 0.4em; }
+.react-preview h2 { font-size: 1.3em; font-weight: 700; margin: 0 0 0.4em; }
+.react-preview h3 { font-size: 1.1em; font-weight: 700; margin: 0 0 0.3em; }
+.react-preview p { margin: 0 0 0.6em; }
+.react-preview ul, .react-preview ol { padding-left: 1.4em; margin: 0 0 0.6em; list-style: disc; }
+.react-preview ol { list-style: decimal; }
+.react-preview button { padding: 6px 12px; margin: 0 6px 6px 0; border: 1px solid #c9ccd1; border-radius: 8px; background: #f3f4f6; font-weight: 600; cursor: pointer; }
+.react-preview button:hover { background: #e5e7eb; }
+.react-preview input, .react-preview select, .react-preview textarea { padding: 6px 10px; border: 1px solid #c9ccd1; border-radius: 8px; background: #fff; }
+.react-preview table { border-collapse: collapse; }
+.react-preview th, .react-preview td { padding: 4px 10px; border-bottom: 1px solid #e5e7eb; text-align: left; }

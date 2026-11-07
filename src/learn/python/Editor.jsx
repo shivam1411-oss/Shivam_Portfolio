@@ -5,6 +5,11 @@ import { Prec, StateEffect, StateField } from '@codemirror/state';
 import { indentWithTab } from '@codemirror/commands';
 import { HighlightStyle, indentUnit, syntaxHighlighting } from '@codemirror/language';
 import { python } from '@codemirror/lang-python';
+import { javascript } from '@codemirror/lang-javascript';
+import { yaml } from '@codemirror/lang-yaml';
+
+// Language support by name; Python is the default.
+const LANGUAGES = { python: () => python(), jsx: () => javascript({ jsx: true }), yaml: () => yaml() };
 import { tags as t } from '@lezer/highlight';
 
 const MONO = '"JetBrains Mono", ui-monospace, SFMono-Regular, monospace';
@@ -40,6 +45,9 @@ const highlight = HighlightStyle.define([
   { tag: t.definition(t.variableName), color: '#ecedef' },
   { tag: [t.className, t.definition(t.className)], color: '#f0abfc' },
   { tag: t.self, color: '#f9a8d4' },
+  { tag: [t.tagName, t.angleBracket], color: '#7dd3fc' },
+  { tag: t.attributeName, color: '#c4b5fd' },
+  { tag: t.propertyName, color: '#d6f5f0' },
 ]);
 
 // Step-through: the line about to run gets a highlighted background.
@@ -58,8 +66,8 @@ const stepLine = StateField.define({
   provide: (f) => EditorView.decorations.from(f),
 });
 
-/** CodeMirror editor for Python. Ctrl/Cmd+Enter calls onRun; `highlightLine` marks a line for step-through. */
-export default function Editor({ value, onChange, onRun, label = 'Python code', highlightLine = null }) {
+/** CodeMirror editor (Python, JSX or YAML). Ctrl/Cmd+Enter calls onRun; `highlightLine` marks a line for step-through. */
+export default function Editor({ value, onChange, onRun, label = 'Python code', highlightLine = null, language = 'python' }) {
   const host = useRef(null);
   const view = useRef(null);
   const callbacks = useRef({ onChange, onRun });
@@ -84,8 +92,8 @@ export default function Editor({ value, onChange, onRun, label = 'Python code', 
         basicSetup,
         stepLine,
         keymap.of([indentWithTab]), // Esc, then Tab, moves focus out of the editor
-        indentUnit.of('    '),
-        python(),
+        indentUnit.of(language === 'python' ? '    ' : '  '), // Python uses 4 spaces; JSX and YAML 2
+        (LANGUAGES[language] || LANGUAGES.python)(),
         syntaxHighlighting(highlight),
         theme,
         EditorView.contentAttributes.of({ 'aria-label': label }),

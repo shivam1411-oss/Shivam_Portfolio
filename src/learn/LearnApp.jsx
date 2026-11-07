@@ -3,7 +3,9 @@ import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import {
   ArrowLeft,
   ArrowRight,
+  Atom,
   BookOpen,
+  Boxes,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -22,6 +24,7 @@ import {
   RotateCcw,
   Search,
   Sparkles,
+  SquareKanban,
   SquareTerminal,
   Table2,
   Target,
@@ -31,16 +34,17 @@ import CodeTrail from '../components/CodeTrail';
 import CursorReveal from '../components/CursorReveal';
 import ThemeToggle from '../components/ThemeToggle';
 import { ease } from '../components/motion';
-import { courseById, courses, learningPath, lessonHash, lessonKey } from './courses';
+import { courseById, courses, learningPaths, lessonHash, lessonKey } from './courses';
 import { BigIdea, Mistakes, Questions, Recap, WordsToKnow } from './LessonGuide';
 import { glossary } from './glossary';
 import Landing from './Landing';
 import PyRunner from './python/PyRunner';
+import ReactRunner from './react/LazyReactRunner';
 import { warmUp } from './python/runtime';
 import { timeline } from './timeline';
 import { btn, btnPrimary } from './ui';
 
-const courseIcons = { site: Code2, python: SquareTerminal, pandas: Table2, sql: Database, viz: ChartColumn };
+const courseIcons = { site: Code2, python: SquareTerminal, pandas: Table2, sql: Database, viz: ChartColumn, react: Atom, jira: SquareKanban, k8s: Boxes };
 const allLessons = courses.flatMap((c) => c.lessons.map((l) => ({ course: c, lesson: l })));
 
 // ---------------------------------------------------------------- routing and progress
@@ -262,7 +266,7 @@ function Hub({ progress }) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
       <section className="relative">
-        <div className="glow-accent absolute -top-24 -left-24 w-[36rem] h-[36rem] opacity-70 -z-10" />
+        <div className="glow-accent absolute -top-24 -left-24 w-[min(36rem,100vw)] h-[min(36rem,100vw)] opacity-70 -z-10" />
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
           <Eyebrow>
             Learning Lab · {courses.length} courses · {allLessons.length} lessons
@@ -277,31 +281,37 @@ function Hub({ progress }) {
         </motion.div>
       </section>
 
-      <section aria-label="Recommended path" className="mt-10 p-5 md:p-6 rounded-[1.75rem] bg-surface border border-line shadow-soft">
-        <div className="eyebrow text-accent">New here? Follow this path</div>
-        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {learningPath.map(({ course: id, why }, i) => {
-            const c = courseById[id];
-            const st = courseStats(c, progress);
-            return (
-              <li key={id}>
-                <a href={`#/c/${id}`} className="group block h-full p-4 rounded-2xl border border-line hover:border-accent/50 transition-colors">
-                  <span className="flex items-center gap-2">
-                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold ${st.done === st.total ? 'bg-accent text-bg' : 'bg-accent/15 text-accent'}`}>
-                      {st.done === st.total ? <Check size={14} /> : i + 1}
+      {learningPaths.map((path, pi) => (
+        <section key={path.id} aria-label={`Recommended path: ${path.title}`} className={`${pi === 0 ? 'mt-10' : 'mt-6'} p-5 md:p-6 rounded-[1.75rem] bg-surface border border-line shadow-soft`}>
+          <div className="eyebrow text-accent">{path.id === 'data' ? 'New here? Follow this path' : path.title}</div>
+          <p className="mt-1 text-sm text-muted">
+            {path.id === 'data' ? `${path.title}: ` : ''}
+            {path.blurb}
+          </p>
+          <ol className={`mt-4 grid gap-3 sm:grid-cols-2 ${path.steps.length >= 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-3'}`}>
+            {path.steps.map(({ course: id, why }, i) => {
+              const c = courseById[id];
+              const st = courseStats(c, progress);
+              return (
+                <li key={id}>
+                  <a href={`#/c/${id}`} className="group block h-full p-4 rounded-2xl border border-line hover:border-accent/50 transition-colors">
+                    <span className="flex items-center gap-2">
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold ${st.done === st.total ? 'bg-accent text-bg' : 'bg-accent/15 text-accent'}`}>
+                        {st.done === st.total ? <Check size={14} /> : i + 1}
+                      </span>
+                      <span className="font-extrabold text-fg group-hover:text-accent">{c.title}</span>
                     </span>
-                    <span className="font-extrabold text-fg group-hover:text-accent">{c.title}</span>
-                  </span>
-                  <span className="mt-2 block text-xs text-muted leading-relaxed">{why}</span>
-                  <span className="mt-2 block text-[11px] font-bold text-subtle">
-                    {st.done}/{st.total} lessons
-                  </span>
-                </a>
-              </li>
-            );
-          })}
-        </ol>
-      </section>
+                    <span className="mt-2 block text-xs text-muted leading-relaxed">{why}</span>
+                    <span className="mt-2 block text-[11px] font-bold text-subtle">
+                      {st.done}/{st.total} lessons
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))}
 
       <section aria-label="Courses" className="mt-6 grid gap-6 md:grid-cols-2">
         {courses.map((c, i) => (
@@ -340,7 +350,7 @@ function CourseHome({ course, progress, resetCourse }) {
         <ArrowLeft size={15} /> All courses
       </a>
       <section className="relative mt-6">
-        <div className="glow-accent absolute -top-24 -left-24 w-[36rem] h-[36rem] opacity-70 -z-10" />
+        <div className="glow-accent absolute -top-24 -left-24 w-[min(36rem,100vw)] h-[min(36rem,100vw)] opacity-70 -z-10" />
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
           <Eyebrow>
             {course.levels} · {s.total} lessons · {roundMinutes(s.minutes)}
@@ -556,6 +566,29 @@ function Quiz({ quiz, answers = {}, onAnswer, onReset }) {
   );
 }
 
+// Each exercise names its kind of runner; Python is the default.
+const RUNNERS = { python: PyRunner, react: ReactRunner };
+
+function ExerciseRunner({ ex, exKey, passed, onPass }) {
+  if (ex.kind && ex.kind !== 'python' && ex.kind !== 'react') {
+    const Custom = ex.component; // JQL, Kubernetes…: the exercise brings its own interactive checker
+    return <Custom ex={ex} storageKey={`ex:${exKey}`} passed={passed} onPass={onPass} />;
+  }
+  const Runner = RUNNERS[ex.kind || 'python'];
+  return (
+    <Runner
+      code={ex.starter}
+      tests={ex.tests}
+      stdin={ex.stdin}
+      hint={ex.hint}
+      solution={ex.solution}
+      storageKey={`${ex.kind === 'react' ? 'react' : 'py'}-code:${exKey}`}
+      passed={passed}
+      onPass={onPass}
+    />
+  );
+}
+
 function Practice({ course, lesson, progress, solve }) {
   const key = lessonKey(course, lesson);
   const solvedCount = lesson.exercises.filter((e) => progress.solved[`${key}/${e.id}`]).length;
@@ -581,16 +614,7 @@ function Practice({ course, lesson, progress, solve }) {
               {i + 1}. {ex.title}
             </div>
             <p className="mt-1 text-sm text-muted leading-relaxed">{ex.prompt}</p>
-            <PyRunner
-              code={ex.starter}
-              tests={ex.tests}
-              stdin={ex.stdin}
-              hint={ex.hint}
-              solution={ex.solution}
-              storageKey={`py-code:${exKey}`}
-              passed={!!progress.solved[exKey]}
-              onPass={() => solve(exKey)}
-            />
+            <ExerciseRunner ex={ex} exKey={exKey} passed={!!progress.solved[exKey]} onPass={() => solve(exKey)} />
           </div>
         );
       })}
