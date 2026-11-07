@@ -21,6 +21,13 @@ Pushing to `main` deploys `dist/` to GitHub Pages via `.github/workflows/deploy.
 
 Content lives in `src/data/content.js`; theme colors are CSS variables at the top of `src/index.css`.
 
+## Site updates (changelog)
+
+Every change to the website since the first page is listed in `src/data/changelog.js`, in plain words with its
+commits. The portfolio shows it as the **Updates** section (`#updates`, newest first, filterable by period and type)
+and the Learning Lab shows the same list at `learn.html#/timeline`. When you ship a change, add an entry at the
+bottom of the list: `{ phase, date, category, title, plain, commits, lessons? }`.
+
 ## Learning Lab
 
 `learn.html` opens on a landing page that takes the portfolio apart into its layers (an interactive 3D exploded view,

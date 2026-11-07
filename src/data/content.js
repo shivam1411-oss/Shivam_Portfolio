@@ -21,6 +21,7 @@ export const navLinks = [
   { id: 'impact', label: 'Metrics' },
   { id: 'experience', label: 'Timeline' },
   { id: 'lab', label: 'Analytical Lab' },
+  { id: 'updates', label: 'Updates' },
 ];
 
 // Hero proof points: how collections were automated, tested and measured.

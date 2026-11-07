@@ -57,6 +57,8 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
+  /* Elements that slide in from the side must not let the page scroll sideways (iOS ignores this on body). */
+  overflow-x: clip;
 }
 
 body {
