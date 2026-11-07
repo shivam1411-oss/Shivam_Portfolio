@@ -6,15 +6,31 @@ const TIME_LIMIT_MS = 15000;
 let worker = null;
 let status = 'idle'; // idle | loading | ready | error
 let statusError = '';
+let downloaded = 0; // bytes fetched while Python loads (0 when it comes from the browser's cache)
+let stallTimer = null;
+// If nothing arrives for this long while Python loads, say so and offer a retry instead of spinning forever.
+const STALL_MS = 45000;
+/** About how much Python downloads the first time (engine + standard library), for the progress text. */
+export const PYTHON_DOWNLOAD_MB = 11;
 const listeners = new Set();
 let current = null; // { id, onOut, resolve, timer }
 let queue = Promise.resolve();
 let nextId = 1;
 
+const notify = () => listeners.forEach((fn) => fn());
 const setStatus = (s, err = '') => {
   status = s;
   statusError = err;
-  listeners.forEach((fn) => fn());
+  if (s !== 'loading') clearTimeout(stallTimer);
+  notify();
+};
+const watchForStall = () => {
+  clearTimeout(stallTimer);
+  stallTimer = setTimeout(() => {
+    if (status !== 'loading') return;
+    setStatus('error', 'The Python download stopped making progress. Check your connection and press Retry.');
+    finish({ error: { type: 'LoadError', message: 'Python is taking too long to download.', text: 'Python is taking too long to download. Check your connection, then press Retry.' } });
+  }, STALL_MS);
 };
 
 export const subscribe = (fn) => {
@@ -22,6 +38,8 @@ export const subscribe = (fn) => {
   return () => listeners.delete(fn);
 };
 export const getStatus = () => status;
+/** Megabytes downloaded so far while Python loads (one decimal place, so the UI updates smoothly). */
+export const getDownloadedMB = () => Math.round(downloaded / 100000) / 10;
 export const getStatusError = () => statusError;
 
 function finish(result) {
@@ -33,9 +51,17 @@ function finish(result) {
 }
 
 function start() {
+  downloaded = 0;
   setStatus('loading');
+  watchForStall();
   worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
   worker.onmessage = ({ data }) => {
+    if (data.type === 'progress') {
+      downloaded = data.bytes;
+      if (status === 'error' && statusError.includes('stopped making progress')) setStatus('loading'); // it recovered
+      if (status === 'loading') watchForStall();
+      return notify();
+    }
     if (data.type === 'ready') return setStatus('ready');
     if (data.type === 'init-error') return setStatus('error', data.message);
     if (!current || data.id !== current.id) return;
@@ -57,9 +83,24 @@ export function warmUp() {
   if (!worker) start();
 }
 
+/** Throw away the Python worker and start loading again (after a failed or stalled download). */
+export function retry() {
+  if (worker) worker.terminate();
+  worker = null;
+  finish({ error: { type: 'Stopped', message: 'Restarting Python…', text: 'Restarting Python…' } });
+  start();
+}
+
 /** Kill the running program by replacing the worker. */
 export function stop(reason = 'stopped') {
   if (!worker) return;
+  // Still downloading: cancel this run but keep the download going, so the next Run does not start over.
+  if (status === 'loading' && reason !== 'timeout') {
+    if (current) worker.postMessage({ type: 'cancel', id: current.id });
+    const message = 'Stopped. Python is still downloading in the background; press Run again when it is ready.';
+    finish({ error: { type: 'Stopped', message, text: message } });
+    return;
+  }
   worker.terminate();
   worker = null;
   const message =
@@ -79,6 +120,11 @@ export function run(code, { stdin = '', tests = [], onOut = () => {}, trace = fa
   const job = queue.then(
     () =>
       new Promise((resolve) => {
+        if (status === 'error' && worker) {
+          // A failed or stalled load: start a fresh worker for this run.
+          worker.terminate();
+          worker = null;
+        }
         if (!worker) start();
         const id = nextId++;
         // The clock starts when the worker says the program itself is starting, so downloading
