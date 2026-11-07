@@ -7,7 +7,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 # Sites allowed to call the chat: the live site, local development, and the Android app.
-ALLOWED_ORIGINS = "https://shivam1411-oss.github.io,http://localhost:5173,http://localhost:4173,https://localhost"
+ALLOWED_ORIGINS = "https://shivam-soni.com,https://www.shivam-soni.com,https://shivam1411-oss.github.io,http://localhost:5173,http://localhost:4173,https://localhost"
 
 # Per-visitor limit to keep API costs predictable: 10 messages per minute per IP address.
 [[ratelimits]]

@@ -5,3 +5,5 @@ dist
 apk/
 *.local
 public/pyodide/
+.codegraph
+CLAUDE.local.md
