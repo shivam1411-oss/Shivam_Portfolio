@@ -56,8 +56,15 @@ Every lesson is built for beginners: a one-sentence **big idea**, **words to kno
 Courses page suggests two learning paths (data: Python → pandas → SQL → charts; technology: React → Jira →
 Kubernetes), and each course says who it is for, what you need and what you will learn.
 
+**Knowledge base** (`#/kb`, `src/learn/kb/`): every course also has a reference of 20 topics in four levels
+(Beginner, Intermediate, Advanced, Expert), 160 in all. Each topic has a plain-English explanation, an example (Python,
+SQL, Matplotlib and React examples run in the browser, HTML examples render live, Kubernetes ones open a practice
+cluster, JQL runs in the sandbox), key points, a real-world use from outside collections and a check-yourself question.
+Readers can search, filter by level and mark topics as understood (saved in the browser). A topic is
+`{ id, level, title, summary, body, code, lang, run?, points, realWorld, check, lesson? }`.
+
 **Adding a course:** write its modules and lessons (see `src/learn/python/` for one with runnable exercises) and add
-an entry to `src/learn/courses.js`, with a beginner guide in `src/learn/guides/`. A lesson is `{ id, module, title, minutes, goals, body, exercises?, quiz? }`;
+an entry to `src/learn/courses.js`, with a beginner guide in `src/learn/guides/` and a knowledge base in `src/learn/kb/`. A lesson is `{ id, module, title, minutes, goals, body, exercises?, quiz? }`;
 an exercise is `{ id, title, prompt, starter, tests, hint?, solution?, stdin? }`, where each test is Python code
 with `assert`s run after the learner's code (`OUTPUT` holds what was printed, `SOURCE` the code itself). React
 exercises set `kind: 'react'` with JavaScript tests; Jira and Kubernetes exercises set their own `kind` and `component`.
