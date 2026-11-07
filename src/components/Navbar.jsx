@@ -127,7 +127,13 @@ export default function Navbar({ onConnect, onResume }) {
                   <motion.a
                     key={link.id}
                     href={`#${link.id}`}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={(e) => {
+                      // Closing the menu cancels the browser's own jump to the section, so scroll there ourselves.
+                      e.preventDefault();
+                      setMenuOpen(false);
+                      history.replaceState(null, '', `#${link.id}`);
+                      requestAnimationFrame(() => document.getElementById(link.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+                    }}
                     initial={{ x: -12, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.05 * i }}

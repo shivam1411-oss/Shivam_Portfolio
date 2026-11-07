@@ -41,7 +41,7 @@ import { glossary } from './glossary';
 import Landing from './Landing';
 import PyRunner from './python/PyRunner';
 import ReactRunner from './react/LazyReactRunner';
-import { timeline } from './timeline';
+import { commitUrl, timeline } from './timeline';
 import { btn, btnPrimary } from './ui';
 
 const KnowledgeBase = lazy(() => import('./kb/KnowledgeBase'));
@@ -818,7 +818,7 @@ function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz })
               <a
                 key={c}
                 href="#/timeline"
-                title={timeline.find((t) => t.hash === c)?.title}
+                title={timeline.find((t) => t.commits.includes(c))?.title}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-2 border border-line font-mono hover:text-fg"
               >
                 <GitCommitHorizontal size={12} /> {c}
@@ -964,13 +964,14 @@ function Timeline() {
       </div>
       <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-fg">What changed, in order</h1>
       <p className="mt-4 text-muted leading-relaxed">
-        Each item is one <b className="text-fg">commit</b> in your repository, from the React rebuild to the latest fix. The short code (like <span className="font-mono">d1fd86a</span>)
-        is its id; you can find it on GitHub under Commits.
+        Every change since the first page in July 2026, oldest first. Each item lists its <b className="text-fg">commits</b>: the short codes (like{' '}
+        <span className="font-mono">d1fd86a</span>) are their ids, and clicking one opens it on GitHub. The same list appears on the portfolio under{' '}
+        <a href="./index.html#updates" className="font-bold text-fg underline underline-offset-2">Site updates</a>.
       </p>
       <ol className="mt-10 relative border-l-2 border-line ml-2">
         {timeline.map((t, i) => (
           <motion.li
-            key={t.hash}
+            key={`${t.date}-${t.title}`}
             initial={{ opacity: 0, x: -10 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-30px' }}
@@ -979,8 +980,13 @@ function Timeline() {
           >
             <span className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-bg border-2 border-accent" />
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-subtle">
-              <span className="font-mono text-accent">{t.hash}</span>
-              <span>·</span>
+              {t.commits.slice(0, 3).map((h) => (
+                <a key={h} href={commitUrl(h)} target="_blank" rel="noreferrer" className="font-mono text-accent hover:underline">
+                  {h}
+                </a>
+              ))}
+              {t.commits.length > 3 && <span>+{t.commits.length - 3} more</span>}
+              {t.commits.length > 0 && <span>·</span>}
               <span>{new Date(`${t.date}T12:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
               <span>·</span>
               <span>Change {i + 1}</span>

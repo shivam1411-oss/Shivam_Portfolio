@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { CheckCircle2, CircleAlert, Eye, FlaskConical, Footprints, Keyboard, Lightbulb, Loader2, Play, RotateCcw, Square, Terminal, XCircle } from 'lucide-react';
-import { getStatus, getStatusError, run, stop, subscribe, warmUp } from './runtime';
+import { PYTHON_DOWNLOAD_MB, getDownloadedMB, getStatus, getStatusError, retry, run, stop, subscribe, warmUp } from './runtime';
 import { btn, btnPrimary } from '../ui';
 import StepThrough from './StepThrough';
 
@@ -25,24 +25,55 @@ const ERROR_HINTS = {
 };
 
 const usePythonStatus = () => useSyncExternalStore(subscribe, getStatus);
+const useDownloadedMB = () => useSyncExternalStore(subscribe, getDownloadedMB);
+
+/** "Downloading Python… 3.4 of ~11 MB", or "Starting Python…" once the files are here (or cached). */
+function loadingText(mb) {
+  if (mb > 0 && mb < PYTHON_DOWNLOAD_MB - 0.3) return `Downloading Python… ${mb.toFixed(1)} of ~${PYTHON_DOWNLOAD_MB} MB`;
+  return 'Starting Python…';
+}
 
 function StatusBadge() {
   const status = usePythonStatus();
+  const mb = useDownloadedMB();
   if (status === 'loading')
     return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted">
-        <Loader2 size={12} className="animate-spin" /> Loading Python…
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted" aria-live="polite">
+        <Loader2 size={12} className="animate-spin" /> {loadingText(mb)}
       </span>
     );
   if (status === 'error')
     return (
       <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-600 dark:text-amber-300" title={getStatusError()}>
         <CircleAlert size={12} /> Python failed to load
+        <button type="button" onClick={retry} className="ml-1 underline underline-offset-2 hover:text-fg">
+          Retry
+        </button>
       </span>
     );
   if (status === 'ready')
     return <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-accent">● Python ready</span>;
   return <span className="text-[11px] font-semibold text-subtle">Python loads on first run</span>;
+}
+
+/** Shown in the output while a run waits: explains the one-time download instead of a bare "Running…". */
+function RunningNote() {
+  const status = usePythonStatus();
+  const mb = useDownloadedMB();
+  if (status !== 'loading') return <div className="text-white/40 italic">Running…</div>;
+  return (
+    <div className="text-white/50 italic">
+      {loadingText(mb)}
+      <div className="not-italic text-[11px] text-white/35 mt-1">
+        The first time only: Python (about {PYTHON_DOWNLOAD_MB} MB) downloads into your browser and is kept for next time. Your program runs as soon as it is ready.
+      </div>
+      {mb > 0 && mb < PYTHON_DOWNLOAD_MB && (
+        <div className="mt-2 h-1 w-48 max-w-full rounded-full bg-white/10 overflow-hidden">
+          <div className="h-full bg-[#5eead4]" style={{ width: `${Math.min(100, (mb / PYTHON_DOWNLOAD_MB) * 100)}%` }} />
+        </div>
+      )}
+    </div>
+  );
 }
 
 const readSaved = (key) => {
@@ -272,7 +303,7 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
             {!lines.some((l) => l.kind !== 'info') && result && !error && !result.images?.length && (
               <div className="text-white/40 italic">(nothing was printed)</div>
             )}
-            {running && !lines.length && <div className="text-white/40 italic">Running…</div>}
+            {running && !lines.length && <RunningNote />}
           </pre>
 
           {result?.images?.length > 0 && (

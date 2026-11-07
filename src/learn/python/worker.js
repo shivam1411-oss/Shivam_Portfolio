@@ -1,8 +1,9 @@
 // Runs Python (Pyodide) off the main thread, so a slow or endless program never freezes the page.
 import { datasets } from './datasets';
 
-// Messages in:  { type: 'init', indexURL }  ·  { type: 'run', id, code, stdin, tests, trace? }
-// Messages out: { type: 'ready' | 'init-error' }  ·  { id, type: 'loading', packages }  ·  { id, type: 'start' }
+// Messages in:  { type: 'init', indexURL }  ·  { type: 'run', id, code, stdin, tests, trace? }  ·  { type: 'cancel', id }
+// Messages out: { type: 'ready' | 'init-error' }  ·  { type: 'progress', bytes }
+//               { id, type: 'loading', packages }  ·  { id, type: 'start' }
 //               { id, type: 'out' | 'err', text }  ·  { id, type: 'done', error, results, images, steps?, ms }
 
 // Helpers run inside Python: they compile the learner's code under a friendly file name, keep each
@@ -144,8 +145,67 @@ def _check(code, ns):
         return {"passed": False, "message": f"{type(e).__name__}: {e}"}
 `;
 
+// ---------------------------------------------------------------- downloads
+// Pyodide fetches its files with fetch(). Wrapping fetch lets us report download progress, and keep the
+// big, versioned files (the .wasm engine, the standard library and package wheels) in Cache Storage, so
+// the next visit starts from disk instead of downloading about 12 MB again.
+const CACHE = 'pyodide-0.29.5';
+const CACHEABLE = /\.(wasm|zip|whl)$/;
+let base = '';
+let received = 0;
+let lastReport = 0;
+const realFetch = self.fetch.bind(self);
+
+const report = (force = false) => {
+  const now = Date.now();
+  if (force || now - lastReport > 200) {
+    lastReport = now;
+    postMessage({ type: 'progress', bytes: received });
+  }
+};
+
+async function openCache() {
+  try {
+    const cache = await caches.open(CACHE);
+    // Drop caches from older Pyodide versions.
+    caches.keys().then((keys) => keys.filter((k) => k.startsWith('pyodide-') && k !== CACHE).forEach((k) => caches.delete(k)));
+    return cache;
+  } catch {
+    return null; // Cache Storage unavailable (e.g. private mode): fall back to the browser's HTTP cache
+  }
+}
+let cachePromise = null;
+
+self.fetch = async (input, init) => {
+  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+  if (!base || !url.startsWith(base)) return realFetch(input, init);
+  const cacheable = CACHEABLE.test(new URL(url).pathname);
+  const cache = cacheable ? await (cachePromise ||= openCache()) : null;
+  if (cache) {
+    const hit = await cache.match(url).catch(() => null);
+    if (hit) return hit;
+  }
+  const res = await realFetch(input, init);
+  if (!res.ok || !res.body) return res;
+  const reader = res.body.getReader();
+  const chunks = [];
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    received += value.length;
+    report();
+  }
+  report(true);
+  const type = res.headers.get('Content-Type') || (url.endsWith('.wasm') ? 'application/wasm' : 'application/octet-stream');
+  const out = new Response(new Blob(chunks), { status: 200, headers: { 'Content-Type': type } });
+  if (cache) cache.put(url, out.clone()).catch(() => {});
+  return out;
+};
+
 let pyodide = null;
 let ready = null;
+const cancelled = new Set(); // runs stopped while Python was still loading
 let py = null; // the helpers above, looked up once
 
 // Packages lessons may import (served from pyodide/ by scripts/copy-pyodide.mjs), by import name.
@@ -153,6 +213,7 @@ const PACKAGES = { numpy: 'numpy', pandas: 'pandas', sqlite3: 'sqlite3', matplot
 const loaded = new Set();
 
 async function init(indexURL) {
+  base = indexURL;
   const { loadPyodide } = await import(/* @vite-ignore */ `${indexURL}pyodide.mjs`);
   pyodide = await loadPyodide({ indexURL });
   await pyodide.runPythonAsync(HELPERS);
@@ -248,8 +309,13 @@ self.onmessage = async ({ data }) => {
     );
     return;
   }
+  if (data.type === 'cancel') {
+    cancelled.add(data.id);
+    return;
+  }
   if (data.type === 'run') {
     await ready;
+    if (cancelled.delete(data.id)) return; // Stop was pressed while Python was loading
     if (!py) return postMessage({ id: data.id, type: 'done', error: { type: 'LoadError', message: 'Python could not start.', text: 'Python could not start.' } });
     try {
       await run(data);

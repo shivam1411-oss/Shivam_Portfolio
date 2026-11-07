@@ -5,6 +5,7 @@ import Marquee from './components/Marquee';
 import Metrics from './components/Metrics';
 import Experience from './components/Experience';
 import Lab from './components/Lab';
+import Updates from './components/Updates';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import ResumeModal from './components/ResumeModal';
@@ -31,6 +32,7 @@ export default function Site() {
         <Metrics />
         <Experience />
         <Lab />
+        <Updates />
       </main>
       <Footer onResume={openResume} />
 
