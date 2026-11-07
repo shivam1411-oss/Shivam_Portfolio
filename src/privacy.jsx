@@ -84,8 +84,8 @@ const sections = [
     body: (
       <>
         <p>
-          The Learning Lab offers free interactive courses on how this site was built and on Python. You don't need an account and you are
-          never asked for any personal information to use it.
+          The Learning Lab offers free interactive courses on how this site was built, Python, and data analysis with pandas, SQL and
+          Matplotlib. You don't need an account and you are never asked for any personal information to use it.
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
@@ -93,9 +93,14 @@ const sections = [
             saved only in your browser or the app on your device. They are never uploaded, and Shivam Soni cannot see them.
           </li>
           <li>
-            <strong>Python runs on your device:</strong> code you run in the Python exercises is executed entirely inside your browser or the
-            app. The Python engine is served from this site itself, not from a third-party service, and your code and its output are never sent
+            <strong>Python runs on your device:</strong> code you run in the Python, pandas, SQL and Matplotlib exercises is executed entirely
+            inside your browser or the app. The Python engine and its data libraries are served from this site itself (and are built into the
+            Android app), not from a third-party service. Your code, its output, the charts it draws and any query results are never sent
             anywhere.
+          </li>
+          <li>
+            <strong>Sample data is made up:</strong> the customer accounts, payments and other records used in the data courses are fictional
+            examples bundled with the site. They do not describe real people, and nothing you change in them leaves your device.
           </li>
           <li>
             <strong>Starting over:</strong> clearing your browser data for this site, clearing the app's storage, or uninstalling the app removes
@@ -342,7 +347,7 @@ function PrivacyPage() {
           transition={{ delay: 0.3 }}
           className="eyebrow text-subtle mb-12"
         >
-          Effective Date: November 6, 2026
+          Effective Date: November 7, 2026
         </motion.p>
 
         <div className="space-y-5 text-muted leading-relaxed">
