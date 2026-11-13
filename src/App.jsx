@@ -39,7 +39,8 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="grain" aria-hidden />
-      <CodeTrail />
+      {/* On top over the welcome screen (it hides the page); behind the content once the site is showing */}
+      <CodeTrail behind={!showIntro} />
       {showIntro && <Intro onEnter={enterSite} onDone={closeIntro} />}
 
       {/* Mounted on entry so the entrance animations play as the welcome screen opens */}

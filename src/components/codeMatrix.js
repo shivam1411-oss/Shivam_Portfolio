@@ -24,14 +24,16 @@ const GLITCH = '01{}[]()<>=+*/;:#$%&|!?'.split('');
 export const matrixThemes = {
   dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
   light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, max: 1, head: '#0c3b36', glow: true, ripple: '15,138,126', rippleAlpha: 0.25 },
-  // Behind page content in dark mode: dim enough that body text stays easy to read.
-  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.1, max: 0.42, head: 'rgba(63,209,191,0.6)', glow: false, ripple: '63,209,191', rippleAlpha: 0.12 },
+  // Behind page content: dim enough that body text stays easy to read over it.
+  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.07, max: 0.3, head: 'rgba(63,209,191,0.45)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
+  lightSubtle: { tile: '#f0f3f2', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.1, max: 0.32, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
 };
 
-/** `subtle` picks the dimmer palette used behind page content (dark mode only; light mode already reads well). */
+/** `subtle` picks the dimmer palette used behind page content; the full one is for the welcome screen. */
 export const currentMatrixTheme = (subtle = false) => {
-  if (!document.documentElement.classList.contains('dark')) return matrixThemes.light;
-  return subtle ? matrixThemes.darkSubtle : matrixThemes.dark;
+  const dark = document.documentElement.classList.contains('dark');
+  if (subtle) return dark ? matrixThemes.darkSubtle : matrixThemes.lightSubtle;
+  return dark ? matrixThemes.dark : matrixThemes.light;
 };
 
 export const rand = (min, max) => min + Math.random() * (max - min);
