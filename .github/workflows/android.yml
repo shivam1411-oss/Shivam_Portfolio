@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 21
@@ -39,7 +39,7 @@ jobs:
       - run: |
           mkdir -p apk
           cp ~/Library/Caches/ShivamPortfolioAndroid/app/outputs/apk/debug/app-debug.apk apk/Shivam-Soni-Portfolio.apk
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Shivam-Soni-Portfolio-apk
           path: apk/Shivam-Soni-Portfolio.apk
