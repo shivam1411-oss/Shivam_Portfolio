@@ -355,7 +355,7 @@ export const changelog = [
     category: 'feature',
     title: 'This timeline',
     plain: 'A "Site updates" section on the portfolio listing every change since the first page, shared with the Learning Lab. Phone menu links now scroll to their section, and the home page no longer drifts sideways on phones.',
-    commits: ['cc33565'],
+    commits: ['cc33565', 'a5b1724'],
   },
   {
     phase: 'lab',
@@ -364,6 +364,30 @@ export const changelog = [
     title: 'Link previews when the site is shared',
     plain: 'Sharing shivam-soni.com on WhatsApp, LinkedIn or X now shows a proper preview card with a title, description and a 1200×630 share image (Open Graph and Twitter tags).',
     commits: ['a77c041'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-13',
+    category: 'learning',
+    title: 'Accounts and paid courses in the Learning Lab',
+    plain: 'Learners can sign up, sign in and keep their progress across devices. "Learn the Code" and the first module of every course stay free; the rest of each course and its knowledge base unlock with a one-time payment through Razorpay, and paid lessons are delivered only to accounts that own them.',
+    commits: ['1c66864', '960d631', '40d5d32', '9382ad2', 'a0fc707', '8f04521', 'bb1e78e', '747199f', '5258fec'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-13',
+    category: 'privacy',
+    title: 'Terms of Use, Refund Policy and an updated Privacy Policy',
+    plain: 'New Terms of Use and Refund & Cancellation pages (7-day refund before a quarter of a course is completed), and a privacy policy that covers accounts, payments and learners\' rights under India\'s data protection law.',
+    commits: ['1d5493b', 'b4c8d73', 'fbbc4ab'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-13',
+    category: 'feature',
+    title: 'An owner dashboard',
+    plain: 'A private admin page for sales, accounts and course progress, with refunds through Razorpay and free course grants.',
+    commits: ['5ae85a8'],
   },
 ];
 

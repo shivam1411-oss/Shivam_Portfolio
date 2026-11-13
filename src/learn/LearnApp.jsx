@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import {
   ArrowLeft,
@@ -22,6 +22,8 @@ import {
   Layers,
   LibraryBig,
   ListTree,
+  Lock,
+  UserRound,
   RotateCcw,
   Search,
   Sparkles,
@@ -35,7 +37,20 @@ import CodeTrail from '../components/CodeTrail';
 import CursorReveal from '../components/CursorReveal';
 import ThemeToggle from '../components/ThemeToggle';
 import { ease } from '../components/motion';
-import { courseById, courses, learningPaths, lessonHash, lessonKey, loadCourse, loadedCourse, prefetchCourse } from './catalog';
+import { courseById, courses, forgetLoadedCourses, learningPaths, lessonHash, lessonKey, loadCourse, loadedCourse, prefetchCourse } from './catalog';
+import { PAYWALL, getAccessVersion, ownsCourse, subscribeAccess } from './access';
+import { LessonAccessBadge, LockedLesson, UnlockCard } from './Paywall';
+import { clearToast, displayName, getAccount, initAccount, loadRemoteProgress, saveRemoteProgress, subscribeAccount } from './account/store';
+
+const AccountPage = lazy(() => import('./account/AccountPage'));
+const AdminPage = lazy(() => import('./account/AdminPage'));
+const useAccount = () => useSyncExternalStore(subscribeAccount, getAccount);
+
+// When what the learner owns changes (sign in, sign out, purchase), reload courses so locks update.
+subscribeAccess(forgetLoadedCourses);
+const useAccessVersion = () => useSyncExternalStore(subscribeAccess, getAccessVersion);
+/** Show free/locked markers for this course? (Only with the paywall on, for courses the learner does not own.) */
+const showLocks = (course) => PAYWALL && course.paid && !ownsCourse(course.id);
 import { BigIdea, Mistakes, Questions, Recap, WordsToKnow } from './LessonGuide';
 import { glossary } from './glossary';
 import Landing from './Landing';
@@ -64,6 +79,8 @@ const parseHash = () => {
     if (lesson) return { view: 'lesson', course: courseById.site, lesson };
   }
   if (view === 'timeline' || view === 'glossary' || view === 'playground') return { view };
+  if (view === 'account') return { view: 'account', sub: a || null };
+  if (view === 'admin') return { view: 'admin' };
   if (view === 'kb') return { view: 'kb', course: courseById[a] || null, topic: courseById[a] ? b : null };
   if (view === 'courses') return { view: 'hub' };
   return { view: 'landing' };
@@ -94,9 +111,35 @@ const loadProgress = () => {
   }
 };
 
-/** Completed lessons, quiz answers and solved exercises, remembered in this browser. */
+const KB_KEY = 'kb-understood';
+const readKb = () => {
+  try {
+    return JSON.parse(localStorage.getItem(KB_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+
+/** Combine progress from this browser with progress saved to the account: nothing completed is ever lost. */
+function mergeProgress(local, remote = {}) {
+  const answers = { ...(remote.answers || {}) };
+  for (const [k, v] of Object.entries(local.answers || {})) answers[k] = { ...(answers[k] || {}), ...v };
+  return {
+    done: { ...(remote.done || {}), ...Object.fromEntries(Object.entries(local.done || {}).filter(([, v]) => v)) },
+    answers,
+    solved: { ...(remote.solved || {}), ...(local.solved || {}) },
+  };
+}
+
+/** Completed lessons, quiz answers and solved exercises: kept in this browser, and in the account when signed in. */
 function useProgress() {
   const [progress, setProgress] = useState(loadProgress);
+  const account = useAccount();
+  const userId = account.status === 'signed-in' ? account.user.id : null;
+  const synced = useRef(null); // the user whose saved progress has been merged in
+  const latest = useRef(progress);
+  latest.current = progress;
+
   useEffect(() => {
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify(progress));
@@ -104,6 +147,45 @@ function useProgress() {
       /* storage unavailable: progress lasts for this visit only */
     }
   }, [progress]);
+
+  // On sign-in: merge the account's progress with this browser's, then save the result back.
+  useEffect(() => {
+    if (!userId) {
+      synced.current = null;
+      return undefined;
+    }
+    if (synced.current === userId) return undefined;
+    let live = true;
+    loadRemoteProgress().then((remote) => {
+      if (!live) return;
+      const merged = mergeProgress(latest.current, remote?.lessons);
+      const kb = { ...(remote?.kb || {}), ...readKb() };
+      try {
+        localStorage.setItem(KB_KEY, JSON.stringify(kb));
+      } catch {
+        /* ignore */
+      }
+      synced.current = userId;
+      setProgress(merged);
+      saveRemoteProgress({ lessons: merged, kb }).catch(() => {});
+    });
+    return () => {
+      live = false;
+    };
+  }, [userId]);
+
+  // Afterwards: save changes to the account a moment after they happen.
+  useEffect(() => {
+    if (!userId || synced.current !== userId) return undefined;
+    const t = setTimeout(() => saveRemoteProgress({ lessons: progress, kb: readKb() }).catch(() => {}), 1500);
+    return () => clearTimeout(t);
+  }, [progress, userId]);
+  useEffect(() => {
+    if (!userId) return undefined;
+    const onKb = () => synced.current === userId && saveRemoteProgress({ lessons: latest.current, kb: readKb() }).catch(() => {});
+    window.addEventListener('lab:kb-changed', onKb);
+    return () => window.removeEventListener('lab:kb-changed', onKb);
+  }, [userId]);
 
   const setDone = useCallback((key, done = true) => setProgress((p) => ({ ...p, done: { ...p.done, [key]: done } })), []);
   const answer = useCallback(
@@ -170,6 +252,54 @@ function Eyebrow({ children }) {
   );
 }
 
+/** A confirmation that stays visible while the page changes (e.g. a course unlocking after payment). */
+function Toast() {
+  const { toast } = useAccount();
+  useEffect(() => {
+    if (!toast) return undefined;
+    const t = setTimeout(clearToast, 9000);
+    return () => clearTimeout(t);
+  }, [toast]);
+  if (!toast) return null;
+  return (
+    <div className="fixed z-50 left-1/2 -translate-x-1/2 bottom-5 w-[min(32rem,calc(100vw-2rem))]" role="status" aria-live="polite">
+      <div className="flex items-start gap-3 p-4 rounded-2xl bg-fg text-bg shadow-soft">
+        <CheckCircle2 size={20} className="shrink-0 mt-0.5 text-accent" />
+        <p className="flex-1 text-sm font-semibold leading-relaxed">{toast}</p>
+        <button type="button" onClick={clearToast} className="text-xs font-bold opacity-70 hover:opacity-100" aria-label="Dismiss">
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** "Sign in", or the learner's initial once signed in. */
+function AccountButton({ active }) {
+  const account = useAccount();
+  const signedIn = account.status === 'signed-in';
+  const name = signedIn ? displayName(account.user) : '';
+  return (
+    <a
+      href="#/account"
+      title={signedIn ? `Signed in as ${account.user.email}` : 'Sign in or create an account'}
+      aria-label={signedIn ? 'Your account' : 'Sign in'}
+      className={`shrink-0 h-9 rounded-xl border flex items-center justify-center gap-1.5 text-xs font-bold transition-colors ${
+        active ? 'border-accent text-fg' : 'border-line text-muted hover:text-fg'
+      } ${signedIn ? 'w-9' : 'w-9 sm:w-auto sm:px-3'}`}
+    >
+      {signedIn ? (
+        <span className="w-6 h-6 rounded-full bg-accent text-bg flex items-center justify-center text-[11px] font-extrabold">{(name[0] || '?').toUpperCase()}</span>
+      ) : (
+        <>
+          <UserRound size={15} />
+          <span className="hidden sm:inline">Sign in</span>
+        </>
+      )}
+    </a>
+  );
+}
+
 function Header({ route, progress }) {
   const done = allLessons.filter(({ course, lesson }) => progress.done[lessonKey(course, lesson)]).length;
   const links = [
@@ -185,7 +315,7 @@ function Header({ route, progress }) {
           <span className="w-9 h-9 rounded-xl bg-fg text-bg flex items-center justify-center">
             <GraduationCap size={18} />
           </span>
-          <span className="hidden sm:block leading-tight">
+          <span className="hidden lg:block leading-tight">
             <span className="block font-extrabold text-fg text-sm">Learning Lab</span>
             <span className="block text-[11px] text-subtle font-semibold">Interactive courses</span>
           </span>
@@ -195,16 +325,18 @@ function Header({ route, progress }) {
             <a
               key={hash}
               href={hash}
+              title={label}
               className={`flex items-center gap-1.5 px-1.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-colors ${active ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg'}`}
             >
-              <Icon size={15} className="hidden sm:block" />
-              {label}
+              <Icon size={16} className="block min-[420px]:hidden lg:block" aria-hidden />
+              <span className="sr-only min-[420px]:not-sr-only">{label}</span>
             </a>
           ))}
         </nav>
-        <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-bold" title="Lessons completed, all courses">
+        <span className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-bold" title="Lessons completed, all courses">
           <CheckCircle2 size={13} /> {done}/{allLessons.length}
         </span>
+        <AccountButton active={route.view === 'account'} />
         <ThemeToggle />
       </div>
     </header>
@@ -234,7 +366,19 @@ function CourseCard({ course, progress, index }) {
           <span className="absolute inset-0 flex items-center justify-center text-[11px] font-extrabold text-fg">{Math.round((s.done / s.total) * 100)}%</span>
         </div>
       </div>
-      <div className="mt-4 eyebrow text-subtle">{course.levels}</div>
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <span className="eyebrow text-subtle">{course.levels}</span>
+        {PAYWALL &&
+          (course.paid ? (
+            ownsCourse(course.id) ? (
+              <span className="px-2 py-0.5 rounded-full bg-accent/12 text-accent text-[10px] font-extrabold uppercase tracking-wider">Unlocked</span>
+            ) : (
+              <span className="px-2 py-0.5 rounded-full bg-accent/12 text-accent text-[10px] font-extrabold uppercase tracking-wider">First module free</span>
+            )
+          ) : (
+            <span className="px-2 py-0.5 rounded-full bg-accent/12 text-accent text-[10px] font-extrabold uppercase tracking-wider">Free</span>
+          ))}
+      </div>
       <h2 className="mt-1 text-2xl font-extrabold text-fg">{course.title}</h2>
       <p className="mt-1 text-sm font-semibold text-fg/80">{course.tagline}</p>
       <p className="mt-3 text-sm text-muted leading-relaxed flex-1">{course.blurb}</p>
@@ -354,6 +498,8 @@ function Hub({ progress }) {
 // ---------------------------------------------------------------- course home
 
 function CourseHome({ course, progress, resetCourse }) {
+  useAccessVersion();
+  const locks = showLocks(course);
   const s = courseStats(course, progress);
   useEffect(() => prefetchCourse(course.id), [course.id]);
   return (
@@ -435,6 +581,11 @@ function CourseHome({ course, progress, resetCourse }) {
           </span>
           <ArrowRight size={18} className="text-subtle group-hover:text-accent shrink-0" />
         </a>
+        {locks && (
+          <div className="mt-3 max-w-2xl">
+            <UnlockCard course={course} compact />
+          </div>
+        )}
       </section>
 
       <section className="mt-16 grid gap-6 md:grid-cols-2">
@@ -469,6 +620,7 @@ function CourseHome({ course, progress, resetCourse }) {
                     <a href={lessonHash(course, l)} className="group flex items-center gap-3 px-3 py-2.5 -mx-3 rounded-xl hover:bg-surface-2 transition-colors">
                       {progress.done[lessonKey(course, l)] ? <CheckCircle2 size={18} className="text-accent shrink-0" /> : <Circle size={18} className="text-subtle shrink-0" />}
                       <span className="flex-1 text-sm font-semibold text-fg">{l.title}</span>
+                      {locks && <LessonAccessBadge free={l.free} />}
                       {l.exercises?.length > 0 && (
                         <span className="inline-flex items-center gap-1 text-[11px] text-subtle font-semibold" title="Coding exercises">
                           <FlaskConical size={11} /> {l.exercises.length}
@@ -671,7 +823,8 @@ function LessonNav({ course, currentId, progress, onPick }) {
                       }`}
                     >
                       {progress.done[lessonKey(course, l)] ? <CheckCircle2 size={15} className="text-accent shrink-0" /> : <Circle size={15} className="text-subtle shrink-0" />}
-                      {l.title}
+                      <span className="flex-1">{l.title}</span>
+                      {l.locked && <Lock size={12} className="text-subtle shrink-0" aria-label="Part of the full course" />}
                     </a>
                   </li>
                 );
@@ -685,6 +838,7 @@ function LessonNav({ course, currentId, progress, onPick }) {
 
 /** A course's full lessons, loaded on demand (each course is its own download). */
 function useFullCourse(id) {
+  const access = useAccessVersion();
   const [state, setState] = useState(() => ({ id, course: loadedCourse(id), error: null }));
   useEffect(() => {
     let live = true;
@@ -701,7 +855,7 @@ function useFullCourse(id) {
     return () => {
       live = false;
     };
-  }, [id]);
+  }, [id, access]);
   return state.id === id ? state : { course: loadedCourse(id), error: null };
 }
 
@@ -737,7 +891,9 @@ function LessonPage({ course, lesson, ...rest }) {
         </article>
       </div>
     );
-  return <Lesson course={full} lesson={full.lessons.find((l) => l.id === lesson.id)} {...rest} />;
+  const fullLesson = full.lessons.find((l) => l.id === lesson.id);
+  if (fullLesson.locked) return <LockedLesson course={full} lesson={fullLesson} />;
+  return <Lesson course={full} lesson={fullLesson} {...rest} />;
 }
 
 function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz }) {
@@ -1044,6 +1200,9 @@ function Glossary() {
 
 export default function LearnApp() {
   const route = useRoute();
+  useEffect(() => {
+    initAccount();
+  }, []);
   const { progress, setDone, answer, solve, resetQuiz, resetCourse } = useProgress();
 
   return (
@@ -1055,6 +1214,7 @@ export default function LearnApp() {
       {/* No background here, so the matrix (drawn behind the page) shows through */}
       <div className="min-h-screen">
         <Header route={route} progress={progress} />
+        <Toast />
         {/* <main> also gets the site's dark-mode text halo, which keeps words readable over the matrix */}
         <main>
           {route.view === 'landing' && <Landing progress={progress} />}
@@ -1074,6 +1234,16 @@ export default function LearnApp() {
           {route.view === 'playground' && <Playground />}
           {route.view === 'timeline' && <Timeline />}
           {route.view === 'glossary' && <Glossary />}
+          {route.view === 'admin' && (
+            <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-16 text-muted">Loading…</div>}>
+              <AdminPage />
+            </Suspense>
+          )}
+          {route.view === 'account' && (
+            <Suspense fallback={<div className="max-w-md mx-auto px-4 py-16 text-muted">Loading…</div>}>
+              <AccountPage sub={route.sub} />
+            </Suspense>
+          )}
           {route.view === 'kb' && (
             <Suspense fallback={<div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-muted">Loading the knowledge base…</div>}>
               <KnowledgeBase key={route.course?.id || 'hub'} course={route.course} topicId={route.topic} courses={courses} icons={courseIcons} />
@@ -1082,7 +1252,18 @@ export default function LearnApp() {
         </main>
         <footer className="border-t border-line mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center justify-between gap-3 text-xs text-subtle">
-            <span>Progress and code are saved in this browser only.</span>
+            <span>Progress is saved in this browser, and to your account when you sign in.</span>
+            <span className="flex flex-wrap gap-x-4 gap-y-1">
+              <a href="./terms.html" className="hover:text-fg">
+                Terms
+              </a>
+              <a href="./refund.html" className="hover:text-fg">
+                Refunds
+              </a>
+              <a href="./privacy.html" className="hover:text-fg">
+                Privacy
+              </a>
+            </span>
             <a href="./index.html" className="font-bold text-muted hover:text-fg">
               ← Back to the portfolio
             </a>

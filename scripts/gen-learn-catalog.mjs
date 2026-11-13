@@ -30,21 +30,28 @@ async function load(entry, name) {
 
 const { courses } = await load('src/learn/courses.js', 'courses');
 const { knowledgeBases } = await load('src/learn/kb/all.js', 'kb');
+const { isCoursePaid, isLessonFree } = await load('src/learn/paywall.config.js', 'paywall');
 
 const COURSE_FIELDS = ['id', 'title', 'tagline', 'blurb', 'levels', 'icon', 'audience', 'needs', 'outcomes', 'extras', 'usesPython'];
 const catalog = {
   courses: courses.map((c) => ({
     ...Object.fromEntries(COURSE_FIELDS.filter((k) => c[k] !== undefined).map((k) => [k, c[k]])),
     modules: c.modules.map(({ id, title, level, blurb }) => ({ id, title, level, blurb })),
+    paid: isCoursePaid(c),
     lessons: c.lessons.map((l) => ({
       id: l.id,
       module: l.module,
       title: l.title,
       minutes: l.minutes,
+      goals: l.goals || [],
+      free: isLessonFree(c, l),
       exercises: (l.exercises || []).map((e) => ({ id: e.id })),
     })),
   })),
-  kb: Object.fromEntries(Object.entries(knowledgeBases).map(([id, kb]) => [id, { intro: kb.intro, topics: kb.topics.map((t) => t.id) }])),
+  // Titles and levels let a locked knowledge base show what it contains.
+  kb: Object.fromEntries(
+    Object.entries(knowledgeBases).map(([id, kb]) => [id, { intro: kb.intro, topics: kb.topics.map((t) => ({ id: t.id, level: t.level, title: t.title })) }])
+  ),
 };
 
 const text = `${JSON.stringify(catalog, null, 1)}\n`;

@@ -57,12 +57,19 @@
      "blurb": "How the course pages work, and how Python was made to run, get tested and deploy in the browser."
     }
    ],
+   "paid": false,
    "lessons": [
     {
      "id": "big-picture",
      "module": "foundations",
      "title": "From one HTML file to a React app",
      "minutes": 8,
+     "goals": [
+      "What changed when the site moved to React",
+      "What Vite does and what dist/ is",
+      "Where to find things in the project"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -70,6 +77,12 @@
      "module": "foundations",
      "title": "Components and props",
      "minutes": 8,
+     "goals": [
+      "What a component is",
+      "How the page is a tree of components",
+      "How props pass data and functions down"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -77,6 +90,12 @@
      "module": "foundations",
      "title": "State and hooks",
      "minutes": 10,
+     "goals": [
+      "What state is and why changing it redraws the page",
+      "useState, useEffect, useRef in plain words",
+      "How the Lab calculators work"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -84,6 +103,12 @@
      "module": "foundations",
      "title": "Content lives in data files",
      "minutes": 6,
+     "goals": [
+      "Why text and numbers are kept apart from layout",
+      "What is in content.js, impact.js and playbook.js",
+      "How a component loops over data"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -91,6 +116,12 @@
      "module": "look",
      "title": "Tailwind and CSS variables",
      "minutes": 8,
+     "goals": [
+      "How to read a Tailwind class list",
+      "What CSS variables are and why the theme uses them",
+      "How custom utilities like glass and text-gradient are made"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -98,6 +129,12 @@
      "module": "look",
      "title": "Light and dark themes",
      "minutes": 10,
+     "goals": [
+      "How the theme is chosen before the page appears",
+      "How the toggle saves your choice",
+      "How the circular reveal works and why phones skip it"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -105,6 +142,12 @@
      "module": "look",
      "title": "Animations with Motion",
      "minutes": 8,
+     "goals": [
+      "Describing animations as start and end states",
+      "Scroll reveals, staggered lists and count-ups",
+      "Respecting reduced motion"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -112,6 +155,12 @@
      "module": "effects",
      "title": "Canvas and the animation loop",
      "minutes": 12,
+     "goals": [
+      "What a canvas is and why the effects use one",
+      "How requestAnimationFrame makes a loop",
+      "How the code matrix and code trail are drawn"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -119,6 +168,12 @@
      "module": "effects",
      "title": "The welcome screen",
      "minutes": 7,
+     "goals": [
+      "How the decoding name works",
+      "Why it shows only once per visit (sessionStorage)",
+      "How the site is mounted when you enter"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -126,6 +181,12 @@
      "module": "effects",
      "title": "The water-droplet reveal",
      "minutes": 9,
+     "goals": [
+      "What a mask is",
+      "How canvas compositing hides and shows layers",
+      "How droplets wobble, drift and dry up"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -133,6 +194,12 @@
      "module": "speed",
      "title": "Making it fast on phones",
      "minutes": 10,
+     "goals": [
+      "Why some CSS is expensive",
+      "How the site detects touch screens",
+      "The changes that took idle frames from ~95ms to ~20ms"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -140,6 +207,12 @@
      "module": "speed",
      "title": "Loading less up front",
      "minutes": 6,
+     "goals": [
+      "What a bundle and a chunk are",
+      "How React.lazy splits the site",
+      "Why it prefetches during the welcome screen"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -147,6 +220,12 @@
      "module": "speed",
      "title": "One layout for every screen",
      "minutes": 6,
+     "goals": [
+      "Mobile-first Tailwind breakpoints",
+      "How the hero rearranges on phones",
+      "Readable font sizes on small screens"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -154,6 +233,12 @@
      "module": "features",
      "title": "The Analytical Lab maths",
      "minutes": 10,
+     "goals": [
+      "How each method is described as data",
+      "The z-test behind champion-challenger",
+      "Why NULLIF appears in the SQL"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -161,6 +246,12 @@
      "module": "features",
      "title": "Contact, resume and email",
      "minutes": 7,
+     "goals": [
+      "How pop-ups (modals) open and close",
+      "Masked phone numbers",
+      "Sending the resume with EmailJS, and the PDF preview"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -168,6 +259,12 @@
      "module": "features",
      "title": "The AI chat and its Worker",
      "minutes": 12,
+     "goals": [
+      "Why the API key must not be in the website",
+      "What the Cloudflare Worker checks",
+      "Streaming answers and why the widget is hidden until configured"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -175,6 +272,12 @@
      "module": "shipping",
      "title": "Git, GitHub Actions and Pages",
      "minutes": 9,
+     "goals": [
+      "Commits and branches in plain words",
+      "What the deploy workflow does, step by step",
+      "How a change reaches the live site"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -182,6 +285,12 @@
      "module": "shipping",
      "title": "The Android app",
      "minutes": 6,
+     "goals": [
+      "How Capacitor turns the website into an app",
+      "What npm run apk does",
+      "Why you rebuild the app after site changes"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -189,6 +298,12 @@
      "module": "python-lab",
      "title": "How the Learning Lab is organised",
      "minutes": 9,
+     "goals": [
+      "How one page holds several courses",
+      "How the address after # picks what to show",
+      "How progress is saved per course, and how old progress was kept"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -196,6 +311,12 @@
      "module": "python-lab",
      "title": "Running Python in the browser",
      "minutes": 12,
+     "goals": [
+      "What Pyodide and WebAssembly are",
+      "Why Python runs in a web worker, and how messages flow",
+      "How Stop, the time limit and input() work"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -203,6 +324,12 @@
      "module": "python-lab",
      "title": "How exercises are checked",
      "minutes": 10,
+     "goals": [
+      "How an exercise is described as data",
+      "How tests use OUTPUT and SOURCE",
+      "How every solution and starter was verified before going live"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -210,6 +337,12 @@
      "module": "python-lab",
      "title": "Shipping Python with the site",
      "minutes": 9,
+     "goals": [
+      "Why Python is hosted on your own site instead of a CDN",
+      "What scripts/copy-pyodide.mjs does and when it runs",
+      "How the deploy includes it, and what visitors download"
+     ],
+     "free": true,
      "exercises": []
     }
    ]
@@ -267,12 +400,19 @@
      "blurb": "Inheritance, dataclasses, generators, decorators, type hints and testing, then a project."
     }
    ],
+   "paid": true,
    "lessons": [
     {
      "id": "hello",
      "module": "start",
      "title": "Hello, Python",
      "minutes": 8,
+     "goals": [
+      "Run your first program",
+      "Use print() to show text and numbers",
+      "Write comments and read error messages calmly"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "two-lines"
@@ -284,6 +424,12 @@
      "module": "start",
      "title": "Variables and types",
      "minutes": 10,
+     "goals": [
+      "Store values in variables",
+      "Know the four basic types: int, float, str, bool",
+      "Check a value's type with type()"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "profile"
@@ -295,6 +441,12 @@
      "module": "start",
      "title": "Numbers and maths",
      "minutes": 10,
+     "goals": [
+      "Use the arithmetic operators, including //, % and **",
+      "Round results and format them for people",
+      "Use f-strings to build readable output"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "interest"
@@ -306,6 +458,12 @@
      "module": "start",
      "title": "Working with text",
      "minutes": 12,
+     "goals": [
+      "Index and slice strings",
+      "Clean and change text with string methods",
+      "Split text into parts and join parts back"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "initials"
@@ -317,6 +475,12 @@
      "module": "flow",
      "title": "Making decisions with if",
      "minutes": 10,
+     "goals": [
+      "Compare values with ==, !=, <, >, <=, >=",
+      "Branch with if, elif and else",
+      "Combine conditions with and, or, not"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "bucket"
@@ -328,6 +492,12 @@
      "module": "flow",
      "title": "Repeating with loops",
      "minutes": 12,
+     "goals": [
+      "Loop over items with for and over numbers with range()",
+      "Keep a running total (the accumulator pattern)",
+      "Use while, break and continue"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "totals"
@@ -342,6 +512,12 @@
      "module": "flow",
      "title": "Talking to the user",
      "minutes": 8,
+     "goals": [
+      "Read typed text with input()",
+      "Convert input to numbers safely",
+      "Build a small interactive program"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "emi-message"
@@ -353,6 +529,12 @@
      "module": "collections",
      "title": "Lists",
      "minutes": 12,
+     "goals": [
+      "Create, index and slice lists",
+      "Add, remove and sort items",
+      "Use len, sum, min, max and in"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "top-balances"
@@ -364,6 +546,12 @@
      "module": "collections",
      "title": "Tuples and sets",
      "minutes": 10,
+     "goals": [
+      "Use tuples for fixed groups of values and unpack them",
+      "Use sets for unique values and fast membership",
+      "Combine sets with union, intersection and difference"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "called-paid"
@@ -375,6 +563,12 @@
      "module": "collections",
      "title": "Dictionaries",
      "minutes": 12,
+     "goals": [
+      "Store and look up values by key",
+      "Loop over keys and values with .items()",
+      "Count things with a dictionary"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "count-channels"
@@ -386,6 +580,12 @@
      "module": "collections",
      "title": "Comprehensions",
      "minutes": 10,
+     "goals": [
+      "Build lists in one line with a list comprehension",
+      "Filter with an if inside",
+      "Write dict and set comprehensions"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "comp"
@@ -397,6 +597,12 @@
      "module": "functions",
      "title": "Writing functions",
      "minutes": 12,
+     "goals": [
+      "Define functions with def and return a result",
+      "Use default and keyword arguments",
+      "Know the difference between print and return"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "emi"
@@ -411,6 +617,12 @@
      "module": "functions",
      "title": "More about functions",
      "minutes": 12,
+     "goals": [
+      "Understand local and global scope",
+      "Accept any number of arguments with *args and **kwargs",
+      "Use lambda with sorted(), and recursion"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "sort-args"
@@ -422,6 +634,12 @@
      "module": "functions",
      "title": "Handling errors",
      "minutes": 12,
+     "goals": [
+      "Catch errors with try / except",
+      "Use else and finally",
+      "Raise your own errors with clear messages"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "parse-amount"
@@ -433,6 +651,12 @@
      "module": "organising",
      "title": "Modules and the standard library",
      "minutes": 12,
+     "goals": [
+      "Import modules and names from them",
+      "Use math, statistics, random, datetime and collections",
+      "Know where to look before writing code yourself"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "dates-stats"
@@ -444,6 +668,12 @@
      "module": "organising",
      "title": "Files, CSV and JSON",
      "minutes": 12,
+     "goals": [
+      "Write and read text files with with open(...)",
+      "Read and write CSV with the csv module",
+      "Turn Python data into JSON and back"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "csv-totals"
@@ -455,6 +685,12 @@
      "module": "organising",
      "title": "Classes and objects",
      "minutes": 14,
+     "goals": [
+      "Define a class with __init__ and methods",
+      "Understand self and attributes",
+      "Give objects a readable __repr__"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "account-class"
@@ -466,6 +702,12 @@
      "module": "advanced",
      "title": "Inheritance, dataclasses and properties",
      "minutes": 14,
+     "goals": [
+      "Build a class on top of another with inheritance and super()",
+      "Cut boilerplate with @dataclass",
+      "Compute attributes with @property"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "dataclass-loan"
@@ -477,6 +719,12 @@
      "module": "advanced",
      "title": "Iterators and generators",
      "minutes": 12,
+     "goals": [
+      "See how for loops use iterators",
+      "Write generator functions with yield",
+      "Process big or endless data lazily"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "fib-chunks"
@@ -488,6 +736,12 @@
      "module": "advanced",
      "title": "Closures and decorators",
      "minutes": 14,
+     "goals": [
+      "Treat functions as values",
+      "Write closures that remember data",
+      "Write and use decorators, including functools.lru_cache"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "count-calls"
@@ -499,6 +753,12 @@
      "module": "advanced",
      "title": "Type hints and testing",
      "minutes": 12,
+     "goals": [
+      "Annotate functions with type hints",
+      "Test code with assert and unittest",
+      "Write code that is easy to test"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "phone"
@@ -510,6 +770,12 @@
      "module": "advanced",
      "title": "Project: a collections report",
      "minutes": 20,
+     "goals": [
+      "Combine everything into one small program",
+      "Parse, group, summarise and format real-looking data",
+      "Structure a program into small tested functions"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "report"
@@ -583,12 +849,19 @@
      "blurb": "A full portfolio report from raw files, the way it is done at work."
     }
    ],
+   "paid": true,
    "lessons": [
     {
      "id": "pd-excel",
      "module": "pd-start",
      "title": "From Excel to pandas",
      "minutes": 12,
+     "goals": [
+      "See how everyday Excel actions map to pandas",
+      "Run your first pandas commands on real-looking data",
+      "Know what pandas adds: repeatable, bigger, faster"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "pd-first-report"
@@ -600,6 +873,12 @@
      "module": "numpy",
      "title": "Arrays and vectorised maths",
      "minutes": 12,
+     "goals": [
+      "Create NumPy arrays and read their shape and type",
+      "Do maths on a whole array without a loop",
+      "Summarise with sum, mean, std, min and max"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "np-interest"
@@ -611,6 +890,12 @@
      "module": "numpy",
      "title": "Boolean masks, np.where and np.select",
      "minutes": 10,
+     "goals": [
+      "Filter arrays with conditions (masks)",
+      "Choose between two values with np.where",
+      "Label many cases at once with np.select"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "np-buckets"
@@ -622,6 +907,12 @@
      "module": "frames",
      "title": "Series and DataFrames",
      "minutes": 10,
+     "goals": [
+      "Know what a Series and a DataFrame are",
+      "Build a DataFrame from a dictionary",
+      "Read columns, add a column and do maths on columns"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-first-frame"
@@ -633,6 +924,12 @@
      "module": "frames",
      "title": "Reading and exploring data",
      "minutes": 12,
+     "goals": [
+      "Load a CSV with read_csv, including dates",
+      "Get to know a dataset with head, info, describe and value_counts",
+      "Answer first questions about the data"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-explore"
@@ -644,6 +941,12 @@
      "module": "select",
      "title": "Selecting rows and columns",
      "minutes": 14,
+     "goals": [
+      "Pick columns with [ ] and rows with filters",
+      "Use loc (labels) and iloc (positions)",
+      "Combine conditions, and use isin, between and query"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-filters"
@@ -655,6 +958,12 @@
      "module": "select",
      "title": "Sorting, ranking and top N",
      "minutes": 8,
+     "goals": [
+      "Sort by one or more columns",
+      "Get the top or bottom rows quickly with nlargest and nsmallest",
+      "Rank values and reset the index"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-topn"
@@ -666,6 +975,12 @@
      "module": "clean",
      "title": "Missing values",
      "minutes": 10,
+     "goals": [
+      "Find missing values with isna",
+      "Decide between dropping and filling",
+      "Fill sensibly with fillna, including per-group values"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-fill"
@@ -677,6 +992,12 @@
      "module": "clean",
      "title": "Types, text and duplicates",
      "minutes": 12,
+     "goals": [
+      "Turn messy text into numbers with to_numeric",
+      "Clean text with the .str methods",
+      "Find and remove duplicate rows"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-clean-all"
@@ -688,6 +1009,12 @@
      "module": "transform",
      "title": "New columns, buckets and apply",
      "minutes": 12,
+     "goals": [
+      "Create columns with vectorised maths and np.where",
+      "Bucket numbers with pd.cut",
+      "Map values and know when (not) to use apply"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-bucket-cut"
@@ -699,6 +1026,12 @@
      "module": "transform",
      "title": "groupby: split, apply, combine",
      "minutes": 14,
+     "goals": [
+      "Summarise per group with groupby and agg",
+      "Name your output columns with named aggregation",
+      "Add group results back to every row with transform"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-agent-summary"
@@ -710,6 +1043,12 @@
      "module": "transform",
      "title": "Pivot tables, crosstabs and melt",
      "minutes": 14,
+     "goals": [
+      "Build Excel-style pivot tables with pivot_table",
+      "Count combinations with crosstab, including a roll-rate matrix",
+      "Turn wide tables long with melt"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-pivot-roll"
@@ -721,6 +1060,12 @@
      "module": "combine",
      "title": "Merging tables (SQL joins in pandas)",
      "minutes": 14,
+     "goals": [
+      "Join two tables with merge: inner, left, and anti-joins",
+      "Check joins with validate and indicator",
+      "Stack tables with concat"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-join"
@@ -732,6 +1077,12 @@
      "module": "combine",
      "title": "Dates and time series",
      "minutes": 14,
+     "goals": [
+      "Convert text to dates and use the .dt accessor",
+      "Resample to monthly totals",
+      "Compute month-on-month change and rolling averages"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-monthly"
@@ -743,6 +1094,12 @@
      "module": "pd-project",
      "title": "Project: the monthly portfolio report",
      "minutes": 20,
+     "goals": [
+      "Combine reading, cleaning, grouping, merging and dates",
+      "Compute CEI, roll rates and channel mix like a real MIS pack",
+      "Package the work as a function that returns a report"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "pd-report"
@@ -786,12 +1143,19 @@
      "blurb": "CTEs, window functions and moving results into pandas."
     }
    ],
+   "paid": true,
    "lessons": [
     {
      "id": "sql-tables",
      "module": "sql-basics",
      "title": "Databases, tables and rows",
      "minutes": 12,
+     "goals": [
+      "Understand what a database, a table, a row and a column are",
+      "Create a table and add rows with plain SQL",
+      "See how a primary key and NULL keep data honest"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "sql-create"
@@ -803,6 +1167,12 @@
      "module": "sql-basics",
      "title": "Your first queries",
      "minutes": 12,
+     "goals": [
+      "Connect to a database from Python with sqlite3",
+      "SELECT columns, filter with WHERE, sort with ORDER BY, LIMIT the rows",
+      "Read results back into Python"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "sql-first"
@@ -814,6 +1184,12 @@
      "module": "sql-basics",
      "title": "Aggregates, GROUP BY and CASE",
      "minutes": 12,
+     "goals": [
+      "Summarise with COUNT, SUM, AVG, MIN and MAX",
+      "Group with GROUP BY and filter groups with HAVING",
+      "Create buckets with CASE WHEN"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "sql-product"
@@ -825,6 +1201,12 @@
      "module": "sql-more",
      "title": "JOINs",
      "minutes": 14,
+     "goals": [
+      "Combine tables with INNER JOIN and LEFT JOIN",
+      "Find rows with no match (anti-join)",
+      "Handle missing values with COALESCE"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "sql-city"
@@ -836,6 +1218,12 @@
      "module": "sql-more",
      "title": "Parameters, changes and transactions",
      "minutes": 12,
+     "goals": [
+      "Pass values safely with ? placeholders",
+      "Understand SQL injection",
+      "INSERT, UPDATE and DELETE inside a transaction"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "sql-add-payment"
@@ -847,6 +1235,12 @@
      "module": "sql-pro",
      "title": "CTEs and window functions",
      "minutes": 14,
+     "goals": [
+      "Break a query into steps with WITH (common table expressions)",
+      "Rank rows within groups with ROW_NUMBER",
+      "Running totals and previous values with SUM() OVER and LAG"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "sql-top-per-product"
@@ -858,6 +1252,12 @@
      "module": "sql-pro",
      "title": "SQL and pandas together",
      "minutes": 12,
+     "goals": [
+      "Load query results into pandas with read_sql_query",
+      "Pass parameters to read_sql_query",
+      "Split work sensibly: filter and aggregate in SQL, reshape and chart in pandas"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "sql-monthly-agent"
@@ -895,12 +1295,19 @@
      "blurb": "Plotting straight from pandas, several charts in one figure, and charts that make a point."
     }
    ],
+   "paid": true,
    "lessons": [
     {
      "id": "viz-first",
      "module": "viz-basics",
      "title": "Figures, axes and your first chart",
      "minutes": 10,
+     "goals": [
+      "Create a figure and axes with plt.subplots",
+      "Draw line and bar charts",
+      "Add a title, axis labels and a legend"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "viz-bar"
@@ -912,6 +1319,12 @@
      "module": "viz-basics",
      "title": "Choosing the right chart",
      "minutes": 12,
+     "goals": [
+      "Match the question to the chart: trend, comparison, distribution, relationship",
+      "Draw histograms and scatter plots",
+      "Format axes as rupees and percentages"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "viz-cei"
@@ -923,6 +1336,12 @@
      "module": "viz-present",
      "title": "Plotting from pandas and multiple charts",
      "minutes": 12,
+     "goals": [
+      "Plot straight from a DataFrame with .plot",
+      "Draw grouped and stacked bars from a pivot table",
+      "Lay out several charts with subplots"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "viz-dashboard"
@@ -934,6 +1353,12 @@
      "module": "viz-present",
      "title": "Charts that make a point",
      "minutes": 12,
+     "goals": [
+      "Highlight what matters and grey out the rest",
+      "Annotate key points and add reference lines",
+      "Remove chart clutter for clean report visuals"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "viz-highlight"
@@ -976,12 +1401,19 @@
      "blurb": "Effects and loading data, then a complete mini dashboard."
     }
    ],
+   "paid": true,
    "lessons": [
     {
      "id": "r-intro",
      "module": "react-basics",
      "title": "Your first component",
      "minutes": 10,
+     "goals": [
+      "Know what React is and why sites like this portfolio use it",
+      "Write a component that returns JSX",
+      "Put JavaScript values into JSX with curly braces"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "r-first"
@@ -993,6 +1425,12 @@
      "module": "react-basics",
      "title": "Components and props",
      "minutes": 12,
+     "goals": [
+      "Split a page into reusable components",
+      "Pass data in with props",
+      "Use the special children prop"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "r-badges"
@@ -1004,6 +1442,12 @@
      "module": "react-interactive",
      "title": "State and events",
      "minutes": 12,
+     "goals": [
+      "Remember values between renders with useState",
+      "Respond to clicks with onClick",
+      "Understand why changing state redraws the component"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "r-promise"
@@ -1015,6 +1459,12 @@
      "module": "react-interactive",
      "title": "Lists, keys and conditions",
      "minutes": 12,
+     "goals": [
+      "Render a list from an array with map",
+      "Give each item a stable key",
+      "Show or hide things with && and the ternary operator"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "r-overdue"
@@ -1026,6 +1476,12 @@
      "module": "react-interactive",
      "title": "Forms and controlled inputs",
      "minutes": 12,
+     "goals": [
+      "Keep an input's text in state (a controlled input)",
+      "Filter a list live as the user types",
+      "Handle a form submit without reloading the page"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "r-search"
@@ -1037,6 +1493,12 @@
      "module": "react-real",
      "title": "Effects and loading data",
      "minutes": 14,
+     "goals": [
+      "Run code after render with useEffect",
+      "Load data with loading and error states",
+      "Clean up timers and subscriptions"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "r-loader"
@@ -1048,6 +1510,12 @@
      "module": "react-real",
      "title": "Project: a collections mini-dashboard",
      "minutes": 18,
+     "goals": [
+      "Combine state, lists, conditions and derived values",
+      "Keep one source of truth and calculate the rest",
+      "Structure an app into small components"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "r-dashboard"
@@ -1090,12 +1558,19 @@
      "blurb": "Filters, dashboards, burndowns and automation rules."
     }
    ],
+   "paid": true,
    "lessons": [
     {
      "id": "j-intro",
      "module": "jira-basics",
      "title": "Projects and work items",
      "minutes": 10,
+     "goals": [
+      "Know what Jira is used for",
+      "Understand projects, work items and their types",
+      "Read the key fields of a work item"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -1103,6 +1578,12 @@
      "module": "jira-basics",
      "title": "Boards and workflows",
      "minutes": 12,
+     "goals": [
+      "Read a Kanban or Scrum board",
+      "Understand statuses, transitions and workflows",
+      "Use WIP limits to keep work flowing"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "j-finish"
@@ -1114,6 +1595,12 @@
      "module": "jira-basics",
      "title": "Scrum: backlog, sprints and estimates",
      "minutes": 12,
+     "goals": [
+      "Know the backlog, sprints and the four Scrum events",
+      "Estimate with story points",
+      "Plan a sprint from the team's velocity"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "j-plan"
@@ -1125,6 +1612,12 @@
      "module": "jira-jql",
      "title": "Searching with JQL",
      "minutes": 14,
+     "goals": [
+      "Write field operator value queries",
+      "Combine conditions with AND, OR and brackets",
+      "Use IN, != and quotes correctly"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "jql-bugs"
@@ -1139,6 +1632,12 @@
      "module": "jira-jql",
      "title": "Functions, dates and sorting",
      "minutes": 14,
+     "goals": [
+      "Use functions like currentUser() and openSprints()",
+      "Search by dates, including relative dates",
+      "Find empty fields, search text and sort results"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "jql-mine"
@@ -1156,6 +1655,12 @@
      "module": "jira-team",
      "title": "Filters, dashboards and automation",
      "minutes": 12,
+     "goals": [
+      "Save searches as filters and share them",
+      "Read a burndown and build a dashboard",
+      "Automate routine updates with rules"
+     ],
+     "free": false,
      "exercises": []
     }
    ]
@@ -1194,12 +1699,19 @@
      "blurb": "Zero-downtime updates, rollbacks and a complete deployment."
     }
    ],
+   "paid": true,
    "lessons": [
     {
      "id": "k-intro",
      "module": "k8s-basics",
      "title": "Containers and why Kubernetes",
      "minutes": 10,
+     "goals": [
+      "Explain what a container and an image are",
+      "Know what problem Kubernetes solves",
+      "Name the parts of a cluster: control plane and nodes"
+     ],
+     "free": true,
      "exercises": []
     },
     {
@@ -1207,6 +1719,12 @@
      "module": "k8s-basics",
      "title": "Pods",
      "minutes": 12,
+     "goals": [
+      "Write a Pod manifest in YAML",
+      "Apply it, list it, describe it and read its logs",
+      "See why bare pods are not enough on their own"
+     ],
+     "free": true,
      "exercises": [
       {
        "id": "k-pod"
@@ -1218,6 +1736,12 @@
      "module": "k8s-apps",
      "title": "Deployments and self-healing",
      "minutes": 14,
+     "goals": [
+      "Run several replicas with a Deployment",
+      "Watch Kubernetes replace a deleted pod",
+      "Scale up and down with one command"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "k-deployment"
@@ -1232,6 +1756,12 @@
      "module": "k8s-apps",
      "title": "Services and networking",
      "minutes": 14,
+     "goals": [
+      "Give a set of pods one stable address with a Service",
+      "Understand selectors, ports and targetPort",
+      "Know ClusterIP, NodePort and LoadBalancer"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "k-service"
@@ -1243,6 +1773,12 @@
      "module": "k8s-apps",
      "title": "Configuration and resources",
      "minutes": 12,
+     "goals": [
+      "Keep settings out of the image with ConfigMaps and Secrets",
+      "Pass them to containers as environment variables",
+      "Set CPU and memory requests and limits"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "k-configmap"
@@ -1254,6 +1790,12 @@
      "module": "k8s-ops",
      "title": "Rolling updates and rollbacks",
      "minutes": 14,
+     "goals": [
+      "Update an app with zero downtime",
+      "Recognise ImagePullBackOff and CrashLoopBackOff",
+      "Roll back with one command"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "k-ship"
@@ -1265,6 +1807,12 @@
      "module": "k8s-ops",
      "title": "Project: deploy the portfolio",
      "minutes": 18,
+     "goals": [
+      "Write a complete manifest: ConfigMap, Deployment and Service",
+      "Use the kubectl commands you need every day",
+      "Know where to go next with real clusters"
+     ],
+     "free": false,
      "exercises": [
       {
        "id": "k-full"
@@ -1278,201 +1826,841 @@
   "site": {
    "intro": "Web development from \"how does a web page reach my screen?\" to security, rendering strategies and architecture. Runnable examples show a live page you can edit; others come from real projects like shops, blogs, portfolios and dashboards.",
    "topics": [
-    "how-the-web-works",
-    "html",
-    "css",
-    "javascript",
-    "devtools-git",
-    "responsive",
-    "modern-js",
-    "npm-build",
-    "git-ci",
-    "hosting",
-    "accessibility",
-    "performance",
-    "seo",
-    "animation",
-    "web-apis",
-    "security",
-    "rendering-strategies",
-    "browser-pipeline",
-    "testing-quality",
-    "architecture"
+    {
+     "id": "how-the-web-works",
+     "level": "beginner",
+     "title": "How the web works"
+    },
+    {
+     "id": "html",
+     "level": "beginner",
+     "title": "HTML: the structure of a page"
+    },
+    {
+     "id": "css",
+     "level": "beginner",
+     "title": "CSS: colours, spacing and the box model"
+    },
+    {
+     "id": "javascript",
+     "level": "beginner",
+     "title": "JavaScript: making pages respond"
+    },
+    {
+     "id": "devtools-git",
+     "level": "beginner",
+     "title": "Developer tools and Git basics"
+    },
+    {
+     "id": "responsive",
+     "level": "intermediate",
+     "title": "Responsive layouts: Flexbox, Grid and media queries"
+    },
+    {
+     "id": "modern-js",
+     "level": "intermediate",
+     "title": "Modern JavaScript: arrays, modules and async/await"
+    },
+    {
+     "id": "npm-build",
+     "level": "intermediate",
+     "title": "npm, packages and build tools"
+    },
+    {
+     "id": "git-ci",
+     "level": "intermediate",
+     "title": "Branches, pull requests and GitHub Actions"
+    },
+    {
+     "id": "hosting",
+     "level": "intermediate",
+     "title": "Hosting, domains and HTTPS"
+    },
+    {
+     "id": "accessibility",
+     "level": "advanced",
+     "title": "Accessibility (a11y)"
+    },
+    {
+     "id": "performance",
+     "level": "advanced",
+     "title": "Web performance and Core Web Vitals"
+    },
+    {
+     "id": "seo",
+     "level": "advanced",
+     "title": "SEO and sharing metadata"
+    },
+    {
+     "id": "animation",
+     "level": "advanced",
+     "title": "Animation: CSS transitions, requestAnimationFrame and canvas"
+    },
+    {
+     "id": "web-apis",
+     "level": "advanced",
+     "title": "Browser storage, Web Workers and offline apps"
+    },
+    {
+     "id": "security",
+     "level": "expert",
+     "title": "Web security essentials"
+    },
+    {
+     "id": "rendering-strategies",
+     "level": "expert",
+     "title": "Rendering strategies: CSR, SSR, SSG and islands"
+    },
+    {
+     "id": "browser-pipeline",
+     "level": "expert",
+     "title": "How browsers render: the critical path"
+    },
+    {
+     "id": "testing-quality",
+     "level": "expert",
+     "title": "Testing and code quality at scale"
+    },
+    {
+     "id": "architecture",
+     "level": "expert",
+     "title": "Front-end architecture and scaling teams"
+    }
    ]
   },
   "python": {
    "intro": "Everything you need to know about Python, from your first print() to how professionals write fast, tested, production code. Every example runs in your browser.",
    "topics": [
-    "what-is-python",
-    "variables-types",
-    "strings",
-    "if-else",
-    "lists-loops",
-    "dicts-sets",
-    "functions",
-    "errors",
-    "files",
-    "comprehensions",
-    "classes",
-    "generators",
-    "decorators",
-    "modules-packages",
-    "testing",
-    "performance",
-    "concurrency",
-    "internals",
-    "typing-advanced",
-    "production"
+    {
+     "id": "what-is-python",
+     "level": "beginner",
+     "title": "What programming is, and why Python"
+    },
+    {
+     "id": "variables-types",
+     "level": "beginner",
+     "title": "Variables and data types"
+    },
+    {
+     "id": "strings",
+     "level": "beginner",
+     "title": "Working with text (strings)"
+    },
+    {
+     "id": "if-else",
+     "level": "beginner",
+     "title": "Making decisions with if, elif and else"
+    },
+    {
+     "id": "lists-loops",
+     "level": "beginner",
+     "title": "Lists and loops"
+    },
+    {
+     "id": "dicts-sets",
+     "level": "intermediate",
+     "title": "Dictionaries and sets"
+    },
+    {
+     "id": "functions",
+     "level": "intermediate",
+     "title": "Functions"
+    },
+    {
+     "id": "errors",
+     "level": "intermediate",
+     "title": "Errors and exceptions"
+    },
+    {
+     "id": "files",
+     "level": "intermediate",
+     "title": "Files, CSV and JSON"
+    },
+    {
+     "id": "comprehensions",
+     "level": "intermediate",
+     "title": "Comprehensions and handy built-ins"
+    },
+    {
+     "id": "classes",
+     "level": "advanced",
+     "title": "Classes and object-oriented programming"
+    },
+    {
+     "id": "generators",
+     "level": "advanced",
+     "title": "Iterators and generators"
+    },
+    {
+     "id": "decorators",
+     "level": "advanced",
+     "title": "Closures and decorators"
+    },
+    {
+     "id": "modules-packages",
+     "level": "advanced",
+     "title": "Modules, packages and virtual environments"
+    },
+    {
+     "id": "testing",
+     "level": "advanced",
+     "title": "Testing and type hints"
+    },
+    {
+     "id": "performance",
+     "level": "expert",
+     "title": "Performance: Big-O, profiling and the right data structure"
+    },
+    {
+     "id": "concurrency",
+     "level": "expert",
+     "title": "Concurrency: threads, processes and asyncio"
+    },
+    {
+     "id": "internals",
+     "level": "expert",
+     "title": "Python's object model: names, references and mutability"
+    },
+    {
+     "id": "typing-advanced",
+     "level": "expert",
+     "title": "Advanced typing: generics, protocols and static checking"
+    },
+    {
+     "id": "production",
+     "level": "expert",
+     "title": "Production Python: packaging, logging and CI"
+    }
    ]
   },
   "pandas": {
    "intro": "pandas from the first table to production-grade pipelines. Examples use movies, shops, weather, sport and stock prices, and every one runs in your browser.",
    "topics": [
-    "what-is-pandas",
-    "first-look",
-    "selecting",
-    "filtering",
-    "sort-new-columns",
-    "io",
-    "missing",
-    "groupby",
-    "merge",
-    "dates",
-    "reshape",
-    "vectorise",
-    "text-categories",
-    "windows",
-    "multiindex",
-    "memory-speed",
-    "copy-on-write",
-    "chaining",
-    "validation",
-    "beyond"
+    {
+     "id": "what-is-pandas",
+     "level": "beginner",
+     "title": "What pandas is: a spreadsheet you control with code"
+    },
+    {
+     "id": "first-look",
+     "level": "beginner",
+     "title": "Your first look at a dataset"
+    },
+    {
+     "id": "selecting",
+     "level": "beginner",
+     "title": "Selecting columns and rows: [], loc and iloc"
+    },
+    {
+     "id": "filtering",
+     "level": "beginner",
+     "title": "Filtering rows with conditions"
+    },
+    {
+     "id": "sort-new-columns",
+     "level": "beginner",
+     "title": "Sorting and creating new columns"
+    },
+    {
+     "id": "io",
+     "level": "intermediate",
+     "title": "Reading and writing CSV, Excel and more"
+    },
+    {
+     "id": "missing",
+     "level": "intermediate",
+     "title": "Missing data"
+    },
+    {
+     "id": "groupby",
+     "level": "intermediate",
+     "title": "Group and summarise with groupby"
+    },
+    {
+     "id": "merge",
+     "level": "intermediate",
+     "title": "Combining tables: merge and concat"
+    },
+    {
+     "id": "dates",
+     "level": "intermediate",
+     "title": "Dates and time series"
+    },
+    {
+     "id": "reshape",
+     "level": "advanced",
+     "title": "Reshaping: pivot_table, melt, stack"
+    },
+    {
+     "id": "vectorise",
+     "level": "advanced",
+     "title": "Vectorisation, np.where, cut and map"
+    },
+    {
+     "id": "text-categories",
+     "level": "advanced",
+     "title": "Text cleaning and categoricals"
+    },
+    {
+     "id": "windows",
+     "level": "advanced",
+     "title": "Rolling windows, shift and ranking"
+    },
+    {
+     "id": "multiindex",
+     "level": "advanced",
+     "title": "MultiIndex: rows labelled by several keys"
+    },
+    {
+     "id": "memory-speed",
+     "level": "expert",
+     "title": "Memory and speed at scale"
+    },
+    {
+     "id": "copy-on-write",
+     "level": "expert",
+     "title": "Views, copies and Copy-on-Write"
+    },
+    {
+     "id": "chaining",
+     "level": "expert",
+     "title": "Readable pipelines: method chaining and pipe"
+    },
+    {
+     "id": "validation",
+     "level": "expert",
+     "title": "Testing and validating data pipelines"
+    },
+    {
+     "id": "beyond",
+     "level": "expert",
+     "title": "Beyond pandas: Arrow, Polars, DuckDB and Spark"
+    }
    ]
   },
   "sql": {
    "intro": "SQL from your first SELECT to query plans, data modelling and warehouses. Examples use books, schools, shops and flights, and every runnable one uses a real SQLite database in your browser.",
    "topics": [
-    "what-is-a-database",
-    "select-where",
-    "aggregates",
-    "having-distinct",
-    "changing-data",
-    "joins",
-    "nulls",
-    "ctes",
-    "case-dates",
-    "constraints",
-    "window-functions",
-    "indexes",
-    "transactions",
-    "recursive",
-    "views-injection",
-    "optimisation",
-    "modelling",
-    "isolation",
-    "dialects-json",
-    "scaling"
+    {
+     "id": "what-is-a-database",
+     "level": "beginner",
+     "title": "What a database is"
+    },
+    {
+     "id": "select-where",
+     "level": "beginner",
+     "title": "SELECT, WHERE, ORDER BY and LIMIT"
+    },
+    {
+     "id": "aggregates",
+     "level": "beginner",
+     "title": "Counting and totals: COUNT, SUM, AVG, GROUP BY"
+    },
+    {
+     "id": "having-distinct",
+     "level": "beginner",
+     "title": "HAVING, DISTINCT and aliases"
+    },
+    {
+     "id": "changing-data",
+     "level": "beginner",
+     "title": "Changing data: INSERT, UPDATE, DELETE"
+    },
+    {
+     "id": "joins",
+     "level": "intermediate",
+     "title": "JOINs: combining tables"
+    },
+    {
+     "id": "nulls",
+     "level": "intermediate",
+     "title": "NULL: the value that means \"unknown\""
+    },
+    {
+     "id": "ctes",
+     "level": "intermediate",
+     "title": "Subqueries and CTEs (WITH)"
+    },
+    {
+     "id": "case-dates",
+     "level": "intermediate",
+     "title": "CASE expressions and dates"
+    },
+    {
+     "id": "constraints",
+     "level": "intermediate",
+     "title": "Keys, constraints and good table design"
+    },
+    {
+     "id": "window-functions",
+     "level": "advanced",
+     "title": "Window functions"
+    },
+    {
+     "id": "indexes",
+     "level": "advanced",
+     "title": "Indexes and query plans"
+    },
+    {
+     "id": "transactions",
+     "level": "advanced",
+     "title": "Transactions and ACID"
+    },
+    {
+     "id": "recursive",
+     "level": "advanced",
+     "title": "Recursive queries for hierarchies"
+    },
+    {
+     "id": "views-injection",
+     "level": "advanced",
+     "title": "Views, parameters and SQL injection"
+    },
+    {
+     "id": "optimisation",
+     "level": "expert",
+     "title": "Query optimisation"
+    },
+    {
+     "id": "modelling",
+     "level": "expert",
+     "title": "Data modelling for analytics: star schemas"
+    },
+    {
+     "id": "isolation",
+     "level": "expert",
+     "title": "Concurrency and isolation levels"
+    },
+    {
+     "id": "dialects-json",
+     "level": "expert",
+     "title": "SQL dialects, JSON and semi-structured data"
+    },
+    {
+     "id": "scaling",
+     "level": "expert",
+     "title": "OLTP vs OLAP, replication, partitioning and sharding"
+    }
    ]
   },
   "viz": {
    "intro": "Data visualisation from your first line chart to honest, publication-quality graphics. Examples cover weather, sport, health, music and markets, and every chart is drawn in your browser.",
    "topics": [
-    "why-charts",
-    "bar-charts",
-    "line-charts",
-    "labels",
-    "histograms",
-    "fig-axes",
-    "scatter",
-    "formatting-axes",
-    "colour",
-    "pandas-plot",
-    "annotations",
-    "distributions",
-    "small-multiples",
-    "heatmaps",
-    "styling",
-    "honesty",
-    "uncertainty",
-    "big-data-plots",
-    "interactive",
-    "chart-system"
+    {
+     "id": "why-charts",
+     "level": "beginner",
+     "title": "Why charts, and your first plot"
+    },
+    {
+     "id": "bar-charts",
+     "level": "beginner",
+     "title": "Bar charts for comparing categories"
+    },
+    {
+     "id": "line-charts",
+     "level": "beginner",
+     "title": "Line charts for trends, with several series"
+    },
+    {
+     "id": "labels",
+     "level": "beginner",
+     "title": "Titles, axis labels and units"
+    },
+    {
+     "id": "histograms",
+     "level": "beginner",
+     "title": "Histograms: seeing a distribution"
+    },
+    {
+     "id": "fig-axes",
+     "level": "intermediate",
+     "title": "Figures and Axes: the object-oriented way"
+    },
+    {
+     "id": "scatter",
+     "level": "intermediate",
+     "title": "Scatter plots and relationships"
+    },
+    {
+     "id": "formatting-axes",
+     "level": "intermediate",
+     "title": "Formatting axes: currency, percentages and dates"
+    },
+    {
+     "id": "colour",
+     "level": "intermediate",
+     "title": "Colour with purpose, and accessibility"
+    },
+    {
+     "id": "pandas-plot",
+     "level": "intermediate",
+     "title": "Plotting straight from pandas"
+    },
+    {
+     "id": "annotations",
+     "level": "advanced",
+     "title": "Annotations and storytelling"
+    },
+    {
+     "id": "distributions",
+     "level": "advanced",
+     "title": "Comparing distributions: box and violin plots"
+    },
+    {
+     "id": "small-multiples",
+     "level": "advanced",
+     "title": "Small multiples"
+    },
+    {
+     "id": "heatmaps",
+     "level": "advanced",
+     "title": "Heatmaps"
+    },
+    {
+     "id": "styling",
+     "level": "advanced",
+     "title": "Styles, themes and exporting"
+    },
+    {
+     "id": "honesty",
+     "level": "expert",
+     "title": "Honest charts and perception"
+    },
+    {
+     "id": "uncertainty",
+     "level": "expert",
+     "title": "Showing uncertainty"
+    },
+    {
+     "id": "big-data-plots",
+     "level": "expert",
+     "title": "Plotting large datasets"
+    },
+    {
+     "id": "interactive",
+     "level": "expert",
+     "title": "Interactive and web visualisation"
+    },
+    {
+     "id": "chart-system",
+     "level": "expert",
+     "title": "Reusable chart functions and a chart style guide"
+    }
    ]
   },
   "react": {
    "intro": "React from your first component to concurrent rendering and Server Components. Examples cover to-do lists, shops, quizzes, weather and chat, and the runnable ones show a live preview as you type.",
    "topics": [
-    "what-is-react",
-    "jsx",
-    "props",
-    "state-events",
-    "lists-conditions",
-    "forms",
-    "effects",
-    "lifting-state",
-    "reducer",
-    "context",
-    "custom-hooks",
-    "performance",
-    "refs",
-    "routing-structure",
-    "testing",
-    "rendering-model",
-    "concurrent",
-    "react-19",
-    "server-components",
-    "state-at-scale"
+    {
+     "id": "what-is-react",
+     "level": "beginner",
+     "title": "What React is and why people use it"
+    },
+    {
+     "id": "jsx",
+     "level": "beginner",
+     "title": "JSX: HTML-like syntax in JavaScript"
+    },
+    {
+     "id": "props",
+     "level": "beginner",
+     "title": "Props: passing data into components"
+    },
+    {
+     "id": "state-events",
+     "level": "beginner",
+     "title": "State and events: making it interactive"
+    },
+    {
+     "id": "lists-conditions",
+     "level": "beginner",
+     "title": "Lists and conditional rendering"
+    },
+    {
+     "id": "forms",
+     "level": "intermediate",
+     "title": "Forms and controlled inputs"
+    },
+    {
+     "id": "effects",
+     "level": "intermediate",
+     "title": "Effects and loading data"
+    },
+    {
+     "id": "lifting-state",
+     "level": "intermediate",
+     "title": "Lifting state up and one source of truth"
+    },
+    {
+     "id": "reducer",
+     "level": "intermediate",
+     "title": "useReducer for complex state"
+    },
+    {
+     "id": "context",
+     "level": "intermediate",
+     "title": "Context: sharing data without prop drilling"
+    },
+    {
+     "id": "custom-hooks",
+     "level": "advanced",
+     "title": "Custom hooks: reusable logic"
+    },
+    {
+     "id": "performance",
+     "level": "advanced",
+     "title": "Rendering and performance: memo, useMemo, useCallback"
+    },
+    {
+     "id": "refs",
+     "level": "advanced",
+     "title": "Refs: DOM access and values that do not re-render"
+    },
+    {
+     "id": "routing-structure",
+     "level": "advanced",
+     "title": "Routing and project structure"
+    },
+    {
+     "id": "testing",
+     "level": "advanced",
+     "title": "Testing React components"
+    },
+    {
+     "id": "rendering-model",
+     "level": "expert",
+     "title": "How React renders: reconciliation, batching and Strict Mode"
+    },
+    {
+     "id": "concurrent",
+     "level": "expert",
+     "title": "Concurrent features: useTransition, useDeferredValue, Suspense"
+    },
+    {
+     "id": "react-19",
+     "level": "expert",
+     "title": "React 19: Actions, useActionState, useOptimistic and use"
+    },
+    {
+     "id": "server-components",
+     "level": "expert",
+     "title": "Server rendering and React Server Components"
+    },
+    {
+     "id": "state-at-scale",
+     "level": "expert",
+     "title": "State management at scale"
+    }
    ]
   },
   "jira": {
    "intro": "Jira from your first work item to running many teams at scale. Examples come from software, marketing, HR, events and IT support, because Jira is used far beyond engineering.",
    "topics": [
-    "what-is-jira",
-    "types-fields",
-    "good-work-items",
-    "boards",
-    "workflows",
-    "scrum-in-jira",
-    "estimation",
-    "kanban-flow",
-    "jql-basics",
-    "filters-dashboards",
-    "advanced-jql",
-    "automation",
-    "reports",
-    "configuration",
-    "releases-links",
-    "scaling-agile",
-    "administration",
-    "rest-api",
-    "metrics",
-    "service-management"
+    {
+     "id": "what-is-jira",
+     "level": "beginner",
+     "title": "What Jira is and the words it uses"
+    },
+    {
+     "id": "types-fields",
+     "level": "beginner",
+     "title": "Work item types and fields"
+    },
+    {
+     "id": "good-work-items",
+     "level": "beginner",
+     "title": "Writing good work items"
+    },
+    {
+     "id": "boards",
+     "level": "beginner",
+     "title": "Boards: Scrum and Kanban"
+    },
+    {
+     "id": "workflows",
+     "level": "beginner",
+     "title": "Workflows and statuses"
+    },
+    {
+     "id": "scrum-in-jira",
+     "level": "intermediate",
+     "title": "Running Scrum in Jira"
+    },
+    {
+     "id": "estimation",
+     "level": "intermediate",
+     "title": "Estimation, story points and velocity"
+    },
+    {
+     "id": "kanban-flow",
+     "level": "intermediate",
+     "title": "Kanban flow: WIP limits and cycle time"
+    },
+    {
+     "id": "jql-basics",
+     "level": "intermediate",
+     "title": "JQL: searching for work"
+    },
+    {
+     "id": "filters-dashboards",
+     "level": "intermediate",
+     "title": "Filters, dashboards and notifications"
+    },
+    {
+     "id": "advanced-jql",
+     "level": "advanced",
+     "title": "Advanced JQL: functions and history"
+    },
+    {
+     "id": "automation",
+     "level": "advanced",
+     "title": "Automation rules and smart values"
+    },
+    {
+     "id": "reports",
+     "level": "advanced",
+     "title": "Agile reports: burndown, burnup, velocity, CFD"
+    },
+    {
+     "id": "configuration",
+     "level": "advanced",
+     "title": "Configuring projects: team-managed vs company-managed"
+    },
+    {
+     "id": "releases-links",
+     "level": "advanced",
+     "title": "Releases, links and developer integrations"
+    },
+    {
+     "id": "scaling-agile",
+     "level": "expert",
+     "title": "Planning across many teams"
+    },
+    {
+     "id": "administration",
+     "level": "expert",
+     "title": "Administration, permissions and governance"
+    },
+    {
+     "id": "rest-api",
+     "level": "expert",
+     "title": "Automating with the Jira REST API"
+    },
+    {
+     "id": "metrics",
+     "level": "expert",
+     "title": "Metrics that matter (and ones that mislead)"
+    },
+    {
+     "id": "service-management",
+     "level": "expert",
+     "title": "Jira Service Management and the wider Atlassian stack"
+    }
    ]
   },
   "k8s": {
    "intro": "Kubernetes from \"what is a container?\" to security, scheduling and GitOps. Examples cover web shops, APIs, databases, batch jobs and streaming. Where you see a practice cluster, type real kubectl commands.",
    "topics": [
-    "containers",
-    "what-k8s-does",
-    "pods",
-    "kubectl",
-    "yaml-anatomy",
-    "deployments",
-    "services",
-    "config-secrets",
-    "namespaces-resources",
-    "probes",
-    "ingress-gateway",
-    "storage",
-    "jobs-daemonsets",
-    "autoscaling",
-    "helm-kustomize",
-    "scheduling",
-    "security",
-    "observability",
-    "internals",
-    "gitops"
+    {
+     "id": "containers",
+     "level": "beginner",
+     "title": "Containers: why \"it works on my machine\" stopped being a problem"
+    },
+    {
+     "id": "what-k8s-does",
+     "level": "beginner",
+     "title": "What Kubernetes does"
+    },
+    {
+     "id": "pods",
+     "level": "beginner",
+     "title": "Pods: the smallest unit"
+    },
+    {
+     "id": "kubectl",
+     "level": "beginner",
+     "title": "kubectl essentials"
+    },
+    {
+     "id": "yaml-anatomy",
+     "level": "beginner",
+     "title": "Reading a Kubernetes YAML file"
+    },
+    {
+     "id": "deployments",
+     "level": "intermediate",
+     "title": "Deployments, ReplicaSets and scaling"
+    },
+    {
+     "id": "services",
+     "level": "intermediate",
+     "title": "Services and DNS"
+    },
+    {
+     "id": "config-secrets",
+     "level": "intermediate",
+     "title": "ConfigMaps and Secrets"
+    },
+    {
+     "id": "namespaces-resources",
+     "level": "intermediate",
+     "title": "Namespaces, requests and limits"
+    },
+    {
+     "id": "probes",
+     "level": "intermediate",
+     "title": "Health checks: liveness, readiness and startup probes"
+    },
+    {
+     "id": "ingress-gateway",
+     "level": "advanced",
+     "title": "Ingress and the Gateway API"
+    },
+    {
+     "id": "storage",
+     "level": "advanced",
+     "title": "Storage and StatefulSets"
+    },
+    {
+     "id": "jobs-daemonsets",
+     "level": "advanced",
+     "title": "Jobs, CronJobs and DaemonSets"
+    },
+    {
+     "id": "autoscaling",
+     "level": "advanced",
+     "title": "Autoscaling pods and nodes"
+    },
+    {
+     "id": "helm-kustomize",
+     "level": "advanced",
+     "title": "Packaging with Helm and Kustomize"
+    },
+    {
+     "id": "scheduling",
+     "level": "expert",
+     "title": "Scheduling: affinity, taints, spread and disruption budgets"
+    },
+    {
+     "id": "security",
+     "level": "expert",
+     "title": "Security: RBAC, service accounts, pod security and network policies"
+    },
+    {
+     "id": "observability",
+     "level": "expert",
+     "title": "Observability and troubleshooting"
+    },
+    {
+     "id": "internals",
+     "level": "expert",
+     "title": "Inside the control plane: controllers, etcd and operators"
+    },
+    {
+     "id": "gitops",
+     "level": "expert",
+     "title": "GitOps and production operations"
+    }
    ]
   }
  }

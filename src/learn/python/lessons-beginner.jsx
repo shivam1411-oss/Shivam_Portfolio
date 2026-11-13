@@ -3,7 +3,9 @@ import PyRunner from './PyRunner';
 
 // Python course, modules 1–3 (beginner). Each lesson: explanation, runnable examples, exercises with
 // tests, and a quiz. Code is written with String.raw so backslashes (\n) reach Python unchanged.
-export const py = (s, ...v) => String.raw(s, ...v).replace(/^\n/, '');
+import { py } from './py';
+
+export { py };
 
 export const beginnerModules = [
   { id: 'start', title: 'Getting started', level: 'Beginner', blurb: 'Printing, variables, numbers and text: the building blocks of every program.' },

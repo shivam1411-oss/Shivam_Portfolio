@@ -62,9 +62,17 @@ export default function Footer({ onResume }) {
           <a href="learn.html" className="text-xs font-extrabold uppercase tracking-widest text-gradient hover:opacity-80 transition-opacity">
             Crack the Code → see how this site was built
           </a>
-          <a href="privacy.html" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
-            Privacy Policy
-          </a>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <a href="privacy.html" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
+              Privacy Policy
+            </a>
+            <a href="terms.html" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
+              Terms of Use
+            </a>
+            <a href="refund.html" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
+              Refund Policy
+            </a>
+          </div>
           <div className="text-[10px] text-subtle font-bold uppercase tracking-[0.2em] mt-8">© 2026 Shivam Soni. All rights reserved. Built for the future of Finance.</div>
         </div>
       </div>
