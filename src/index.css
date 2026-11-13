@@ -111,10 +111,17 @@ body {
 /* Both themes: a soft halo in the page colour around all page text masks the code matrix and code
    trail behind it, so words stay crisp. It is inherited, so it reaches every line of text; anything on its
    own background (cards, buttons, badges, gradient text) turns it off, as nothing shows through there. */
-main {
+main,
+footer {
   text-shadow: 0 0 4px var(--bg), 0 0 10px var(--bg), 0 0 18px var(--bg);
 }
-main :is([class^="bg-"], [class*=" bg-"], .glass, .text-gradient, .shine-text, button, svg, canvas, img) {
+/* Browsers reset text-shadow on buttons; let background-less ones (like glossary terms in a sentence) inherit it */
+:is(main, footer) button {
+  text-shadow: inherit;
+}
+/* Faint tints such as bg-accent/5 (a "/" opacity) still let the code show through, so they keep the halo. */
+:is(main, footer) :is([class^="bg-"], [class*=" bg-"]):not([class*="/"]),
+:is(main, footer) :is(.glass, .text-gradient, .shine-text, svg, canvas, img) {
   text-shadow: none;
 }
 
