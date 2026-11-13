@@ -7,7 +7,7 @@ import { courseById, forgetLoadedCourses } from '../catalog';
 import { setAuthHeaders, setOwned } from '../access';
 
 const listeners = new Set();
-let state = { status: 'loading', user: null, owned: [], notice: null, recovering: false, toast: null };
+let state = { status: 'loading', user: null, owned: [], notice: null, recovering: false, toast: null, isAdmin: false };
 let client = null;
 let clientPromise = null;
 
@@ -65,7 +65,7 @@ async function onSession(session) {
     setAuthHeaders(async () => ({}));
     setOwned([]);
     forgetLoadedCourses();
-    set({ status: 'signed-out', user: null, owned: [] });
+    set({ status: 'signed-out', user: null, owned: [], isAdmin: false });
     return;
   }
   setAuthHeaders(async () => {
@@ -73,6 +73,9 @@ async function onSession(session) {
     return data.session ? { Authorization: `Bearer ${data.session.access_token}` } : {};
   });
   set({ status: 'signed-in', user: session.user });
+  // Admins (the site owner) have every course without buying it. Before supabase/admin.sql is run, this is false.
+  const { data: isAdmin } = await client.rpc('is_admin').then((r) => r, () => ({ data: false }));
+  set({ isAdmin: isAdmin === true });
   await refreshPurchases();
 }
 
@@ -80,7 +83,8 @@ async function onSession(session) {
 export async function refreshPurchases() {
   if (!client || state.status !== 'signed-in') return;
   const { data, error } = await client.from('purchases').select('product_id').eq('status', 'paid');
-  const owned = error ? [] : [...new Set(data.map((r) => r.product_id))];
+  const bought = error ? [] : data.map((r) => r.product_id);
+  const owned = [...new Set(state.isAdmin ? ['all', ...bought] : bought)];
   setOwned(owned);
   forgetLoadedCourses();
   set({ owned });
@@ -252,6 +256,27 @@ export async function loadRemoteProgress() {
 export async function saveRemoteProgress(payload) {
   if (!client || state.status !== 'signed-in') return;
   await client.from('progress').upsert({ user_id: state.user.id, data: payload, updated_at: new Date().toISOString() });
+}
+
+/** Call the admin Edge Function (only works for admins; the server checks). */
+export async function adminCall(body) {
+  await getClient();
+  const { data } = await client.auth.getSession();
+  if (!data.session) throw new Error('Please sign in.');
+  const { SUPABASE_KEY, SUPABASE_URL } = await import('../supabase.config');
+  let res;
+  try {
+    res = await fetch(`${SUPABASE_URL}/functions/v1/admin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${data.session.access_token}` },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new Error('Could not reach the admin server.');
+  }
+  const out = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(out.error || `Admin server error (${res.status}).`);
+  return out;
 }
 
 export const displayName = (user) => user?.user_metadata?.name || user?.email?.split('@')[0] || '';

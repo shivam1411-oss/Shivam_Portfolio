@@ -8,6 +8,7 @@ The Razorpay **key secret lives only in Supabase's secrets**: never in this repo
 | `create-order` | the Lab, when a signed-in learner clicks Unlock | Looks up the price in `products`, creates a Razorpay order, stores a `created` purchase, returns `{ order_id, amount, currency, key_id }` |
 | `verify-payment` | the Lab, after Razorpay Checkout succeeds | Checks `HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)`, confirms the payment with Razorpay (capturing it if needed) and marks the purchase `paid` |
 | `razorpay-webhook` | Razorpay's servers | Safety net: marks the purchase paid on `payment.captured` / `order.paid` even if the buyer closed the page |
+| `admin` | the Lab's admin page (`learn.html#/admin`) | Admins only (`public.admins`, see `supabase/admin.sql`): sales, accounts and progress; refunds through Razorpay; free course grants |
 
 ## 1. Secrets
 Supabase Dashboard → **Edge Functions → Secrets** → add:
@@ -23,7 +24,7 @@ Supabase Dashboard → **Edge Functions → Secrets** → add:
 ## 2. Deploy the functions
 **Dashboard (no tools needed):** Edge Functions → **Deploy a new function → Via Editor**. Name it exactly
 `create-order`, replace the sample code with `create-order/index.ts`, and click **Deploy**. Repeat for
-`verify-payment` and `razorpay-webhook`. Then open each function → **Details / Settings** and turn **off**
+`verify-payment`, `razorpay-webhook` and `admin`. Then open each function → **Details / Settings** and turn **off**
 "Verify JWT" (each function checks the sign-in itself; Razorpay's webhook has no Supabase token).
 
 **Or with the Supabase CLI:**
@@ -34,6 +35,7 @@ supabase secrets set --env-file .env          # .env holds RAZORPAY_KEY_ID, RAZO
 supabase functions deploy create-order --no-verify-jwt
 supabase functions deploy verify-payment --no-verify-jwt
 supabase functions deploy razorpay-webhook --no-verify-jwt
+supabase functions deploy admin --no-verify-jwt
 ```
 
 ## 3. Webhook

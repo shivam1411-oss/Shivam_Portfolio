@@ -333,6 +333,14 @@ function Profile({ account }) {
         <h2 className="font-extrabold text-fg flex items-center gap-2">
           <Sparkles size={16} className="text-accent" /> Your courses
         </h2>
+        {account.isAdmin && (
+          <p className="mt-2 text-sm text-fg leading-relaxed">
+            <b>Admin:</b> you have every course without buying it.{' '}
+            <a href="#/admin" className="font-bold text-accent underline underline-offset-2">
+              Open the admin dashboard
+            </a>
+          </p>
+        )}
         <p className="mt-2 text-sm text-muted leading-relaxed">
           {courses === 'all'
             ? 'All-access: every course is unlocked.'

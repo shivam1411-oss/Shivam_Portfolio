@@ -43,6 +43,7 @@ import { LessonAccessBadge, LockedLesson, UnlockCard } from './Paywall';
 import { clearToast, displayName, getAccount, initAccount, loadRemoteProgress, saveRemoteProgress, subscribeAccount } from './account/store';
 
 const AccountPage = lazy(() => import('./account/AccountPage'));
+const AdminPage = lazy(() => import('./account/AdminPage'));
 const useAccount = () => useSyncExternalStore(subscribeAccount, getAccount);
 
 // When what the learner owns changes (sign in, sign out, purchase), reload courses so locks update.
@@ -79,6 +80,7 @@ const parseHash = () => {
   }
   if (view === 'timeline' || view === 'glossary' || view === 'playground') return { view };
   if (view === 'account') return { view: 'account', sub: a || null };
+  if (view === 'admin') return { view: 'admin' };
   if (view === 'kb') return { view: 'kb', course: courseById[a] || null, topic: courseById[a] ? b : null };
   if (view === 'courses') return { view: 'hub' };
   return { view: 'landing' };
@@ -1232,6 +1234,11 @@ export default function LearnApp() {
           {route.view === 'playground' && <Playground />}
           {route.view === 'timeline' && <Timeline />}
           {route.view === 'glossary' && <Glossary />}
+          {route.view === 'admin' && (
+            <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-16 text-muted">Loading…</div>}>
+              <AdminPage />
+            </Suspense>
+          )}
           {route.view === 'account' && (
             <Suspense fallback={<div className="max-w-md mx-auto px-4 py-16 text-muted">Loading…</div>}>
               <AccountPage sub={route.sub} />
