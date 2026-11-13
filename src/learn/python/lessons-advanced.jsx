@@ -1,6 +1,6 @@
 import { B, Callout, F, H, P, Term } from '../ui';
 import PyRunner from './PyRunner';
-import { py } from './lessons-beginner';
+import { py } from './py';
 
 // Python course, modules 4–6 (intermediate to advanced).
 

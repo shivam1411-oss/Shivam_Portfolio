@@ -1,11 +1,13 @@
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ChevronDown, Circle, Globe2, Lightbulb, RotateCcw, Search, Sparkles, XCircle } from 'lucide-react';
+import { Suspense, lazy, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { ArrowLeft, ArrowRight, BookOpen, Lock, Check, CheckCircle2, ChevronDown, Circle, Globe2, Lightbulb, RotateCcw, Search, Sparkles, XCircle } from 'lucide-react';
 import { Code, btn } from '../ui';
 import PyRunner from '../python/PyRunner';
 import ReactRunner from '../react/LazyReactRunner';
 import { LEVELS } from './util';
 import { kbLoaders } from './data';
 import { kbCatalog } from '../catalog';
+import { getAccessVersion, subscribeAccess } from '../access';
+import { UnlockCard } from '../Paywall';
 
 const Editor = lazy(() => import('../python/Editor'));
 // The Jira and Kubernetes playgrounds load only when a topic that uses them is opened.
@@ -248,7 +250,7 @@ function KbHub({ courses, icons, understood }) {
           const kb = kbCatalog[c.id];
           if (!kb) return null;
           const Icon = icons[c.icon] || BookOpen;
-          const done = kb.topics.filter((id) => understood[`${c.id}/${id}`]).length;
+          const done = kb.topics.filter((t) => understood[`${c.id}/${t.id}`]).length;
           return (
             <a key={c.id} href={`#/kb/${c.id}`} className="group p-6 rounded-[1.75rem] bg-surface border border-line hover:border-accent/50 shadow-soft transition-colors">
               <div className="flex items-center gap-3">
@@ -283,16 +285,22 @@ function KbHub({ courses, icons, understood }) {
 function KbCourse({ course, topicId, understood, toggleUnderstood }) {
   const [kb, setKb] = useState(null);
   const [failed, setFailed] = useState(false);
+  const [locked, setLocked] = useState(false);
+  const access = useSyncExternalStore(subscribeAccess, getAccessVersion);
   useEffect(() => {
     let live = true;
+    setKb(null);
+    setFailed(false);
+    setLocked(false);
     kbLoaders[course.id]().then(
       (data) => live && setKb(data),
-      () => live && setFailed(true)
+      (e) => live && (e?.locked ? setLocked(true) : setFailed(true))
     );
     return () => {
       live = false;
     };
-  }, [course.id]);
+  }, [course.id, access]);
+  if (locked) return <KbLocked course={course} />;
   if (failed)
     return (
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
@@ -310,6 +318,42 @@ function KbCourse({ course, topicId, understood, toggleUnderstood }) {
       </div>
     );
   return <KbTopics course={course} kb={kb} topicId={topicId} understood={understood} toggleUnderstood={toggleUnderstood} />;
+}
+
+/** A paid course's knowledge base before purchase: what it covers, and how to unlock it. */
+function KbLocked({ course }) {
+  const meta = kbCatalog[course.id];
+  return (
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <a href="#/kb" className="inline-flex items-center gap-1.5 text-sm font-bold text-muted hover:text-fg">
+        <ArrowLeft size={15} /> All knowledge bases
+      </a>
+      <div className="mt-6 eyebrow text-accent flex items-center gap-2">
+        <span className="h-px w-8 bg-accent/60" /> Knowledge base · {meta.topics.length} topics · included with the course
+      </div>
+      <h1 className="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight text-fg">{course.title}</h1>
+      <p className="mt-4 text-muted leading-relaxed max-w-3xl">{meta.intro}</p>
+      <div className="mt-6 max-w-2xl">
+        <UnlockCard course={course} compact />
+      </div>
+      <div className="mt-8 grid md:grid-cols-2 gap-4">
+        {LEVELS.map((l) => (
+          <section key={l.id} className="p-5 rounded-2xl bg-surface border border-line">
+            <LevelBadge level={l.id} />
+            <ul className="mt-3 space-y-1.5">
+              {meta.topics
+                .filter((t) => t.level === l.id)
+                .map((t) => (
+                  <li key={t.id} className="flex gap-2 text-sm text-muted leading-snug">
+                    <Lock size={13} className="shrink-0 mt-0.5 text-subtle" /> {t.title}
+                  </li>
+                ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function KbTopics({ course, kb, topicId, understood, toggleUnderstood }) {

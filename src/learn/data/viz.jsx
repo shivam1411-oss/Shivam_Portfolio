@@ -1,6 +1,6 @@
 import { B, Callout, F, H, P, Term } from '../ui';
 import PyRunner from '../python/PyRunner';
-import { py } from '../python/lessons-beginner';
+import { py } from '../python/py';
 
 // "Charts with Matplotlib": the standard Python charting library. Charts are drawn in the worker
 // and shown as images under the output; tests inspect the figure and axes objects.

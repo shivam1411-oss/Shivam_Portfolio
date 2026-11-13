@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import {
   ArrowLeft,
@@ -22,6 +22,7 @@ import {
   Layers,
   LibraryBig,
   ListTree,
+  Lock,
   RotateCcw,
   Search,
   Sparkles,
@@ -35,7 +36,15 @@ import CodeTrail from '../components/CodeTrail';
 import CursorReveal from '../components/CursorReveal';
 import ThemeToggle from '../components/ThemeToggle';
 import { ease } from '../components/motion';
-import { courseById, courses, learningPaths, lessonHash, lessonKey, loadCourse, loadedCourse, prefetchCourse } from './catalog';
+import { courseById, courses, forgetLoadedCourses, learningPaths, lessonHash, lessonKey, loadCourse, loadedCourse, prefetchCourse } from './catalog';
+import { PAYWALL, getAccessVersion, ownsCourse, subscribeAccess } from './access';
+import { LessonAccessBadge, LockedLesson, UnlockCard } from './Paywall';
+
+// When what the learner owns changes (sign in, sign out, purchase), reload courses so locks update.
+subscribeAccess(forgetLoadedCourses);
+const useAccessVersion = () => useSyncExternalStore(subscribeAccess, getAccessVersion);
+/** Show free/locked markers for this course? (Only with the paywall on, for courses the learner does not own.) */
+const showLocks = (course) => PAYWALL && course.paid && !ownsCourse(course.id);
 import { BigIdea, Mistakes, Questions, Recap, WordsToKnow } from './LessonGuide';
 import { glossary } from './glossary';
 import Landing from './Landing';
@@ -234,7 +243,19 @@ function CourseCard({ course, progress, index }) {
           <span className="absolute inset-0 flex items-center justify-center text-[11px] font-extrabold text-fg">{Math.round((s.done / s.total) * 100)}%</span>
         </div>
       </div>
-      <div className="mt-4 eyebrow text-subtle">{course.levels}</div>
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <span className="eyebrow text-subtle">{course.levels}</span>
+        {PAYWALL &&
+          (course.paid ? (
+            ownsCourse(course.id) ? (
+              <span className="px-2 py-0.5 rounded-full bg-accent/12 text-accent text-[10px] font-extrabold uppercase tracking-wider">Unlocked</span>
+            ) : (
+              <span className="px-2 py-0.5 rounded-full bg-accent/12 text-accent text-[10px] font-extrabold uppercase tracking-wider">First module free</span>
+            )
+          ) : (
+            <span className="px-2 py-0.5 rounded-full bg-accent/12 text-accent text-[10px] font-extrabold uppercase tracking-wider">Free</span>
+          ))}
+      </div>
       <h2 className="mt-1 text-2xl font-extrabold text-fg">{course.title}</h2>
       <p className="mt-1 text-sm font-semibold text-fg/80">{course.tagline}</p>
       <p className="mt-3 text-sm text-muted leading-relaxed flex-1">{course.blurb}</p>
@@ -354,6 +375,8 @@ function Hub({ progress }) {
 // ---------------------------------------------------------------- course home
 
 function CourseHome({ course, progress, resetCourse }) {
+  useAccessVersion();
+  const locks = showLocks(course);
   const s = courseStats(course, progress);
   useEffect(() => prefetchCourse(course.id), [course.id]);
   return (
@@ -435,6 +458,11 @@ function CourseHome({ course, progress, resetCourse }) {
           </span>
           <ArrowRight size={18} className="text-subtle group-hover:text-accent shrink-0" />
         </a>
+        {locks && (
+          <div className="mt-3 max-w-2xl">
+            <UnlockCard course={course} compact />
+          </div>
+        )}
       </section>
 
       <section className="mt-16 grid gap-6 md:grid-cols-2">
@@ -469,6 +497,7 @@ function CourseHome({ course, progress, resetCourse }) {
                     <a href={lessonHash(course, l)} className="group flex items-center gap-3 px-3 py-2.5 -mx-3 rounded-xl hover:bg-surface-2 transition-colors">
                       {progress.done[lessonKey(course, l)] ? <CheckCircle2 size={18} className="text-accent shrink-0" /> : <Circle size={18} className="text-subtle shrink-0" />}
                       <span className="flex-1 text-sm font-semibold text-fg">{l.title}</span>
+                      {locks && <LessonAccessBadge free={l.free} />}
                       {l.exercises?.length > 0 && (
                         <span className="inline-flex items-center gap-1 text-[11px] text-subtle font-semibold" title="Coding exercises">
                           <FlaskConical size={11} /> {l.exercises.length}
@@ -671,7 +700,8 @@ function LessonNav({ course, currentId, progress, onPick }) {
                       }`}
                     >
                       {progress.done[lessonKey(course, l)] ? <CheckCircle2 size={15} className="text-accent shrink-0" /> : <Circle size={15} className="text-subtle shrink-0" />}
-                      {l.title}
+                      <span className="flex-1">{l.title}</span>
+                      {l.locked && <Lock size={12} className="text-subtle shrink-0" aria-label="Part of the full course" />}
                     </a>
                   </li>
                 );
@@ -685,6 +715,7 @@ function LessonNav({ course, currentId, progress, onPick }) {
 
 /** A course's full lessons, loaded on demand (each course is its own download). */
 function useFullCourse(id) {
+  const access = useAccessVersion();
   const [state, setState] = useState(() => ({ id, course: loadedCourse(id), error: null }));
   useEffect(() => {
     let live = true;
@@ -701,7 +732,7 @@ function useFullCourse(id) {
     return () => {
       live = false;
     };
-  }, [id]);
+  }, [id, access]);
   return state.id === id ? state : { course: loadedCourse(id), error: null };
 }
 
@@ -737,7 +768,9 @@ function LessonPage({ course, lesson, ...rest }) {
         </article>
       </div>
     );
-  return <Lesson course={full} lesson={full.lessons.find((l) => l.id === lesson.id)} {...rest} />;
+  const fullLesson = full.lessons.find((l) => l.id === lesson.id);
+  if (fullLesson.locked) return <LockedLesson course={full} lesson={fullLesson} />;
+  return <Lesson course={full} lesson={fullLesson} {...rest} />;
 }
 
 function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz }) {

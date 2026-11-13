@@ -1,7 +1,7 @@
 import { B, Callout, F, H, P, Term } from '../ui';
 import PyRunner from '../python/PyRunner';
 import { useState } from 'react';
-import { py } from '../python/lessons-beginner';
+import { py } from '../python/py';
 
 // "Data Analysis with pandas": NumPy foundations, then the pandas skills analyst roles ask for most
 // (reading, selecting, cleaning, transforming, groupby, reshaping, merging, time series) on one

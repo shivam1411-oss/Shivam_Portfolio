@@ -74,6 +74,20 @@ Readers can search, filter by level and mark topics as understood (saved in the 
 `scripts/gen-learn-catalog.mjs` before every dev start and build) and downloads each course's lessons and each
 knowledge base only when opened. Python and the code editor start loading when a code box nears the screen.
 
+**Paid courses (paywall):** Learn the Code is free; in every other course the first module is free and the rest
+is paid (`src/learn/paywall.config.js`). It is switched off unless the site is built with `VITE_PAYWALL=on`, so the
+live site is fully free until sign-in and payments are ready. With it on:
+
+- `scripts/vite-lesson-parts.mjs` splits each course file into its free and paid lessons at build time
+  (`course.jsx?part=free` / `?part=paid`), so lessons stay in one file per course for editing.
+- `scripts/split-paid.mjs` (runs after `vite build`) moves the files only paid content needs from `dist/` to
+  `dist-paid/<course>/` for upload to the private Supabase bucket `paid-lessons`, and writes `dist/paid-manifest.json`.
+- `src/learn/access.js` downloads a course's paid files from storage only for learners who own it and runs them in
+  the page; others see the lesson title, goals and an unlock card (`src/learn/Paywall.jsx`). Prices come from the
+  Supabase `products` table. The database setup is `supabase/schema.sql`.
+- Local testing: `VITE_PAYWALL=on VITE_PAID_BASE=http://localhost:4175/ VITE_PAYWALL_TEST_OWNED=react npm run build`
+  and serve `dist-paid/` with CORS on port 4175. Never set `VITE_PAYWALL_TEST_OWNED` for the real site.
+
 **Adding a course:** write its modules and lessons (see `src/learn/python/` for one with runnable exercises) and add
 `src/learn/content/<id>.js`, list it in `src/learn/courses.js` and `src/learn/catalog.js`, with a beginner guide in `src/learn/guides/` and a knowledge base in `src/learn/kb/`. A lesson is `{ id, module, title, minutes, goals, body, exercises?, quiz? }`;
 an exercise is `{ id, title, prompt, starter, tests, hint?, solution?, stdin? }`, where each test is Python code

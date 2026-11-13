@@ -4,6 +4,7 @@
 // Full lessons (text, widgets, exercises, quizzes, guides) are loaded per course with loadCourse(),
 // so opening the Lab does not download every course.
 import data from './catalog.generated.json';
+import { loadPaidLessons, ownsCourse } from './access';
 
 /** Course order on the Courses page. */
 export const COURSE_IDS = ['site', 'python', 'pandas', 'sql', 'viz', 'react', 'jira', 'k8s'];
@@ -20,15 +21,17 @@ export { learningPath, learningPaths, techPath } from './paths';
 
 // ---------------------------------------------------------------- loading full course content
 
-const loaders = {
-  site: () => import('./content/site'),
-  python: () => import('./content/python'),
-  pandas: () => import('./content/pandas'),
-  sql: () => import('./content/sql'),
-  viz: () => import('./content/viz'),
-  react: () => import('./content/react'),
-  jira: () => import('./content/jira'),
-  k8s: () => import('./content/k8s'),
+// Learn the Code is free throughout; paid courses load their free first module here and their paid
+// lessons through the access layer.
+const freeLoaders = {
+  site: () => import('./content/site').then((m) => m.default.lessons),
+  python: () => import('./content/python.free.js').then((m) => m.default),
+  pandas: () => import('./content/pandas.free.js').then((m) => m.default),
+  sql: () => import('./content/sql.free.js').then((m) => m.default),
+  viz: () => import('./content/viz.free.js').then((m) => m.default),
+  react: () => import('./content/react.free.js').then((m) => m.default),
+  jira: () => import('./content/jira.free.js').then((m) => m.default),
+  k8s: () => import('./content/k8s.free.js').then((m) => m.default),
 };
 const loaded = new Map(); // id -> full course
 const pending = new Map(); // id -> promise
@@ -36,16 +39,36 @@ const pending = new Map(); // id -> promise
 /** The full course if it has already loaded, otherwise null. */
 export const loadedCourse = (id) => loaded.get(id) || null;
 
-/** Load a course's full lessons (cached). */
+/** Forget loaded courses (after signing in, out or buying, so locked lessons are re-checked). */
+export function forgetLoadedCourses() {
+  loaded.clear();
+  pending.clear();
+}
+
+/**
+ * Load a course's lessons (cached). Lessons the learner cannot open yet come back as catalogue entries
+ * marked `locked: true` (title, goals and module, no content).
+ */
 export function loadCourse(id) {
   if (loaded.has(id)) return Promise.resolve(loaded.get(id));
   if (!pending.has(id)) {
+    const meta = courseById[id];
     pending.set(
       id,
-      loaders[id]().then(
-        (m) => {
-          loaded.set(id, m.default);
-          return m.default;
+      Promise.all([
+        freeLoaders[id](),
+        meta.paid && ownsCourse(id)
+          ? loadPaidLessons(id).catch((e) => {
+              if (e.locked) return [];
+              throw e;
+            })
+          : [],
+      ]).then(
+        ([free, paid]) => {
+          const byId = new Map([...free, ...paid].map((l) => [l.id, l]));
+          const course = { ...meta, lessons: meta.lessons.map((l) => byId.get(l.id) || { ...l, locked: true }) };
+          loaded.set(id, course);
+          return course;
         },
         (e) => {
           pending.delete(id); // allow a retry
@@ -59,7 +82,7 @@ export function loadCourse(id) {
 
 /** Fetch a course in the background when the browser is idle, so opening a lesson is instant. */
 export function prefetchCourse(id) {
-  if (loaded.has(id) || pending.has(id) || !loaders[id]) return;
+  if (loaded.has(id) || pending.has(id) || !freeLoaders[id]) return;
   const go = () => loadCourse(id).catch(() => {});
   if ('requestIdleCallback' in window) window.requestIdleCallback(go, { timeout: 3000 });
   else setTimeout(go, 1200);

@@ -1,6 +1,6 @@
 import { B, Callout, F, H, P, Term } from '../ui';
 import PyRunner from '../python/PyRunner';
-import { py } from '../python/lessons-beginner';
+import { py } from '../python/py';
 
 // "SQL with Python": SQL is the skill analyst job postings ask for most often. Lessons use SQLite
 // (built into Python) with the same collections data as the pandas course, loaded into an
