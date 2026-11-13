@@ -392,10 +392,34 @@ export const changelog = [
   {
     phase: 'lab',
     date: '2026-11-13',
+    category: 'learning',
+    title: 'The Learning Lab is live',
+    plain: 'The Learning Lab opened to everyone with paid courses switched on: anyone can sign up, learn the free lessons, and buy a course to unlock the rest. The Terms of Use, Refund Policy and Privacy Policy took effect the same day.',
+    commits: ['59d4f99'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-13',
     category: 'app',
     title: 'Android app 1.6 with accounts and paid courses',
     plain: 'The Android app now includes accounts and paid courses, built automatically on GitHub. After signing in, learners go straight back to the Learning Lab instead of the account page.',
-    commits: ['c22669d'],
+    commits: ['c22669d', 'c3bba1c'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-13',
+    category: 'infra',
+    title: 'Android builds move to Node 24',
+    plain: 'The GitHub workflow that builds the Android app now uses the latest Java setup and artifact upload steps, which run on Node 24, ahead of GitHub retiring Node 20.',
+    commits: ['2f2f242'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-13',
+    category: 'app',
+    title: 'Android app 1.7: a straight update',
+    plain: 'Version 1.7 has everything in 1.6 and is signed with the same key as the earlier app shared on Google Drive, so it installs as an ordinary update and learners keep their progress.',
+    commits: ['a317d5e'],
   },
 ];
 
