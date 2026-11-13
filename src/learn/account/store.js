@@ -38,8 +38,13 @@ const getClient = () => {
   return clientPromise;
 };
 
-/** Where email links should come back to: this page, without the route or any query. */
-const returnUrl = () => `${window.location.origin}${window.location.pathname}`;
+/**
+ * Where email links should come back to: this page, without the route or any query. In the Android app the page
+ * is https://localhost, which a phone's email app cannot open, so links go to the live site instead.
+ */
+const SITE_LAB = 'https://shivam-soni.com/learn.html';
+const inApp = () => window.location.origin === 'https://localhost';
+const returnUrl = () => (inApp() ? SITE_LAB : `${window.location.origin}${window.location.pathname}`);
 
 // ---------------------------------------------------------------- friendly messages
 
@@ -65,7 +70,7 @@ async function onSession(session) {
     setAuthHeaders(async () => ({}));
     setOwned([]);
     forgetLoadedCourses();
-    set({ status: 'signed-out', user: null, owned: [], isAdmin: false });
+    set({ status: 'signed-out', user: null, owned: [], isAdmin: false, ownedLoaded: false });
     return;
   }
   setAuthHeaders(async () => {
@@ -85,10 +90,33 @@ export async function refreshPurchases() {
   const { data, error } = await client.from('purchases').select('product_id').eq('status', 'paid');
   const bought = error ? [] : data.map((r) => r.product_id);
   const owned = [...new Set(state.isAdmin ? ['all', ...bought] : bought)];
+  if (owned.length === state.owned.length && owned.every((p) => state.owned.includes(p)) && state.ownedLoaded) return;
   setOwned(owned);
   forgetLoadedCourses();
-  set({ owned });
+  set({ owned, ownedLoaded: true });
 }
+
+// ---------------------------------------------------------------- where to go after signing in
+
+// The Lab page the learner was on before opening the account page (e.g. the locked lesson they tried to unlock).
+let returnTo = null;
+const isAccountHash = (h) => /^#\/account/.test(h || '');
+function rememberReturn(event) {
+  const oldHash = new URL(event.oldURL).hash;
+  const newHash = new URL(event.newURL).hash;
+  if (isAccountHash(newHash) && !isAccountHash(oldHash)) returnTo = oldHash && oldHash !== '#' ? oldHash : null;
+}
+/** Leave the account page for the Lab: back where the learner came from, else the course list. */
+export function goToLab(message) {
+  const target = returnTo || '#/courses';
+  returnTo = null;
+  if (message) set({ toast: message });
+  window.location.hash = target;
+}
+const welcome = (user) => {
+  const name = displayName(user);
+  return `Welcome${name ? `, ${name}` : ''}! You are signed in.`;
+};
 
 /** Handle an email link in the URL, then remove it from the address bar. */
 async function handleEmailLink() {
@@ -114,8 +142,7 @@ async function handleEmailLink() {
       set({ recovering: true });
       window.location.hash = '#/account/reset';
     } else {
-      set({ notice: { tone: 'ok', text: 'Your email is confirmed and you are signed in. Welcome to the Learning Lab!' } });
-      window.location.hash = '#/account';
+      goToLab('Your email is confirmed and you are signed in. Welcome to the Learning Lab!');
     }
   } else {
     // ?code=… is exchanged by the Supabase client itself (detectSessionInUrl); just tidy the address bar.
@@ -132,6 +159,11 @@ export function initAccount() {
   if (started) return;
   started = true;
   window.addEventListener('lab:unlock', onUnlock);
+  window.addEventListener('hashchange', rememberReturn);
+  // Coming back to the tab or app (e.g. after paying in a bank's page): pick up purchases the server recorded.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && state.status === 'signed-in') refreshPurchases();
+  });
   let hasSession = false;
   try {
     hasSession = !!localStorage.getItem('lab-auth');
@@ -160,6 +192,7 @@ function onUnlock(event) {
   const { product, say } = event.detail || {};
   if (state.status !== 'signed-in') {
     pendingProduct = product;
+    returnTo = window.location.hash || null;
     set({ notice: { tone: 'info', text: 'Sign in or create a free account, then you can unlock the course.' } });
     window.location.hash = '#/account';
     return;
@@ -198,17 +231,27 @@ export async function signUp({ name, email, password }) {
   if (error) throw new Error(friendly(error));
   // With email confirmation on, an existing address returns a user with no identities (no email is sent).
   if (data.user && data.user.identities?.length === 0) throw new Error(friendly({ code: 'user_already_exists' }));
+  if (data.session) leaveAfterSignIn(data.session.user);
   return { needsConfirmation: !data.session };
 }
 
 export async function signIn({ email, password }) {
   await getClient();
-  const { error } = await client.auth.signInWithPassword({ email, password });
+  const { data, error } = await client.auth.signInWithPassword({ email, password });
   if (error) {
     const e = new Error(friendly(error));
     e.unconfirmed = error.code === 'email_not_confirmed' || /not confirmed/i.test(error.message);
     throw e;
   }
+  leaveAfterSignIn(data.user);
+}
+
+/** After signing in, go to the Lab (not the account page). If they were unlocking a course, say how to continue. */
+function leaveAfterSignIn(user) {
+  const product = pendingProduct;
+  pendingProduct = null;
+  const title = product === 'all' ? 'every course' : courseById[product]?.title;
+  goToLab(product && title ? `${welcome(user)} Press Unlock to get ${title}.` : welcome(user));
 }
 
 export async function resendConfirmation(email) {
