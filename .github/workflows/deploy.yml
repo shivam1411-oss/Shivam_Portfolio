@@ -29,6 +29,15 @@ jobs:
         env:
           # Address of the chat Worker (repository variable CHAT_API_URL). Empty = chat widget hidden.
           VITE_CHAT_API_URL: ${{ vars.CHAT_API_URL }}
+          # Learning Lab paywall (repository variable PAYWALL). "on" = paid lessons are kept off the public
+          # site and uploaded to private storage below; anything else = every lesson is free.
+          VITE_PAYWALL: ${{ vars.PAYWALL }}
+      # Upload paid lessons before the site is published, so it never points to files that are not there yet.
+      - run: node scripts/upload-paid.mjs
+        env:
+          VITE_PAYWALL: ${{ vars.PAYWALL }}
+          # Supabase secret key (repository secret SUPABASE_SECRET_KEY); only needed when PAYWALL is "on".
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
