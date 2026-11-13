@@ -354,8 +354,16 @@ export const changelog = [
     date: '2026-11-07',
     category: 'feature',
     title: 'This timeline',
-    plain: 'A "Site updates" section on the portfolio listing every change since the first page, shared with the Learning Lab.',
-    commits: [],
+    plain: 'A "Site updates" section on the portfolio listing every change since the first page, shared with the Learning Lab. Phone menu links now scroll to their section, and the home page no longer drifts sideways on phones.',
+    commits: ['cc33565'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-08',
+    category: 'feature',
+    title: 'Link previews when the site is shared',
+    plain: 'Sharing shivam-soni.com on WhatsApp, LinkedIn or X now shows a proper preview card with a title, description and a 1200×630 share image (Open Graph and Twitter tags).',
+    commits: ['a77c041'],
   },
 ];
 
