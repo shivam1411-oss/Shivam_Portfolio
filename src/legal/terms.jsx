@@ -108,7 +108,8 @@ const sections = [
         <li>The courses are for education. They are not professional, financial, legal or career advice, and do not guarantee a job, exam result or income.</li>
         <li>We work to keep lessons accurate and up to date and may improve, reorganise or update them at any time.</li>
         <li>
-          If we permanently withdraw a paid course within 12 months of your purchase, you may ask for a full refund of that course.
+          We may change or withdraw courses. Refunds are only available as set out in the Refund &amp; Cancellation Policy (within 7 days of purchase), not
+          when a course is changed or withdrawn later.
         </li>
         <li>The site is provided "as is". We aim to keep it available but cannot promise it will always be free of errors or interruptions.</li>
       </ul>

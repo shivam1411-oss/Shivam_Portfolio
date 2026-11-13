@@ -6,8 +6,10 @@ const sections = [
     body: (
       <ul className="list-disc list-inside">
         <li>
-          Not happy with a course? Ask within <strong>7 days</strong> of buying it for a <strong>full refund</strong>.
+          Not happy with a course? Ask within <strong>7 days</strong> of buying it, before completing a quarter of its paid lessons, for a{' '}
+          <strong>full refund</strong>.
         </li>
+        <li>No refunds after 7 days, including if a course is later changed or withdrawn.</li>
         <li>Failed or duplicate payments are refunded automatically.</li>
         <li>There are no subscriptions, so there is nothing to cancel and you are never charged again.</li>
         <li>Refunds go back to the original payment method, usually within 5–7 working days.</li>
@@ -20,8 +22,20 @@ const sections = [
       <>
         <p>
           The first module of every course is free so you can try it before buying. If you buy a course or the all-access bundle and are not satisfied,
-          email us within <strong>7 days of your purchase</strong> from the address on your account, with your payment reference (shown in the receipt
-          from Razorpay), and we will refund the full amount. You do not need to give a reason.
+          email us from the address on your account, with your payment reference (shown in the receipt from Razorpay), and we will refund the full
+          amount if both of these are true:
+        </p>
+        <ul className="list-disc list-inside mt-3">
+          <li>
+            you ask within <strong>7 days of your purchase</strong>; and
+          </li>
+          <li>
+            you have completed <strong>fewer than 25% of the paid lessons</strong> in that course (for all-access, fewer than 25% of all paid lessons).
+            Free first-module lessons do not count.
+          </li>
+        </ul>
+        <p className="mt-3">
+          You do not need to give a reason. We check completed lessons using the progress saved to your account.
         </p>
         <p className="mt-3">
           To keep this fair, the 7-day refund applies once per course per person. It does not apply to accounts suspended for breaking the{' '}
@@ -71,11 +85,11 @@ const sections = [
     ),
   },
   {
-    title: 'Withdrawn Courses',
+    title: 'After 7 Days',
     body: (
       <p>
-        If we permanently withdraw a paid course within 12 months of your purchase, you may ask for a full refund of that course, as described in the{' '}
-        <A href="terms.html">Terms of Use</A>.
+        Refunds are not available more than 7 days after purchase, including if a course is later updated, reorganised or withdrawn. This does not
+        affect failed, duplicate or undelivered payments (above), or any rights you have under Indian consumer law that cannot be excluded.
       </p>
     ),
   },

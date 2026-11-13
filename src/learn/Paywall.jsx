@@ -52,7 +52,7 @@ export function UnlockCard({ course, compact = false }) {
         </button>
       </div>
       <p className="mt-3 text-[11px] text-subtle leading-relaxed">
-        Secure payment by Razorpay. 7-day refund if it is not for you. By unlocking you agree to the{' '}
+        Secure payment by Razorpay. One-time payment with a 7-day refund policy. By unlocking you agree to the{' '}
         <a href="./terms.html" target="_blank" rel="noreferrer" className="underline hover:text-fg">
           terms
         </a>{' '}
