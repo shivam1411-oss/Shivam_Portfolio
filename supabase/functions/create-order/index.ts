@@ -73,6 +73,12 @@ export async function handler(req: Request, rawEnv: Env, f: typeof fetch = fetch
   const gaps = missing(env, serviceKey, ['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET']);
   if (gaps.length) return json(req, 500, { error: `Payments are not configured yet. Missing: ${gaps.join(', ')}.` });
 
+  if (!/^rzp_(test|live)_[A-Za-z0-9]+$/.test(env.RAZORPAY_KEY_ID || ''))
+    return json(req, 500, {
+      error: 'Payments are not configured correctly.',
+      detail: 'RAZORPAY_KEY_ID must be the Key ID, which starts with rzp_test_ or rzp_live_. It currently holds something else (possibly the secret).',
+    });
+
   const user = await getUser(req, env, serviceKey, f);
   if (!user) return json(req, 401, { error: 'Please sign in again to buy a course.' });
 
@@ -106,12 +112,10 @@ export async function handler(req: Request, rawEnv: Env, f: typeof fetch = fetch
     }),
   });
   if (order.status === 401) {
-    // Safe to show: the key id is public; only the secret's length is reported, never the secret.
-    const id = env.RAZORPAY_KEY_ID || '';
-    console.error(`Razorpay rejected key id ${id} (secret length ${env.RAZORPAY_KEY_SECRET?.length})`);
+    console.error('Razorpay rejected the key id / key secret pair');
     return json(req, 500, {
       error: 'The payment provider rejected our credentials. Please try again later.',
-      detail: `Razorpay rejected key id ${id} with a ${env.RAZORPAY_KEY_SECRET?.length}-character secret (expected 24). Check both come from the same key in Razorpay → API Keys.`,
+      detail: 'Razorpay rejected the key pair: RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be the id and secret of the same key in Razorpay → API Keys.',
     });
   }
   if (!order.ok) return json(req, 500, { error: 'Could not start the payment. Please try again.' });
