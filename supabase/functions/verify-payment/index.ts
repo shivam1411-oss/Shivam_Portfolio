@@ -26,6 +26,8 @@ function serviceKeyFrom(env: Env) {
 }
 /** Headers that authenticate as the server. New sb_secret_ keys go only in apikey; older JWT keys also as a Bearer token. */
 const serverHeaders = (key: string) => (key.startsWith('sb_secret_') ? { apikey: key } : { apikey: key, Authorization: `Bearer ${key}` });
+/** Secrets as pasted into Supabase can carry stray spaces, line breaks or quotes: remove them. */
+const cleanSecret = (v?: string) => (v || '').trim().replace(/^['"]|['"]$/g, '').trim();
 /** Names (never values) of required settings that are missing. */
 const missing = (env: Env, serviceKey: string, names: string[]) => [
   ...(env.SUPABASE_URL ? [] : ['SUPABASE_URL']),
@@ -74,7 +76,8 @@ function safeEqual(a: string, b: string) {
   return diff === 0;
 }
 
-export async function handler(req: Request, env: Env, f: typeof fetch = fetch): Promise<Response> {
+export async function handler(req: Request, rawEnv: Env, f: typeof fetch = fetch): Promise<Response> {
+  const env: Env = { ...rawEnv, RAZORPAY_KEY_ID: cleanSecret(rawEnv.RAZORPAY_KEY_ID), RAZORPAY_KEY_SECRET: cleanSecret(rawEnv.RAZORPAY_KEY_SECRET) };
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
   if (req.method !== 'POST') return json(req, 405, { error: 'Use POST.' });
 

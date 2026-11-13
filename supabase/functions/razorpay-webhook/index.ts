@@ -38,7 +38,8 @@ function safeEqual(a: string, b: string) {
   return diff === 0;
 }
 
-export async function handler(req: Request, env: Env, f: typeof fetch = fetch): Promise<Response> {
+export async function handler(req: Request, rawEnv: Env, f: typeof fetch = fetch): Promise<Response> {
+  const env: Env = { ...rawEnv, RAZORPAY_WEBHOOK_SECRET: (rawEnv.RAZORPAY_WEBHOOK_SECRET || '').trim().replace(/^['"]|['"]$/g, '').trim() };
   if (req.method !== 'POST') return new Response('Use POST', { status: 405 });
   const serviceKey = serviceKeyFrom(env);
   const gaps = missing(env, serviceKey, ['RAZORPAY_WEBHOOK_SECRET']);

@@ -26,6 +26,8 @@ function serviceKeyFrom(env: Env) {
 }
 /** Headers that authenticate as the server. New sb_secret_ keys go only in apikey; older JWT keys also as a Bearer token. */
 const serverHeaders = (key: string) => (key.startsWith('sb_secret_') ? { apikey: key } : { apikey: key, Authorization: `Bearer ${key}` });
+/** Secrets as pasted into Supabase can carry stray spaces, line breaks or quotes: remove them. */
+const cleanSecret = (v?: string) => (v || '').trim().replace(/^['"]|['"]$/g, '').trim();
 /** Names (never values) of required settings that are missing. */
 const missing = (env: Env, serviceKey: string, names: string[]) => [
   ...(env.SUPABASE_URL ? [] : ['SUPABASE_URL']),
@@ -62,7 +64,8 @@ const db = (env: Env, serviceKey: string, f: typeof fetch) => (path: string, ini
     headers: { ...serverHeaders(serviceKey), 'Content-Type': 'application/json', ...(init.headers || {}) },
   });
 
-export async function handler(req: Request, env: Env, f: typeof fetch = fetch): Promise<Response> {
+export async function handler(req: Request, rawEnv: Env, f: typeof fetch = fetch): Promise<Response> {
+  const env: Env = { ...rawEnv, RAZORPAY_KEY_ID: cleanSecret(rawEnv.RAZORPAY_KEY_ID), RAZORPAY_KEY_SECRET: cleanSecret(rawEnv.RAZORPAY_KEY_SECRET) };
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
   if (req.method !== 'POST') return json(req, 405, { error: 'Use POST.' });
 
@@ -102,7 +105,15 @@ export async function handler(req: Request, env: Env, f: typeof fetch = fetch): 
       notes: { user_id: user.id, product, email: user.email || '' },
     }),
   });
-  if (order.status === 401) return json(req, 500, { error: 'The payment provider rejected our credentials. Please try again later.' });
+  if (order.status === 401) {
+    // Safe to show: the key id is public; only the secret's length is reported, never the secret.
+    const id = env.RAZORPAY_KEY_ID || '';
+    console.error(`Razorpay rejected key id ${id} (secret length ${env.RAZORPAY_KEY_SECRET?.length})`);
+    return json(req, 500, {
+      error: 'The payment provider rejected our credentials. Please try again later.',
+      detail: `Razorpay rejected key id ${id} with a ${env.RAZORPAY_KEY_SECRET?.length}-character secret (expected 24). Check both come from the same key in Razorpay → API Keys.`,
+    });
+  }
   if (!order.ok) return json(req, 500, { error: 'Could not start the payment. Please try again.' });
   const o = await order.json();
 
