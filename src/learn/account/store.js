@@ -3,11 +3,11 @@
 //
 // Email links (confirm sign-up, reset password) come back to learn.html with ?token_hash=…&type=… (our email
 // templates, see supabase/email-templates) or ?code=… (Supabase's default templates); both are handled here.
-import { forgetLoadedCourses } from '../catalog';
+import { courseById, forgetLoadedCourses } from '../catalog';
 import { setAuthHeaders, setOwned } from '../access';
 
 const listeners = new Set();
-let state = { status: 'loading', user: null, owned: [], notice: null, recovering: false };
+let state = { status: 'loading', user: null, owned: [], notice: null, recovering: false, toast: null };
 let client = null;
 let clientPromise = null;
 
@@ -164,8 +164,13 @@ function onUnlock(event) {
     say?.('You already own this course.');
     return;
   }
+  const onPaid = async () => {
+    await refreshPurchases();
+    const title = product === 'all' ? 'Every course' : courseById[product]?.title || 'Your course';
+    set({ toast: `${title} unlocked! Every lesson, exercise and the knowledge base are now open. Thank you for your support.` });
+  };
   import('./checkout')
-    .then((m) => m.startCheckout(product, { say, onPaid: refreshPurchases }))
+    .then((m) => m.startCheckout(product, { say, onPaid }))
     .catch((e) => say?.(e.message || 'Could not start the payment. Please try again.'));
 }
 export const takePendingProduct = () => {
@@ -177,6 +182,7 @@ export const takePendingProduct = () => {
 // ---------------------------------------------------------------- account actions (used by the account page)
 
 export const clearNotice = () => set({ notice: null });
+export const clearToast = () => set({ toast: null });
 
 export async function signUp({ name, email, password }) {
   await getClient();

@@ -40,7 +40,7 @@ import { ease } from '../components/motion';
 import { courseById, courses, forgetLoadedCourses, learningPaths, lessonHash, lessonKey, loadCourse, loadedCourse, prefetchCourse } from './catalog';
 import { PAYWALL, getAccessVersion, ownsCourse, subscribeAccess } from './access';
 import { LessonAccessBadge, LockedLesson, UnlockCard } from './Paywall';
-import { displayName, getAccount, initAccount, loadRemoteProgress, saveRemoteProgress, subscribeAccount } from './account/store';
+import { clearToast, displayName, getAccount, initAccount, loadRemoteProgress, saveRemoteProgress, subscribeAccount } from './account/store';
 
 const AccountPage = lazy(() => import('./account/AccountPage'));
 const useAccount = () => useSyncExternalStore(subscribeAccount, getAccount);
@@ -246,6 +246,28 @@ function Eyebrow({ children }) {
   return (
     <div className="eyebrow text-accent mb-4 flex items-center gap-3">
       <span className="h-px w-8 bg-accent/60" /> {children}
+    </div>
+  );
+}
+
+/** A confirmation that stays visible while the page changes (e.g. a course unlocking after payment). */
+function Toast() {
+  const { toast } = useAccount();
+  useEffect(() => {
+    if (!toast) return undefined;
+    const t = setTimeout(clearToast, 9000);
+    return () => clearTimeout(t);
+  }, [toast]);
+  if (!toast) return null;
+  return (
+    <div className="fixed z-50 left-1/2 -translate-x-1/2 bottom-5 w-[min(32rem,calc(100vw-2rem))]" role="status" aria-live="polite">
+      <div className="flex items-start gap-3 p-4 rounded-2xl bg-fg text-bg shadow-soft">
+        <CheckCircle2 size={20} className="shrink-0 mt-0.5 text-accent" />
+        <p className="flex-1 text-sm font-semibold leading-relaxed">{toast}</p>
+        <button type="button" onClick={clearToast} className="text-xs font-bold opacity-70 hover:opacity-100" aria-label="Dismiss">
+          ✕
+        </button>
+      </div>
     </div>
   );
 }
@@ -1190,6 +1212,7 @@ export default function LearnApp() {
       {/* No background here, so the matrix (drawn behind the page) shows through */}
       <div className="min-h-screen">
         <Header route={route} progress={progress} />
+        <Toast />
         {/* <main> also gets the site's dark-mode text halo, which keeps words readable over the matrix */}
         <main>
           {route.view === 'landing' && <Landing progress={progress} />}
