@@ -1,0 +1,46 @@
+name: Build Android app
+
+# Builds the installable APK with the same settings as the live site (paywall on), and attaches it to the run
+# as an artifact named "Shivam-Soni-Portfolio-apk". Start it from Actions > Build Android app > Run workflow.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_CHAT_API_URL: ${{ vars.CHAT_API_URL }}
+          VITE_PAYWALL: ${{ vars.PAYWALL }}
+      # The app loads paid lessons from private storage by file name, so make sure this build's files are there.
+      # (Uploads only add files, so apps built earlier keep working.)
+      - run: node scripts/upload-paid.mjs
+        env:
+          VITE_PAYWALL: ${{ vars.PAYWALL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      - run: npx cap sync android
+      - run: ./gradlew assembleDebug --no-daemon
+        working-directory: android
+      # android/build.gradle puts build output under ~/Library/Caches (to keep it out of iCloud on a Mac).
+      - run: |
+          mkdir -p apk
+          cp ~/Library/Caches/ShivamPortfolioAndroid/app/outputs/apk/debug/app-debug.apk apk/Shivam-Soni-Portfolio.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Shivam-Soni-Portfolio-apk
+          path: apk/Shivam-Soni-Portfolio.apk
+          if-no-files-found: error

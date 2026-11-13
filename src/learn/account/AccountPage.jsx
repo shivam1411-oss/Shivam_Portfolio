@@ -14,6 +14,7 @@ import {
   signUp,
   subscribeAccount,
   takePendingProduct,
+  goToLab,
   updateName,
   updatePassword,
 } from './store';
@@ -387,7 +388,7 @@ export default function AccountPage({ sub }) {
         <Loader2 size={15} className="animate-spin" /> Loading your account…
       </p>
     );
-  else if (sub === 'reset' && account.status === 'signed-in') body = <NewPassword onDone={() => setTimeout(() => (window.location.hash = '#/account'), 1500)} />;
+  else if (sub === 'reset' && account.status === 'signed-in') body = <NewPassword onDone={() => setTimeout(() => goToLab('Your password has been changed. You are signed in.'), 1200)} />;
   else if (sub === 'reset')
     body = <Message tone="error">This reset link has expired or was already used. Ask for a new one from "Forgot password?" below.</Message>;
   else if (account.status === 'signed-in') body = <Profile account={account} />;
