@@ -160,7 +160,13 @@ function onUnlock(event) {
     window.location.hash = '#/account';
     return;
   }
-  say?.('Payments are being set up. You will be able to unlock this course here very soon.');
+  if (state.owned.includes(product) || state.owned.includes('all')) {
+    say?.('You already own this course.');
+    return;
+  }
+  import('./checkout')
+    .then((m) => m.startCheckout(product, { say, onPaid: refreshPurchases }))
+    .catch((e) => say?.(e.message || 'Could not start the payment. Please try again.'));
 }
 export const takePendingProduct = () => {
   const p = pendingProduct;

@@ -8,3 +8,6 @@ public/pyodide/
 .codegraph
 CLAUDE.local.md
 dist-paid
+.env
+.env.*
+!.env.example
