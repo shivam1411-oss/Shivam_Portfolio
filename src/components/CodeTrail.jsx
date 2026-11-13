@@ -20,8 +20,12 @@ const palettes = {
 
 const rand = (min, max) => min + Math.random() * (max - min);
 
-/** Canvas overlay that leaves a trail of flickering code tokens behind the cursor (or finger), also while scrolling. */
-export default function CodeTrail() {
+/**
+ * Canvas that leaves a trail of flickering code tokens behind the cursor (or finger), also while scrolling.
+ * `behind` (the default) draws it underneath the page content, so tokens never pass over words; the
+ * welcome screen, which covers the whole page, shows it on top instead.
+ */
+export default function CodeTrail({ behind = true }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -168,5 +172,6 @@ export default function CodeTrail() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} aria-hidden className="fixed inset-0 z-[90] pointer-events-none w-full h-full" />;
+  // -z-[4]: just above the cursor-revealed matrix (-z-[5]) and below all page content.
+  return <canvas ref={canvasRef} aria-hidden className={`fixed inset-0 pointer-events-none w-full h-full ${behind ? '-z-[4]' : 'z-[90]'}`} />;
 }
