@@ -8,5 +8,5 @@ export const LEGAL = {
   phone: '+91 89628 82456',
   address: 'A403, Sukhwani Highlands, Sus, Pune, Maharashtra 411021, India',
   jurisdiction: 'Pune, Maharashtra, India',
-  effective: 'November 13, 2026', // set to the day the paid courses go live
+  effective: 'November 13, 2026',
 };

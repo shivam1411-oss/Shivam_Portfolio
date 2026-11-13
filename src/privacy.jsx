@@ -454,7 +454,7 @@ function PrivacyPage() {
           transition={{ delay: 0.3 }}
           className="eyebrow text-subtle mb-12"
         >
-          Effective Date: November 7, 2026
+          Effective Date: November 13, 2026
         </motion.p>
 
         <div className="space-y-5 text-muted leading-relaxed">
