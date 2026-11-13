@@ -13,8 +13,8 @@ const sections = [
     body: (
       <p>
         This privacy policy applies to Shivam Soni's portfolio website at <strong>shivam-soni.com</strong> (this site), including its{' '}
-        <strong>Learning Lab</strong> ("Crack the Code"), and the <strong>Shivam Soni Android app</strong> (together, "the website and app"). It explains what information is collected, how it's used, and who it's shared with. This is a personal portfolio,
-        not a commercial product, and the website and app collect the minimum information needed to provide the features described below. It
+        <strong>Learning Lab</strong> ("Crack the Code"), and the <strong>Shivam Soni Android app</strong> (together, "the website and app"). It explains what information is collected, how it's used, and who it's shared with. This is a personal portfolio that also offers optional paid
+        courses in the Learning Lab. The website and app collect the minimum information needed to provide the features described below. It
         also sets out who owns their content and the restrictions on copying or reusing it.
       </p>
     ),
@@ -24,8 +24,9 @@ const sections = [
     body: (
       <>
         <p>
-          The website and app collect information only when you choose to use the <strong>"Get Resume"</strong> feature or the{' '}
-          <strong>AI assistant</strong> chat (described in its own section below). For "Get Resume":
+          The website and app collect information only when you choose to use the <strong>"Get Resume"</strong> feature, the{' '}
+          <strong>AI assistant</strong> chat, or a <strong>Learning Lab account</strong> (each described in its own section below). For "Get
+          Resume":
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
@@ -40,10 +41,11 @@ const sections = [
           collect location data, device identifiers, or analytics of any kind.
         </p>
         <p className="mt-3">
-          <strong>Stored only on your device:</strong> your light/dark theme choice, a note that you have already seen the welcome screen
-          during the current visit, and, if you use the Learning Lab, your lesson progress, quiz answers, solved exercises and the code you
-          write there. These stay in your browser or in the app on your device, are never sent anywhere, and can be removed by
-          clearing your browser data, clearing the app's storage, or uninstalling the app.
+          <strong>Stored on your device:</strong> your light/dark theme choice, a note that you have already seen the welcome screen
+          during the current visit, and, if you use the Learning Lab, your lesson progress, quiz answers, solved exercises, the code you write
+          there and, if you sign in, a sign-in token that keeps you logged in. These stay in your browser or in the app on your device and can be
+          removed by clearing your browser data, clearing the app's storage, or uninstalling the app. If you have a Learning Lab account, your
+          progress is also saved to it, as described below; the code you type in the editors is never uploaded.
         </p>
       </>
     ),
@@ -54,11 +56,13 @@ const sections = [
       <>
         <p>
           The Shivam Soni Android app shows the same portfolio as this website, packaged inside the app. It handles your information in exactly
-          the same way as the website, and only collects anything if you use the "Get Resume" feature.
+          the same way as the website, and only collects anything if you use the "Get Resume" feature, the AI assistant, or a Learning Lab
+          account.
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
-            <strong>Permissions:</strong> the app requests internet access only, used to email the resume you request and to open links. It does
+            <strong>Permissions:</strong> the app requests internet access only, used to email the resume you request, sign in to the Learning
+            Lab, download courses you have unlocked and open links. It does
             not access your contacts, camera, microphone, photos, files, location or phone identifiers.
           </li>
           <li>
@@ -84,13 +88,15 @@ const sections = [
     body: (
       <>
         <p>
-          The Learning Lab offers free interactive courses on how this site was built, Python, and data analysis with pandas, SQL and
-          Matplotlib. You don't need an account and you are never asked for any personal information to use it.
+          The Learning Lab offers interactive courses on how this site was built, Python, data analysis with pandas, SQL and Matplotlib, React,
+          Jira and Kubernetes. "Learn the Code" and the first module of every course are free and need no account and no personal information.
+          The rest of each course is available to buy, which requires a free account (see "Learning Lab Accounts &amp; Payments" below).
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
-            <strong>Your progress stays with you:</strong> completed lessons, quiz answers, solved exercises and code you type in the editors are
-            saved only in your browser or the app on your device. They are never uploaded, and Shivam Soni cannot see them.
+            <strong>Your progress:</strong> without an account, completed lessons, quiz answers, solved exercises and the code you type are saved
+            only in your browser or the app on your device. With an account, your progress (but not your code) is also saved to your account so it
+            follows you to other devices.
           </li>
           <li>
             <strong>Python runs on your device:</strong> code you run in the Python, pandas, SQL and Matplotlib exercises is executed entirely
@@ -104,9 +110,83 @@ const sections = [
           </li>
           <li>
             <strong>Starting over:</strong> clearing your browser data for this site, clearing the app's storage, or uninstalling the app removes
-            your saved progress and code.
+            the progress and code saved on your device. Progress saved to an account is removed when the account is deleted.
           </li>
         </ul>
+      </>
+    ),
+  },
+  {
+    title: 'Learning Lab Accounts & Payments',
+    body: (
+      <>
+        <p>
+          Creating a Learning Lab account is optional. You need one only to save your progress across devices or to buy a course. When you
+          create and use an account, the following is collected:
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>
+            <strong>Name and email address</strong>, which you enter when you sign up, to identify your account, show your name in the Lab and
+            send you account emails.
+          </li>
+          <li>
+            <strong>Password</strong>, which is stored only in scrambled (hashed) form by the account provider. Nobody, including Shivam Soni,
+            can read it.
+          </li>
+          <li>
+            <strong>Learning progress</strong>: completed lessons, quiz answers, solved exercises and knowledge-base topics you mark as
+            understood. The code you write is not uploaded.
+          </li>
+          <li>
+            <strong>Purchase records</strong>: which course you bought, the amount, the date, and the payment reference numbers from the payment
+            provider, so the right courses unlock for you and for accounting.
+          </li>
+          <li>
+            <strong>Account activity</strong>: the account provider keeps basic security logs, such as when you signed in and the IP address it
+            came from, to protect accounts and prevent abuse.
+          </li>
+        </ul>
+        <p className="mt-3">
+          <strong>Payment details are never seen or stored by Shivam Soni.</strong> When you buy a course, you pay on a secure checkout run by 
+          <strong>Razorpay</strong>, which collects your card, UPI or bank details directly under its own policies. Shivam Soni receives only
+          whether the payment succeeded, the amount and Razorpay's reference numbers.
+        </p>
+        <p className="mt-3">
+          <strong>Emails you will receive:</strong> only account emails you trigger, such as confirming your email address, resetting your
+          password and purchase confirmations. Your email address is not used for marketing or newsletters and is never sold or shared for
+          advertising.
+        </p>
+        <p className="mt-3">
+          <strong>Who stores and processes it:</strong>
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>
+            <strong>Supabase</strong> stores accounts, progress and purchase records on secure cloud servers, which may be located outside
+            India (
+            <a href="https://supabase.com/privacy" className="underline hover:text-fg" target="_blank" rel="noreferrer">
+              supabase.com/privacy
+            </a>
+            ).
+          </li>
+          <li>
+            <strong>Brevo</strong> delivers account emails on Shivam Soni's behalf (
+            <a href="https://www.brevo.com/legal/privacypolicy/" className="underline hover:text-fg" target="_blank" rel="noreferrer">
+              brevo.com/legal/privacypolicy
+            </a>
+            ).
+          </li>
+          <li>
+            <strong>Razorpay</strong> processes payments (
+            <a href="https://razorpay.com/privacy/" className="underline hover:text-fg" target="_blank" rel="noreferrer">
+              razorpay.com/privacy
+            </a>
+            ).
+          </li>
+        </ul>
+        <p className="mt-3">
+          <strong>Security:</strong> all connections are encrypted (HTTPS). Each account can read only its own progress and purchases, and paid
+          lessons are downloaded only to accounts that own them.
+        </p>
       </>
     ),
   },
@@ -152,8 +232,10 @@ const sections = [
     title: 'How We Use Your Information',
     body: (
       <p>
-        The name and email you provide are used for exactly one purpose: sending you the requested resume by email. This information is not used for
-        marketing, is not added to any mailing list, and is not used to contact you for any other reason.
+        The name and email you give through "Get Resume" are used for exactly one purpose: sending you the requested resume by email. Learning Lab
+        account information is used only to run your account: signing you in, saving your progress, unlocking courses you have bought, sending
+        account emails, keeping purchase records required by law, and protecting accounts from misuse. None of this information is used for
+        marketing, added to a mailing list, sold, or used to contact you for any other reason.
       </p>
     ),
   },
@@ -171,6 +253,8 @@ const sections = [
         </p>
         <p className="mt-3">
           Messages you type into the AI assistant are handled by Cloudflare and Anthropic, as described in the AI Assistant section above.
+          Learning Lab accounts, emails and payments are handled by Supabase, Brevo and Razorpay, as described in the Learning Lab Accounts &amp;
+          Payments section above.
         </p>
         <p className="mt-3">
           <strong>Hosting and fonts:</strong> the website is hosted on <strong>GitHub Pages</strong>, and its fonts are loaded from{' '}
@@ -195,29 +279,52 @@ const sections = [
   {
     title: 'Data Storage & Retention',
     body: (
-      <p>
-        Shivam Soni does not maintain a database of names or email addresses submitted through this feature. Your information is transmitted directly to
-        EmailJS for the purpose of sending the email and is not separately stored, logged, or retained by the website or app beyond what EmailJS itself
-        retains as part of its standard email delivery logs.
-      </p>
+      <>
+        <p>
+          <strong>Get Resume:</strong> Shivam Soni does not keep a database of names or email addresses submitted through this feature. Your
+          information is sent directly to EmailJS to send the email and is not separately stored, logged, or retained beyond what EmailJS itself
+          keeps in its standard email delivery logs.
+        </p>
+        <p className="mt-3">
+          <strong>Learning Lab accounts:</strong> your account information and progress are kept for as long as your account exists. When you ask
+          for your account to be deleted, it and its progress are deleted within 30 days. Purchase records are kept only for as long as Indian
+          tax and accounting laws require, and are then deleted.
+        </p>
+      </>
     ),
   },
   {
     title: "Children's Privacy",
     body: (
       <p>
-        The website and app are not directed at children and are not intended for use by anyone under the age of 13. We do not knowingly collect personal information
-        from children.
+        The website and app are not directed at children. Learning Lab accounts and purchases are intended for people aged 18 or over; anyone
+        under 18 may use an account only if a parent or guardian creates it and agrees to this policy on their behalf. We do not knowingly
+        collect personal information from children without that consent, and will delete it if we learn that we have.
       </p>
     ),
   },
   {
     title: 'Your Rights',
     body: (
-      <p>
-        If you've submitted your name and email through the "Get Resume" feature and would like to know what information was sent or would like it
-        removed from EmailJS's delivery logs, contact us using the details below and we'll assist or direct you to EmailJS's own data request process.
-      </p>
+      <>
+        <p>
+          Under India's Digital Personal Data Protection Act, 2023 and other applicable laws, you can ask to:
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>see a summary of the personal information held about you and who it has been shared with;</li>
+          <li>correct or update it (you can change your name and password yourself on the Learning Lab account page);</li>
+          <li>delete your Learning Lab account and its data, apart from purchase records the law requires us to keep;</li>
+          <li>withdraw your consent at any time, which ends your account (it does not undo processing already done);</li>
+          <li>nominate someone to exercise these rights for you in case of death or incapacity.</li>
+        </ul>
+        <p className="mt-3">
+          To make a request or raise a concern, email the contact below from the address linked to your account. Requests are answered within
+          30 days. If you are not satisfied with the response, you may complain to the Data Protection Board of India.
+        </p>
+        <p className="mt-3">
+          For "Get Resume" requests, we will help you or direct you to EmailJS's own data request process.
+        </p>
+      </>
     ),
   },
   {
@@ -302,7 +409,7 @@ const sections = [
     title: 'Contact',
     body: (
       <>
-        <p>Questions about this policy or your information can be sent to:</p>
+        <p>Questions, requests or complaints about this policy or your information (including as grievance officer under the DPDP Act) can be sent to:</p>
         <p className="mt-3 font-bold text-fg">
           Shivam Soni
           <br />
