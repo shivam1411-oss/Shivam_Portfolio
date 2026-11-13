@@ -389,6 +389,14 @@ export const changelog = [
     plain: 'A private admin page for sales, accounts and course progress, with refunds through Razorpay and free course grants.',
     commits: ['5ae85a8'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-13',
+    category: 'app',
+    title: 'Android app 1.6 with accounts and paid courses',
+    plain: 'The Android app now includes accounts and paid courses, built automatically on GitHub. After signing in, learners go straight back to the Learning Lab instead of the account page.',
+    commits: ['c22669d'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
