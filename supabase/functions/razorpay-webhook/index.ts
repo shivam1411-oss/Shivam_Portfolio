@@ -7,6 +7,25 @@
 
 type Env = Record<string, string | undefined>;
 
+/** The server (service) key: the older SUPABASE_SERVICE_ROLE_KEY, or the newer sb_secret_ key from SUPABASE_SECRET_KEYS. */
+function serviceKeyFrom(env: Env) {
+  if (env.SUPABASE_SERVICE_ROLE_KEY) return env.SUPABASE_SERVICE_ROLE_KEY;
+  try {
+    const keys = JSON.parse(env.SUPABASE_SECRET_KEYS || '{}');
+    return keys.default || Object.values(keys)[0] || '';
+  } catch {
+    return '';
+  }
+}
+/** Headers that authenticate as the server. New sb_secret_ keys go only in apikey; older JWT keys also as a Bearer token. */
+const serverHeaders = (key: string) => (key.startsWith('sb_secret_') ? { apikey: key } : { apikey: key, Authorization: `Bearer ${key}` });
+/** Names (never values) of required settings that are missing. */
+const missing = (env: Env, serviceKey: string, names: string[]) => [
+  ...(env.SUPABASE_URL ? [] : ['SUPABASE_URL']),
+  ...(serviceKey ? [] : ['service key (SUPABASE_SERVICE_ROLE_KEY or SUPABASE_SECRET_KEYS)']),
+  ...names.filter((n) => !env[n]),
+];
+
 async function hmacHex(secret: string, message: string) {
   const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(message));
@@ -21,8 +40,9 @@ function safeEqual(a: string, b: string) {
 
 export async function handler(req: Request, env: Env, f: typeof fetch = fetch): Promise<Response> {
   if (req.method !== 'POST') return new Response('Use POST', { status: 405 });
-  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY || '';
-  if (!env.SUPABASE_URL || !serviceKey || !env.RAZORPAY_WEBHOOK_SECRET) return new Response('Not configured', { status: 500 });
+  const serviceKey = serviceKeyFrom(env);
+  const gaps = missing(env, serviceKey, ['RAZORPAY_WEBHOOK_SECRET']);
+  if (gaps.length) return new Response(`Not configured. Missing: ${gaps.join(', ')}`, { status: 500 });
 
   const raw = await req.text(); // the signature covers the exact bytes Razorpay sent
   const signature = req.headers.get('x-razorpay-signature') || '';
@@ -38,7 +58,7 @@ export async function handler(req: Request, env: Env, f: typeof fetch = fetch): 
   const payment = event.payload?.payment?.entity;
   if (!payment?.order_id || payment.status !== 'captured') return new Response('Ignored', { status: 200 });
 
-  const headers = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, 'Content-Type': 'application/json' };
+  const headers = { ...serverHeaders(serviceKey), 'Content-Type': 'application/json' };
   const pRes = await f(`${env.SUPABASE_URL}/rest/v1/purchases?razorpay_order_id=eq.${encodeURIComponent(payment.order_id)}&select=id,amount_paise,status`, { headers });
   const [purchase] = pRes.ok ? await pRes.json() : [];
   if (!purchase) return new Response('Unknown order', { status: 200 }); // not one of ours; acknowledge so Razorpay stops retrying

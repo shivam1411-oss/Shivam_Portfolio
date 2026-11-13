@@ -14,6 +14,25 @@ const MIN_AMOUNT = 100; // paise; Razorpay's minimum
 
 type Env = Record<string, string | undefined>;
 
+/** The server (service) key: the older SUPABASE_SERVICE_ROLE_KEY, or the newer sb_secret_ key from SUPABASE_SECRET_KEYS. */
+function serviceKeyFrom(env: Env) {
+  if (env.SUPABASE_SERVICE_ROLE_KEY) return env.SUPABASE_SERVICE_ROLE_KEY;
+  try {
+    const keys = JSON.parse(env.SUPABASE_SECRET_KEYS || '{}');
+    return keys.default || Object.values(keys)[0] || '';
+  } catch {
+    return '';
+  }
+}
+/** Headers that authenticate as the server. New sb_secret_ keys go only in apikey; older JWT keys also as a Bearer token. */
+const serverHeaders = (key: string) => (key.startsWith('sb_secret_') ? { apikey: key } : { apikey: key, Authorization: `Bearer ${key}` });
+/** Names (never values) of required settings that are missing. */
+const missing = (env: Env, serviceKey: string, names: string[]) => [
+  ...(env.SUPABASE_URL ? [] : ['SUPABASE_URL']),
+  ...(serviceKey ? [] : ['service key (SUPABASE_SERVICE_ROLE_KEY or SUPABASE_SECRET_KEYS)']),
+  ...names.filter((n) => !env[n]),
+];
+
 const corsHeaders = (req: Request) => {
   const origin = req.headers.get('origin') || '';
   return {
@@ -40,16 +59,16 @@ async function getUser(req: Request, env: Env, serviceKey: string, f: typeof fet
 const db = (env: Env, serviceKey: string, f: typeof fetch) => (path: string, init: RequestInit = {}) =>
   f(`${env.SUPABASE_URL}/rest/v1/${path}`, {
     ...init,
-    headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, 'Content-Type': 'application/json', ...(init.headers || {}) },
+    headers: { ...serverHeaders(serviceKey), 'Content-Type': 'application/json', ...(init.headers || {}) },
   });
 
 export async function handler(req: Request, env: Env, f: typeof fetch = fetch): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
   if (req.method !== 'POST') return json(req, 405, { error: 'Use POST.' });
 
-  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY || '';
-  if (!env.SUPABASE_URL || !serviceKey || !env.RAZORPAY_KEY_ID || !env.RAZORPAY_KEY_SECRET)
-    return json(req, 500, { error: 'Payments are not configured yet (missing server secrets).' });
+  const serviceKey = serviceKeyFrom(env);
+  const gaps = missing(env, serviceKey, ['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET']);
+  if (gaps.length) return json(req, 500, { error: `Payments are not configured yet. Missing: ${gaps.join(', ')}.` });
 
   const user = await getUser(req, env, serviceKey, f);
   if (!user) return json(req, 401, { error: 'Please sign in again to buy a course.' });
