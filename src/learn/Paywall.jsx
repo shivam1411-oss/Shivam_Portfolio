@@ -26,7 +26,7 @@ export function usePrices() {
  * event; until it exists, explain that purchases open soon.
  */
 function requestUnlock(product, setNote) {
-  const event = new CustomEvent('lab:unlock', { detail: { product }, cancelable: true });
+  const event = new CustomEvent('lab:unlock', { detail: { product, say: setNote }, cancelable: true });
   const handled = !window.dispatchEvent(event);
   if (!handled) setNote('Sign-in and payments are being set up. Paid lessons will open here very soon.');
 }

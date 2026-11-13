@@ -23,6 +23,7 @@ import {
   LibraryBig,
   ListTree,
   Lock,
+  UserRound,
   RotateCcw,
   Search,
   Sparkles,
@@ -39,6 +40,10 @@ import { ease } from '../components/motion';
 import { courseById, courses, forgetLoadedCourses, learningPaths, lessonHash, lessonKey, loadCourse, loadedCourse, prefetchCourse } from './catalog';
 import { PAYWALL, getAccessVersion, ownsCourse, subscribeAccess } from './access';
 import { LessonAccessBadge, LockedLesson, UnlockCard } from './Paywall';
+import { displayName, getAccount, initAccount, loadRemoteProgress, saveRemoteProgress, subscribeAccount } from './account/store';
+
+const AccountPage = lazy(() => import('./account/AccountPage'));
+const useAccount = () => useSyncExternalStore(subscribeAccount, getAccount);
 
 // When what the learner owns changes (sign in, sign out, purchase), reload courses so locks update.
 subscribeAccess(forgetLoadedCourses);
@@ -73,6 +78,7 @@ const parseHash = () => {
     if (lesson) return { view: 'lesson', course: courseById.site, lesson };
   }
   if (view === 'timeline' || view === 'glossary' || view === 'playground') return { view };
+  if (view === 'account') return { view: 'account', sub: a || null };
   if (view === 'kb') return { view: 'kb', course: courseById[a] || null, topic: courseById[a] ? b : null };
   if (view === 'courses') return { view: 'hub' };
   return { view: 'landing' };
@@ -103,9 +109,35 @@ const loadProgress = () => {
   }
 };
 
-/** Completed lessons, quiz answers and solved exercises, remembered in this browser. */
+const KB_KEY = 'kb-understood';
+const readKb = () => {
+  try {
+    return JSON.parse(localStorage.getItem(KB_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+
+/** Combine progress from this browser with progress saved to the account: nothing completed is ever lost. */
+function mergeProgress(local, remote = {}) {
+  const answers = { ...(remote.answers || {}) };
+  for (const [k, v] of Object.entries(local.answers || {})) answers[k] = { ...(answers[k] || {}), ...v };
+  return {
+    done: { ...(remote.done || {}), ...Object.fromEntries(Object.entries(local.done || {}).filter(([, v]) => v)) },
+    answers,
+    solved: { ...(remote.solved || {}), ...(local.solved || {}) },
+  };
+}
+
+/** Completed lessons, quiz answers and solved exercises: kept in this browser, and in the account when signed in. */
 function useProgress() {
   const [progress, setProgress] = useState(loadProgress);
+  const account = useAccount();
+  const userId = account.status === 'signed-in' ? account.user.id : null;
+  const synced = useRef(null); // the user whose saved progress has been merged in
+  const latest = useRef(progress);
+  latest.current = progress;
+
   useEffect(() => {
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify(progress));
@@ -113,6 +145,45 @@ function useProgress() {
       /* storage unavailable: progress lasts for this visit only */
     }
   }, [progress]);
+
+  // On sign-in: merge the account's progress with this browser's, then save the result back.
+  useEffect(() => {
+    if (!userId) {
+      synced.current = null;
+      return undefined;
+    }
+    if (synced.current === userId) return undefined;
+    let live = true;
+    loadRemoteProgress().then((remote) => {
+      if (!live) return;
+      const merged = mergeProgress(latest.current, remote?.lessons);
+      const kb = { ...(remote?.kb || {}), ...readKb() };
+      try {
+        localStorage.setItem(KB_KEY, JSON.stringify(kb));
+      } catch {
+        /* ignore */
+      }
+      synced.current = userId;
+      setProgress(merged);
+      saveRemoteProgress({ lessons: merged, kb }).catch(() => {});
+    });
+    return () => {
+      live = false;
+    };
+  }, [userId]);
+
+  // Afterwards: save changes to the account a moment after they happen.
+  useEffect(() => {
+    if (!userId || synced.current !== userId) return undefined;
+    const t = setTimeout(() => saveRemoteProgress({ lessons: progress, kb: readKb() }).catch(() => {}), 1500);
+    return () => clearTimeout(t);
+  }, [progress, userId]);
+  useEffect(() => {
+    if (!userId) return undefined;
+    const onKb = () => synced.current === userId && saveRemoteProgress({ lessons: latest.current, kb: readKb() }).catch(() => {});
+    window.addEventListener('lab:kb-changed', onKb);
+    return () => window.removeEventListener('lab:kb-changed', onKb);
+  }, [userId]);
 
   const setDone = useCallback((key, done = true) => setProgress((p) => ({ ...p, done: { ...p.done, [key]: done } })), []);
   const answer = useCallback(
@@ -179,6 +250,32 @@ function Eyebrow({ children }) {
   );
 }
 
+/** "Sign in", or the learner's initial once signed in. */
+function AccountButton({ active }) {
+  const account = useAccount();
+  const signedIn = account.status === 'signed-in';
+  const name = signedIn ? displayName(account.user) : '';
+  return (
+    <a
+      href="#/account"
+      title={signedIn ? `Signed in as ${account.user.email}` : 'Sign in or create an account'}
+      aria-label={signedIn ? 'Your account' : 'Sign in'}
+      className={`shrink-0 h-9 rounded-xl border flex items-center justify-center gap-1.5 text-xs font-bold transition-colors ${
+        active ? 'border-accent text-fg' : 'border-line text-muted hover:text-fg'
+      } ${signedIn ? 'w-9' : 'w-9 sm:w-auto sm:px-3'}`}
+    >
+      {signedIn ? (
+        <span className="w-6 h-6 rounded-full bg-accent text-bg flex items-center justify-center text-[11px] font-extrabold">{(name[0] || '?').toUpperCase()}</span>
+      ) : (
+        <>
+          <UserRound size={15} />
+          <span className="hidden sm:inline">Sign in</span>
+        </>
+      )}
+    </a>
+  );
+}
+
 function Header({ route, progress }) {
   const done = allLessons.filter(({ course, lesson }) => progress.done[lessonKey(course, lesson)]).length;
   const links = [
@@ -194,7 +291,7 @@ function Header({ route, progress }) {
           <span className="w-9 h-9 rounded-xl bg-fg text-bg flex items-center justify-center">
             <GraduationCap size={18} />
           </span>
-          <span className="hidden sm:block leading-tight">
+          <span className="hidden lg:block leading-tight">
             <span className="block font-extrabold text-fg text-sm">Learning Lab</span>
             <span className="block text-[11px] text-subtle font-semibold">Interactive courses</span>
           </span>
@@ -204,16 +301,18 @@ function Header({ route, progress }) {
             <a
               key={hash}
               href={hash}
+              title={label}
               className={`flex items-center gap-1.5 px-1.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-colors ${active ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg'}`}
             >
-              <Icon size={15} className="hidden sm:block" />
-              {label}
+              <Icon size={16} className="block min-[420px]:hidden lg:block" aria-hidden />
+              <span className="sr-only min-[420px]:not-sr-only">{label}</span>
             </a>
           ))}
         </nav>
-        <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-bold" title="Lessons completed, all courses">
+        <span className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-bold" title="Lessons completed, all courses">
           <CheckCircle2 size={13} /> {done}/{allLessons.length}
         </span>
+        <AccountButton active={route.view === 'account'} />
         <ThemeToggle />
       </div>
     </header>
@@ -1077,6 +1176,9 @@ function Glossary() {
 
 export default function LearnApp() {
   const route = useRoute();
+  useEffect(() => {
+    initAccount();
+  }, []);
   const { progress, setDone, answer, solve, resetQuiz, resetCourse } = useProgress();
 
   return (
@@ -1107,6 +1209,11 @@ export default function LearnApp() {
           {route.view === 'playground' && <Playground />}
           {route.view === 'timeline' && <Timeline />}
           {route.view === 'glossary' && <Glossary />}
+          {route.view === 'account' && (
+            <Suspense fallback={<div className="max-w-md mx-auto px-4 py-16 text-muted">Loading…</div>}>
+              <AccountPage sub={route.sub} />
+            </Suspense>
+          )}
           {route.view === 'kb' && (
             <Suspense fallback={<div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-muted">Loading the knowledge base…</div>}>
               <KnowledgeBase key={route.course?.id || 'hub'} course={route.course} topicId={route.topic} courses={courses} icons={courseIcons} />

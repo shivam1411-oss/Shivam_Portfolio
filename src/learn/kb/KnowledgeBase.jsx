@@ -33,6 +33,7 @@ function useUnderstood() {
       else next[key] = true;
       try {
         localStorage.setItem(STORE, JSON.stringify(next));
+        setTimeout(() => window.dispatchEvent(new Event('lab:kb-changed')), 0); // saved to the account if signed in
       } catch {
         /* storage blocked: keep it for this visit only */
       }

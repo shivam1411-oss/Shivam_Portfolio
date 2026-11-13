@@ -88,6 +88,14 @@ live site is fully free until sign-in and payments are ready. With it on:
 - Local testing: `VITE_PAYWALL=on VITE_PAID_BASE=http://localhost:4175/ VITE_PAYWALL_TEST_OWNED=react npm run build`
   and serve `dist-paid/` with CORS on port 4175. Never set `VITE_PAYWALL_TEST_OWNED` for the real site.
 
+**Accounts** (`#/account`, `src/learn/account/`): email + password sign-up with email confirmation, sign in,
+forgot/reset password and a profile page, using Supabase Auth (`supabase.config.js` holds the public URL and
+publishable key). The Supabase library loads only when needed (an existing login, an email link, or the account
+page). When signed in, lesson progress and "understood" knowledge-base topics are merged with the browser's and
+saved to the `progress` table, and owned courses are read from `purchases`. Email templates to paste into Supabase
+(Authentication → Emails → Templates) are in `supabase/email-templates/`; their links use `?token_hash=…&type=…`
+so they work even when opened on another device.
+
 **Adding a course:** write its modules and lessons (see `src/learn/python/` for one with runnable exercises) and add
 `src/learn/content/<id>.js`, list it in `src/learn/courses.js` and `src/learn/catalog.js`, with a beginner guide in `src/learn/guides/` and a knowledge base in `src/learn/kb/`. A lesson is `{ id, module, title, minutes, goals, body, exercises?, quiz? }`;
 an exercise is `{ id, title, prompt, starter, tests, hint?, solution?, stdin? }`, where each test is Python code
