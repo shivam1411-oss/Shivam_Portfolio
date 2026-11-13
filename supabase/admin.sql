@@ -35,7 +35,7 @@ grant execute on function public.owns(text) to authenticated;
 -- 1. Sign up in the Learning Lab with your own email and confirm it.
 -- 2. Replace the address below with that email and run this statement.
 insert into public.admins (user_id)
-select id from auth.users where email = lower('your-email@example.com')
+select id from auth.users where email = lower('Shivam.soni1495@outlook.com')
 on conflict do nothing;
 
 -- See who is an admin:            select a.user_id, u.email from public.admins a join auth.users u on u.id = a.user_id;
