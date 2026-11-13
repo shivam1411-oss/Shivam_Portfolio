@@ -51,6 +51,17 @@ export function UnlockCard({ course, compact = false }) {
           All 7 courses · {formatRupees(prices.all)}
         </button>
       </div>
+      <p className="mt-3 text-[11px] text-subtle leading-relaxed">
+        Secure payment by Razorpay. 7-day refund if it is not for you. By unlocking you agree to the{' '}
+        <a href="./terms.html" target="_blank" rel="noreferrer" className="underline hover:text-fg">
+          terms
+        </a>{' '}
+        and{' '}
+        <a href="./refund.html" target="_blank" rel="noreferrer" className="underline hover:text-fg">
+          refund policy
+        </a>
+        .
+      </p>
       {note && (
         <p className="mt-3 text-sm text-fg" role="status">
           {note}

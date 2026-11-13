@@ -96,6 +96,11 @@ saved to the `progress` table, and owned courses are read from `purchases`. Emai
 (Authentication → Emails → Templates) are in `supabase/email-templates/`; their links use `?token_hash=…&type=…`
 so they work even when opened on another device.
 
+**Payments and launch:** Razorpay checkout runs through three Supabase Edge Functions (`supabase/functions/`, see
+its README). With the repository variable `PAYWALL=on`, the deploy workflow builds with the paywall and uploads the
+paid lessons to private storage using the `SUPABASE_SECRET_KEY` Actions secret before publishing. The Terms of Use
+(`terms.html`) and Refund & Cancellation Policy (`refund.html`) pages read business details from `src/legal/details.js`.
+
 **Adding a course:** write its modules and lessons (see `src/learn/python/` for one with runnable exercises) and add
 `src/learn/content/<id>.js`, list it in `src/learn/courses.js` and `src/learn/catalog.js`, with a beginner guide in `src/learn/guides/` and a knowledge base in `src/learn/kb/`. A lesson is `{ id, module, title, minutes, goals, body, exercises?, quiz? }`;
 an exercise is `{ id, title, prompt, starter, tests, hint?, solution?, stdin? }`, where each test is Python code

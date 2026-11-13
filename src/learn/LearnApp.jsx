@@ -1245,7 +1245,18 @@ export default function LearnApp() {
         </main>
         <footer className="border-t border-line mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center justify-between gap-3 text-xs text-subtle">
-            <span>Progress and code are saved in this browser only.</span>
+            <span>Progress is saved in this browser, and to your account when you sign in.</span>
+            <span className="flex flex-wrap gap-x-4 gap-y-1">
+              <a href="./terms.html" className="hover:text-fg">
+                Terms
+              </a>
+              <a href="./refund.html" className="hover:text-fg">
+                Refunds
+              </a>
+              <a href="./privacy.html" className="hover:text-fg">
+                Privacy
+              </a>
+            </span>
             <a href="./index.html" className="font-bold text-muted hover:text-fg">
               ← Back to the portfolio
             </a>

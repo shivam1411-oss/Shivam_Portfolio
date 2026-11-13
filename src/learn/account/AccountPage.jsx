@@ -189,6 +189,10 @@ function SignUp({ onMode, email, setEmail }) {
         <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} required className="mt-0.5 accent-[var(--accent)]" />
         <span>
           I agree to the{' '}
+          <a href="./terms.html" target="_blank" rel="noreferrer" className="font-bold text-fg underline underline-offset-2">
+            terms of use
+          </a>{' '}
+          and the{' '}
           <a href="./privacy.html" target="_blank" rel="noreferrer" className="font-bold text-fg underline underline-offset-2">
             privacy policy
           </a>

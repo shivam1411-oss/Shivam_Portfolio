@@ -31,6 +31,8 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         privacy: resolve(__dirname, 'privacy.html'),
         learn: resolve(__dirname, 'learn.html'),
+        terms: resolve(__dirname, 'terms.html'),
+        refund: resolve(__dirname, 'refund.html'),
       },
     },
   },
