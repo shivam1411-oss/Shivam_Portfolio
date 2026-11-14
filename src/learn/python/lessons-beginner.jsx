@@ -189,6 +189,11 @@ print(name, age, height, is_learning)
     goals: ['Use the arithmetic operators, including //, % and **', 'Round results and format them for people', 'Use f-strings to build readable output'],
     body: () => (
       <>
+        <P>
+          Python can be used as a calculator. The symbols that do the maths, such as <F>+</F> and <F>*</F>, are called <Term id="operator">operators</Term>. A piece of
+          code that works out to a single value, like <F>7 + 2</F>, is called an <Term id="expression">expression</Term>. Run the box below and match each line of output to
+          the line of code that produced it.
+        </P>
         <PyRunner
           code={py`
 print(7 + 2, 7 - 2, 7 * 2)   # add, subtract, multiply
@@ -272,7 +277,7 @@ print(f"Monthly interest: ₹{monthly_interest:,.2f}")
     body: () => (
       <>
         <P>
-          A string is a sequence of characters, and each has a position (an <B>index</B>) starting at <B>0</B>. Negative indexes count from the end.
+          A string is a sequence of characters (letters, digits, spaces and symbols), and each has a position (an <B>index</B>) starting at <B>0</B>. Negative indexes count from the end.
         </P>
         <PyRunner
           code={py`
@@ -458,6 +463,11 @@ print(bucket)
     goals: ['Loop over items with for and over numbers with range()', 'Keep a running total (the accumulator pattern)', 'Use while, break and continue'],
     body: () => (
       <>
+        <P>
+          A <Term id="loop">loop</Term> repeats the same lines of code, so you write them once instead of once per item. A <F>for</F> loop goes through a collection, here a{' '}
+          <Term id="list">list</Term> (several values in square brackets), and runs its indented <Term id="block">block</Term> once for each item. The variable after{' '}
+          <F>for</F> holds the current item on each round.
+        </P>
         <PyRunner
           code={py`
 payments = [1200, 450, 3000, 800]

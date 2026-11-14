@@ -479,6 +479,8 @@ footer {
 :is(main, footer) :is([class^="bg-"], [class*=" bg-"]):not([class*="/"]),
 /* Solid colour panels such as bg-[#0d1014], even if another class has a "/" */
 :is(main, footer) [class*="bg-[#"]:not([class*="]/"]),
+/* The solid theme backgrounds, matched as whole class names so a "/" elsewhere cannot fool the rule */
+:is(main, footer) :is([class~="bg-fg"], [class~="bg-surface"], [class~="bg-accent"]),
 :is(main, footer) :is(.glass, .text-gradient, .shine-text, svg, canvas, img) {
   text-shadow: none;
 }`}</Code>

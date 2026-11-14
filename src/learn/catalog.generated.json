@@ -20,6 +20,47 @@
      "label": "What changed, in order"
     }
    ],
+   "start": {
+    "intro": "This course explains how this very website was built, one change at a time, for someone who has never coded. You will not write a program here. Instead, every idea comes with a small playground to click, drag and break, and many steps send you to look at the real site.",
+    "need": [
+     "No coding experience and nothing to install.",
+     "About 10 minutes for each lesson.",
+     "A computer is best for a few steps that look at the page source or resize the window; everything else works on a phone."
+    ],
+    "order": [
+     "Start with \"From one HTML file to a React app\" for the big picture.",
+     "Then go module by module: Foundations, Look & feel, The effects, Speed & devices, Features, Shipping it.",
+     "The last two modules explain the Learning Lab itself: Python in the browser, then accounts and payments.",
+     "\"What changed, in order\", at the bottom of this page, is the timeline of every change the lessons describe."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough using the lesson's own playground or the live site: one small action per step, and what you should see. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "foundations",
@@ -445,6 +486,48 @@
     "Test your code and structure a small project"
    ],
    "usesPython": true,
+   "start": {
+    "intro": "New to coding? This page tells you exactly what to do, in order. You do not need to install anything or know any maths beyond adding and dividing. Go slowly, type everything yourself, and expect to see errors: they are part of learning, not a sign you are doing it wrong.",
+    "need": [
+     "A phone, tablet or computer with a web browser. A keyboard makes typing code easier, but it is not required.",
+     "About 20 to 30 minutes for each lesson. One lesson a day is a good pace.",
+     "No installs and no account for the first module: Python runs inside this page.",
+     "The first time you press Run, Python takes a few seconds to load. After that it is quick."
+    ],
+    "order": [
+     "Open lesson 1, \"Hello, Python\", and finish it before moving on. Each lesson uses what the one before taught.",
+     "Work through the modules from top to bottom: Getting started, then Decisions and loops, then Collections.",
+     "Stuck on a word? Every keyword is defined at the top of its lesson, and all of them are in the Glossary.",
+     "Finished a lesson? The next one is linked at the bottom of the page."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what Python does, in order, for the idea being taught."
+     ],
+     [
+      "Read and run",
+      "Short explanations with code boxes. Press Run on every one, change a number or a word, and run it again to see what changes."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in a practice box: one small action per step, exactly what to type, and what you should see. Tick each step as you go."
+     ],
+     [
+      "Solve the exercises",
+      "Small tasks checked automatically. A hint is always available, and the solution if you are truly stuck."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "start",
@@ -882,6 +965,48 @@
     "Build a monthly portfolio report with one function"
    ],
    "usesPython": true,
+   "start": {
+    "intro": "This course turns the things you already do in Excel (open, filter, sort, SUMIF, VLOOKUP, pivot) into short lines of Python. Every example uses the same made-up collections data, so you always know what you are looking at. Type the code yourself and read each result before moving on.",
+    "need": [
+     "The first four modules of the Python course, up to functions. If print(), variables, lists and loops feel familiar, you are ready.",
+     "Nothing to install: pandas runs inside this page. The first Run in a lesson takes a few seconds while pandas loads.",
+     "About 30 minutes for each lesson.",
+     "Excel experience helps, because each idea is compared with the Excel way of doing it."
+    ],
+    "order": [
+     "Start with \"From Excel to pandas\". It shows the whole course in miniature.",
+     "Then the two NumPy lessons: pandas is built on them, and they are short.",
+     "Then work down the modules in order: DataFrames, selecting, cleaning, grouping, combining.",
+     "Finish with the project, which uses everything once more on raw files."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in a practice box that already has the data loaded: one small action per step, exactly what to type, and what you should see. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "pd-start",
@@ -1206,6 +1331,48 @@
     "Use window functions and move results into pandas"
    ],
    "usesPython": true,
+   "start": {
+    "intro": "SQL is how you ask a database for exactly the rows you want. Here you write real SQL against a small practice database of accounts and payments that is rebuilt on every Run, so nothing you do can break it. Read each query out loud in plain words before you run it.",
+    "need": [
+     "Nothing to install: the database runs inside this page.",
+     "The first six Python lessons help, because queries are sent from a few lines of Python, but you can follow the SQL without them.",
+     "About 30 minutes for each lesson.",
+     "Type SQL keywords in capitals (SELECT, FROM, WHERE). It is not required, but it makes queries much easier to read."
+    ],
+    "order": [
+     "Start with \"Databases, tables and rows\" to learn what a table is.",
+     "Then \"Your first queries\" and \"Aggregates, GROUP BY and CASE\": most everyday SQL is in these two.",
+     "Then JOINs, and changing data safely.",
+     "Finish with window functions and using SQL together with pandas."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in a practice box that already has the practice database loaded: one small action per step, exactly what to type, and what you should see. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "sql-basics",
@@ -1364,6 +1531,47 @@
     "Design report charts that make one clear point"
    ],
    "usesPython": true,
+   "start": {
+    "intro": "This course teaches you to draw charts with code and, more importantly, to choose the right chart and make it say one clear thing. Every chart appears right under the code that drew it, so change a number or a colour and run it again to see the difference.",
+    "need": [
+     "Python basics: variables and lists. The last two lessons use a little pandas.",
+     "Nothing to install: Matplotlib runs inside this page. The first Run in a lesson takes a few seconds while it loads.",
+     "About 30 minutes for each lesson."
+    ],
+    "order": [
+     "Start with \"Figures, axes and your first chart\": every chart afterwards is built the same way.",
+     "Then \"Choosing the right chart\", which matches the question to the chart type.",
+     "Then plotting straight from pandas, and several charts in one figure.",
+     "Finish with \"Charts that make a point\"."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in a practice box: one small change per step, exactly what to type, and the chart you should see. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "viz-basics",
@@ -1464,6 +1672,47 @@
     "Build lists, forms and live filters",
     "Load data with effects and build a small dashboard"
    ],
+   "start": {
+    "intro": "React is how modern websites, including this portfolio, are built from small reusable pieces. In this course you write real React in a live editor: the result appears next to your code a moment after you stop typing. Make small changes, watch what happens, and read every error: it tells you which line to look at.",
+    "need": [
+     "Nothing to install: the editor and preview run inside this page.",
+     "A little JavaScript helps (variables, functions, arrays). If you have done the Python course, the ideas are the same and the lessons explain the differences.",
+     "About 30 minutes for each lesson."
+    ],
+    "order": [
+     "Start with \"Your first component\". Every later lesson builds on it.",
+     "Then props, then state: these two ideas are most of React.",
+     "Then lists, forms and effects.",
+     "Finish with the project, a small collections dashboard."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in a live practice editor: one small change per step, the code you should end up with, and what the preview should show. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "react-basics",
@@ -1621,6 +1870,47 @@
     "Plan a sprint from velocity",
     "Write JQL searches, dashboards and automation rules"
    ],
+   "start": {
+    "intro": "Jira is where most teams plan and track their work. This course uses a made-up Jira site with two projects and 23 work items, so you can click, drag and search without touching a real one. Nothing here needs a Jira account.",
+    "need": [
+     "No account, no install and no coding experience.",
+     "About 20 minutes for each lesson.",
+     "In this sample site you are a user called Shivam, and today is always 7 November 2026, so searches by date give the same answers every time."
+    ],
+    "order": [
+     "Start with \"Projects and work items\" to learn the parts of one piece of work.",
+     "Then boards and workflows, then Scrum and sprint planning.",
+     "Then the two JQL lessons: searching is the skill you will use every day.",
+     "Finish with filters, dashboards and automation."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough on a practice board, sprint planner or search box: one small action per step, and what you should see. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "jira-basics",
@@ -1762,6 +2052,48 @@
     "Write Deployment, Service and ConfigMap YAML",
     "Scale, update and roll back an app with kubectl"
    ],
+   "start": {
+    "intro": "Kubernetes runs apps across many machines and keeps them running. Real clusters cost money and take time to set up, so this course gives you a simulated three-machine cluster inside the page. The commands and files are the real ones; you just cannot break anything.",
+    "need": [
+     "Nothing to install: the practice cluster runs inside this page.",
+     "No coding experience. You will type short commands and edit small text files.",
+     "About 30 minutes for each lesson.",
+     "Type commands exactly, including the spaces and dashes. If one fails, read the error: it names what it did not understand."
+    ],
+    "order": [
+     "Start with \"Containers and why Kubernetes\" to meet the cluster.",
+     "Then Pods, then Deployments: the two ideas everything else rests on.",
+     "Then Services, configuration, and rolling updates.",
+     "Finish with the project, which deploys the portfolio from one file."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in a practice cluster: one command per step, exactly what to type, and what the cluster should answer. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "k8s-basics",

@@ -51,7 +51,7 @@ subscribeAccess(forgetLoadedCourses);
 const useAccessVersion = () => useSyncExternalStore(subscribeAccess, getAccessVersion);
 /** Show free/locked markers for this course? (Only with the paywall on, for courses the learner does not own.) */
 const showLocks = (course) => PAYWALL && course.paid && !ownsCourse(course.id);
-import { BigIdea, Mistakes, Questions, Recap, WordsToKnow } from './LessonGuide';
+import { BigIdea, KeyWords, LessonPath, Mistakes, Process, Questions, Recap, StartHere, StepByStep, useChecks, WordsToKnow } from './LessonGuide';
 import { glossary } from './glossary';
 import Landing from './Landing';
 import PyRunner from './python/PyRunner';
@@ -586,6 +586,7 @@ function CourseHome({ course, progress, resetCourse }) {
             <UnlockCard course={course} compact />
           </div>
         )}
+        {course.start && <StartHere start={course.start} firstHref={lessonHash(course, course.lessons[0])} />}
       </section>
 
       <section className="mt-16 grid gap-6 md:grid-cols-2">
@@ -909,6 +910,21 @@ function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz })
   const quiz = lesson.quiz || [];
   const exercises = lesson.exercises || [];
 
+  // Lessons in the step-by-step format: a checklist of stages, with ticks kept in this browser.
+  const steps = guide?.steps || [];
+  const [checks, toggleCheck] = useChecks(key);
+  const solvedCount = exercises.filter((e) => progress.solved[`${key}/${e.id}`]).length;
+  const rightCount = quiz.filter((q, i) => progress.answers[key]?.[i] === q.answer).length;
+  const path = steps.length
+    ? [
+        { id: 'words', target: 'words', label: 'Learn the words', note: 'Read each keyword and its everyday comparison.' },
+        { id: 'read', target: 'read', label: 'Read the lesson and run every example', note: 'Press Run on each code box, change something, and run it again.' },
+        { id: 'steps', target: 'steps', label: 'Do it yourself, step by step', note: `${steps.filter((_, i) => checks[`s${i}`]).length} of ${steps.length} steps ticked.`, done: steps.every((_, i) => checks[`s${i}`]) },
+        ...(exercises.length ? [{ id: 'practice', target: 'practice', label: 'Solve the exercises', note: `${solvedCount} of ${exercises.length} solved.`, done: solvedCount === exercises.length }] : []),
+        ...(quiz.length ? [{ id: 'quiz', target: 'quiz', label: 'Pass the quiz', note: `${rightCount} of ${quiz.length} right.`, done: rightCount === quiz.length }] : []),
+      ]
+    : null;
+
   // The lesson completes itself the moment every quiz answer is right and every exercise is solved.
   const complete =
     (quiz.length > 0 || exercises.length > 0) &&
@@ -998,21 +1014,38 @@ function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz })
             </ul>
           </div>
 
+          {path && <LessonPath items={path} checks={checks} toggle={toggleCheck} />}
           {guide?.idea && <BigIdea text={guide.idea} />}
-          {guide?.terms?.length > 0 && <WordsToKnow ids={guide.terms} />}
+          {guide?.terms?.length > 0 && (path ? <KeyWords ids={guide.terms} /> : <WordsToKnow ids={guide.terms} />)}
+          {guide?.process && <Process process={guide.process} />}
 
-          <div className="mt-6">
+          <div id="read" className="mt-6 scroll-mt-24">
             <Body />
           </div>
+
+          {steps.length > 0 && (
+            <StepByStep steps={steps} checks={checks} toggle={toggleCheck} intro={guide.stepsIntro}>
+              {/* Where the steps are done: the course's own practice tool, or the Python practice box. */}
+              {typeof guide.practice === 'function'
+                ? guide.practice(key)
+                : course.usesPython && (
+                    <PyRunner key={key} code={guide.practice ?? '# Type your code below this line, then press Run\n'} storageKey={`py-code:steps:${key}`} title="Practice box" />
+                  )}
+            </StepByStep>
+          )}
 
           {guide?.mistakes?.length > 0 && <Mistakes items={guide.mistakes} />}
           {guide?.faq?.length > 0 && <Questions items={guide.faq} />}
 
-          {exercises.length > 0 && <Practice course={course} lesson={lesson} progress={progress} solve={solve} />}
+          <div id="practice" className="scroll-mt-24">
+            {exercises.length > 0 && <Practice course={course} lesson={lesson} progress={progress} solve={solve} />}
+          </div>
 
-          {quiz.length > 0 && (
-            <Quiz key={key} quiz={quiz} answers={progress.answers[key]} onAnswer={(qi, oi) => answer(key, qi, oi)} onReset={() => resetQuiz(key)} />
-          )}
+          <div id="quiz" className="scroll-mt-24">
+            {quiz.length > 0 && (
+              <Quiz key={key} quiz={quiz} answers={progress.answers[key]} onAnswer={(qi, oi) => answer(key, qi, oi)} onReset={() => resetQuiz(key)} />
+            )}
+          </div>
 
           {guide?.recap?.length > 0 && <Recap items={guide.recap} />}
 
