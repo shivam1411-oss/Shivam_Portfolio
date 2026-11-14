@@ -211,7 +211,7 @@ export const siteGuide = {
   },
   deploy: {
     idea: 'Every push to main triggers GitHub Actions to build the site and publish it to GitHub Pages automatically.',
-    terms: ['git', 'commit', 'branch', 'actions', 'pages'],
+    terms: ['git', 'commit', 'branch', 'actions', 'pages', 'opengraph'],
     mistakes: [
       ['Committing node_modules or dist', 'They are rebuilt; .gitignore keeps them out.'],
       ['Working directly on main for big changes', 'Use a branch and a pull request, then merge when it is ready.'],
@@ -220,20 +220,21 @@ export const siteGuide = {
       ['How long does a deploy take?', 'Usually one to a few minutes; GitHub can be slower on busy days.'],
       ['What if a deploy fails?', 'The live site stays on the last good version. The Actions tab shows which step failed and why.'],
     ],
-    recap: ['commit → push → Actions builds → Pages serves.', 'npm ci installs exact versions for repeatable builds.', 'A failed deploy never breaks the live site.'],
+    recap: ['commit → push → Actions builds → paid lessons upload → Pages serves.', 'npm ci installs exact versions for repeatable builds.', 'Secrets stay in GitHub; Open Graph tags give shared links a preview card.'],
   },
   android: {
     idea: 'Capacitor wraps the built website inside an Android app, so the same code runs as an installable APK.',
-    terms: ['capacitor', 'apk'],
+    terms: ['capacitor', 'apk', 'versioncode', 'signing'],
     mistakes: [
       ['Expecting the app to update with the website', 'The site is bundled inside; rebuild with npm run apk and reinstall.'],
       ['Building inside an iCloud-synced folder', 'iCloud duplicates files; the build output lives outside it on purpose.'],
+      ['Sharing a build signed with a different key', 'The phone refuses it as an update. Build on the same Mac (same key) so it installs over the old app.'],
     ],
     faq: [
       ['Can it go on the Play Store?', 'Yes, with a signed release build and a Play Console account.'],
       ['Does the app work offline?', 'Yes, the site is inside it; only features like email and AI chat need the internet.'],
     ],
-    recap: ['webDir: dist puts the built site into the app.', 'npm run apk builds, syncs and packages it.', 'Rebuild after every site change.'],
+    recap: ['webDir: dist puts the built site into the app.', 'npm run apk bumps the version, builds, syncs and packages it.', 'Same signing key + higher versionCode = a smooth update.'],
   },
   'learning-lab': {
     idea: 'The Learning Lab reads every course from one list, and the address after # decides which course or lesson to show.',
@@ -243,7 +244,7 @@ export const siteGuide = {
       ['Reusing a lesson id across courses without the course id', 'Progress keys include the course (python/loops) so they never clash.'],
     ],
     faq: [
-      ['Is my progress synced across devices?', 'No, it is saved in the browser you use.'],
+      ['Is my progress synced across devices?', 'Yes, once you sign in: it is kept in the browser and in your account, and merged (see "Accounts and synced progress").'],
       ['Why use # in the address?', 'Changing what follows # switches pages without reloading, and works on any static host.'],
     ],
     recap: ['courses.js lists every course.', 'parseHash turns the address into a page.', 'Progress keys are course/lesson.'],
@@ -286,5 +287,83 @@ export const siteGuide = {
       ['When does pandas download for visitors?', 'Only when they open a lesson whose code imports it.'],
     ],
     recap: ['prebuild copies Python and packages into public/pyodide.', 'Checksums guard every downloaded file.', 'Packages load on first import, then stay cached.'],
+  },
+  readable: {
+    idea: 'One soft text-shadow in the page colour, set on main and inherited by every line, erases the moving code just around the words.',
+    terms: ['textshadow', 'cssvar', 'canvas'],
+    mistakes: [
+      ['Adding a shadow to each paragraph by hand', 'Set it once on a parent; text-shadow is inherited.'],
+      ['Keeping the halo on solid panels', 'On a dark panel in the light theme it becomes a white glow around white text. Solid backgrounds switch it off.'],
+    ],
+    faq: [
+      ['Why not just make the background effects fainter?', 'They were made subtler too, but the halo fixes readability without losing the effect.'],
+      ['Why does a "/" matter in the rule?', 'bg-accent/5 is a faint see-through tint, so text on it still needs the halo; solid colours do not.'],
+    ],
+    recap: ['Halo = text-shadow in var(--bg), on main and footer.', 'Solid backgrounds, gradients and buttons with a background turn it off.', 'bg-[#…] panels have their own rule (the gloss fix).'],
+  },
+  'tilt-shine': {
+    idea: 'A wide gradient clipped to the letters slides sideways as the phone tilts, which looks like light moving across glossy text.',
+    terms: ['gyroscope', 'cssvar', 'raf'],
+    mistakes: [
+      ['Measuring tilt from flat', 'People hold phones at an angle; measure from a baseline that follows them.'],
+      ['Putting fast sensor values in React state', 'Write the CSS variable straight to the element; React does not need to redraw.'],
+    ],
+    faq: [
+      ['Does it work on computers?', 'Yes, the mouse position moves the shine instead.'],
+      ['Why does the shine drift back?', 'The baseline slowly catches up with how you hold the phone, so the gleam returns to the middle.'],
+    ],
+    recap: ['background-clip: text paints the gradient inside the letters.', '--shine moves the gradient; deviceorientation or the mouse sets it.', 'The loop eases towards the target and stops when it arrives.'],
+  },
+  accounts: {
+    idea: 'Supabase gives the Lab sign-in and a database; row-level security makes the database itself check who may read or change each row.',
+    terms: ['supabase', 'rls', 'token', 'localstorage'],
+    mistakes: [
+      ['Thinking a public key is a leak', 'The public key only works through the policies; secrets stay on the server.'],
+      ['Letting the browser write purchases', 'Then anyone could unlock courses. Only server functions mark a purchase paid.'],
+    ],
+    faq: [
+      ['Do I need an account to learn?', 'No. Free lessons work without one; progress is then saved only in this browser.'],
+      ['What happens if two devices disagree?', 'Progress is merged: a lesson done on either device counts as done.'],
+    ],
+    recap: ['products, purchases and progress are the three tables.', 'Policies compare user_id with auth.uid() on every query.', 'Progress saves locally first, then to the account 1.5 s later.'],
+  },
+  paywall: {
+    idea: 'Paid lessons are built into separate files that are never published; private storage hands them only to learners who own the course.',
+    terms: ['chunk', 'bundle', 'supabase', 'rls'],
+    mistakes: [
+      ['Hiding paid content behind a button only', 'Published files can be downloaded by anyone. Keep paid files off the public site.'],
+      ['Giving a paid file its own CSS', 'The paid loader handles JavaScript only; the build stops with a clear error if this happens.'],
+    ],
+    faq: [
+      ['Is "Learn the Code" ever paid?', 'No. It is listed in FREE_COURSES and stays free from start to finish.'],
+      ['How do I test the paid view locally?', 'Build with VITE_PAYWALL=on, or set VITE_PAYWALL_TEST_OWNED to pretend you own a course.'],
+    ],
+    recap: ['?part=free / ?part=paid splits each course file.', 'split-paid.mjs moves paid files to dist-paid/, upload-paid.mjs stores them privately.', 'owns(course) decides every download.'],
+  },
+  payments: {
+    idea: 'The browser only asks to buy; server functions set the price, check Razorpay\'s signature and the payment itself, and only then unlock the course.',
+    terms: ['razorpay', 'edgefunction', 'hmac', 'webhook'],
+    mistakes: [
+      ['Trusting a price or "paid" flag sent by the browser', 'Anything from the browser can be edited. The server decides and checks.'],
+      ['Pasting the key secret where the key id belongs', 'create-order checks the id starts with rzp_test_ or rzp_live_ and says so clearly.'],
+    ],
+    faq: [
+      ['Does this site see my card or UPI details?', 'No. They go only to Razorpay\'s window.'],
+      ['What if I close the tab right after paying?', 'Razorpay\'s webhook still tells the server, which unlocks the course.'],
+    ],
+    recap: ['create-order → Razorpay window → verify-payment.', 'HMAC proves the payment came from Razorpay.', 'The webhook is the safety net; the admin page handles refunds and free grants.'],
+  },
+  'checkout-guard': {
+    idea: 'Every checkout step has a time limit and a clean way out, so a problem with the payment window can never leave the page frozen.',
+    terms: ['timeout', 'razorpay'],
+    mistakes: [
+      ['Waiting forever for a network answer', 'Give every request a time limit with AbortSignal.timeout.'],
+      ['Assuming open() means the window is showing', 'Check that it actually appeared, and clean up if it did not.'],
+    ],
+    faq: [
+      ['Was I charged if the window did not open?', 'No. The message says so, and no payment was started.'],
+      ['Why does the payment window still not open?', 'That is decided in the Razorpay account: the website must be approved and live mode switched on.'],
+    ],
+    recap: ['Script 20 s, order 25 s, window 15 s, verify 60 s.', 'Blocking alerts are caught until the window appears.', 'Every message says whether money moved.'],
   },
 };
