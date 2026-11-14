@@ -3,6 +3,8 @@
 //   import { reactCourse } from '../react/course.jsx?part=free'   → lessons array holds the free lessons
 //   import { reactCourse } from '../react/course.jsx?part=paid'   → lessons array holds the paid lessons
 //
+// The same works for a course's step-by-step file (guides/<course>-steps): `…Steps` objects keyed by lesson id.
+//
 // Lessons stay in one file per course for easy editing; the build splits them so the paid lessons land in
 // their own files, which can then be kept off the public site (see scripts/split-paid.mjs).
 // Which lessons are free comes from src/learn/catalog.generated.json (written from paywall.config.js).
@@ -10,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { parse } from '@babel/parser';
 import { transform } from 'esbuild';
 
-const PART = /^(.*\.jsx)\?part=(free|paid)$/;
+const PART = /^(.*\.jsx?)\?part=(free|paid)$/;
 
 /** Remove the lessons that do not belong to `part` from every `…lessons = [ … ]` array in the source. */
 export function filterLessons(src, part, isFree, file = 'source') {
@@ -29,8 +31,18 @@ export function filterLessons(src, part, isFree, file = 'source') {
         if ((part === 'free') !== isFree(idProp.value.value)) cuts.push([el.start, el.end]);
       }
     }
+    // Step-by-step files: `…Steps = { 'lesson-id': { … }, … }`, keyed by lesson id.
+    for (const d of decl.declarations) {
+      if (!/Steps$/.test(d.id?.name || '') || d.init?.type !== 'ObjectExpression') continue;
+      for (const prop of d.init.properties) {
+        const id = prop.key?.type === 'StringLiteral' ? prop.key.value : prop.key?.name;
+        if (prop.type !== 'ObjectProperty' || !id) throw new Error(`${file}: every entry of ${d.id.name} must be 'lesson-id': { … }`);
+        found++;
+        if ((part === 'free') !== isFree(id)) cuts.push([prop.start, prop.end]);
+      }
+    }
   }
-  if (!found) throw new Error(`${file}: no lessons array found`);
+  if (!found) throw new Error(`${file}: no lessons array or …Steps object found`);
   let out = src;
   for (const [start, end] of cuts.sort((a, b) => b[0] - a[0])) {
     let stop = end;

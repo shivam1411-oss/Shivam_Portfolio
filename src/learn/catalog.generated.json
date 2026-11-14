@@ -1631,6 +1631,47 @@
     "Build lists, forms and live filters",
     "Load data with effects and build a small dashboard"
    ],
+   "start": {
+    "intro": "React is how modern websites, including this portfolio, are built from small reusable pieces. In this course you write real React in a live editor: the result appears next to your code a moment after you stop typing. Make small changes, watch what happens, and read every error: it tells you which line to look at.",
+    "need": [
+     "Nothing to install: the editor and preview run inside this page.",
+     "A little JavaScript helps (variables, functions, arrays). If you have done the Python course, the ideas are the same and the lessons explain the differences.",
+     "About 30 minutes for each lesson."
+    ],
+    "order": [
+     "Start with \"Your first component\". Every later lesson builds on it.",
+     "Then props, then state: these two ideas are most of React.",
+     "Then lists, forms and effects.",
+     "Finish with the project, a small collections dashboard."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in a live practice editor: one small change per step, the code you should end up with, and what the preview should show. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "react-basics",
@@ -1788,6 +1829,47 @@
     "Plan a sprint from velocity",
     "Write JQL searches, dashboards and automation rules"
    ],
+   "start": {
+    "intro": "Jira is where most teams plan and track their work. This course uses a made-up Jira site with two projects and 23 work items, so you can click, drag and search without touching a real one. Nothing here needs a Jira account.",
+    "need": [
+     "No account, no install and no coding experience.",
+     "About 20 minutes for each lesson.",
+     "In this sample site you are a user called Shivam, and today is always 7 November 2026, so searches by date give the same answers every time."
+    ],
+    "order": [
+     "Start with \"Projects and work items\" to learn the parts of one piece of work.",
+     "Then boards and workflows, then Scrum and sprint planning.",
+     "Then the two JQL lessons: searching is the skill you will use every day.",
+     "Finish with filters, dashboards and automation."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough on a practice board, sprint planner or search box: one small action per step, and what you should see. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "jira-basics",
@@ -1929,6 +2011,48 @@
     "Write Deployment, Service and ConfigMap YAML",
     "Scale, update and roll back an app with kubectl"
    ],
+   "start": {
+    "intro": "Kubernetes runs apps across many machines and keeps them running. Real clusters cost money and take time to set up, so this course gives you a simulated three-machine cluster inside the page. The commands and files are the real ones; you just cannot break anything.",
+    "need": [
+     "Nothing to install: the practice cluster runs inside this page.",
+     "No coding experience. You will type short commands and edit small text files.",
+     "About 30 minutes for each lesson.",
+     "Type commands exactly, including the spaces and dashes. If one fails, read the error: it names what it did not understand."
+    ],
+    "order": [
+     "Start with \"Containers and why Kubernetes\" to meet the cluster.",
+     "Then Pods, then Deployments: the two ideas everything else rests on.",
+     "Then Services, configuration, and rolling updates.",
+     "Finish with the project, which deploys the portfolio from one file."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in a practice cluster: one command per step, exactly what to type, and what the cluster should answer. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "k8s-basics",

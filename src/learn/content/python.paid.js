@@ -2,6 +2,7 @@
 import { beginnerLessons } from '../python/lessons-beginner.jsx?part=paid';
 import { advancedLessons } from '../python/lessons-advanced.jsx?part=paid';
 import { pythonGuide } from '../guides/python';
+import { pythonSteps } from '../guides/python-steps.js?part=paid';
 import { withGuide } from './util';
 
-export default withGuide({ lessons: [...beginnerLessons, ...advancedLessons] }, pythonGuide).lessons;
+export default withGuide({ lessons: [...beginnerLessons, ...advancedLessons] }, pythonGuide, pythonSteps).lessons;

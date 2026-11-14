@@ -154,9 +154,10 @@ export function Process({ process }) {
 
 /**
  * A hands-on walkthrough: one small action per step, what to type, and what you should see.
- * `steps`: { do, code?, see? }. `children` is the practice box the steps are done in.
+ * `steps`: { do, code?, see? }. `children` is the practice box the steps are done in; `intro` replaces the
+ * opening sentence for lessons that have no practice box.
  */
-export function StepByStep({ steps, checks, toggle, children }) {
+export function StepByStep({ steps, checks, toggle, intro, children }) {
   const done = steps.filter((_, i) => checks[`s${i}`]).length;
   return (
     <section id="steps" className="mt-12 scroll-mt-24 rounded-2xl border border-accent/40 bg-surface shadow-soft overflow-hidden">
@@ -171,7 +172,7 @@ export function StepByStep({ steps, checks, toggle, children }) {
       </div>
       <div className="p-5 md:p-6">
         <p className="text-sm text-muted leading-relaxed">
-          Do one step at a time in the practice box below. Type the code yourself instead of copying it: typing is how it sticks. Tick each step when what you see matches.
+          {intro || 'Do one step at a time in the practice box below. Type the code yourself instead of copying it: typing is how it sticks. Tick each step when what you see matches.'}
         </p>
         {children}
         <ol className="mt-5 space-y-4">

@@ -1,6 +1,4 @@
 // Beginner guides for the pandas, SQL and Matplotlib lessons (same shape as guides/python.js).
-// data-steps.js adds the step-by-step material to each lesson.
-import { pandasSteps, sqlSteps, vizSteps } from './data-steps';
 
 export const pandasGuide = {
   'pd-excel': {
@@ -349,6 +347,3 @@ export const vizGuide = {
     recap: ['Highlight one thing; grey the rest.', 'Annotate key values and add reference lines.', 'An action title tells the reader what to take away.'],
   },
 };
-
-for (const [guide, steps] of [[pandasGuide, pandasSteps], [sqlGuide, sqlSteps], [vizGuide, vizSteps]])
-  for (const [id, extra] of Object.entries(steps)) guide[id] = { ...guide[id], ...extra };

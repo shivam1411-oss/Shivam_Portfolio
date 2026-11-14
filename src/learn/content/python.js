@@ -1,5 +1,6 @@
 import { pythonCourse } from '../python/course';
 import { pythonGuide } from '../guides/python';
+import { pythonSteps } from '../guides/python-steps';
 import { withGuide } from './util';
 
 export default withGuide(
@@ -34,5 +35,6 @@ export default withGuide(
       tip: 'Every lesson has a checklist at the top called "Your path through this lesson". Follow it from step 1 and you will never wonder what to do next.',
     },
   },
-  pythonGuide
+  pythonGuide,
+  pythonSteps
 );

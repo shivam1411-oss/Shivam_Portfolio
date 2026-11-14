@@ -1,5 +1,6 @@
 import { vizCourse } from '../data/viz';
 import { vizGuide } from '../guides/data';
+import { vizSteps } from '../guides/viz-steps';
 import { startGuide, withGuide } from './util';
 
 export default withGuide(
@@ -25,5 +26,6 @@ export default withGuide(
       doing: 'A numbered walkthrough in a practice box: one small change per step, exactly what to type, and the chart you should see. Tick each step as you go.',
     }),
   },
-  vizGuide
+  vizGuide,
+  vizSteps
 );

@@ -1,6 +1,7 @@
 // sql: the paid lessons (kept off the public site when the paywall is on). The full course is content/sql.js (used by build scripts and tests).
 import { sqlCourse } from '../data/sql.jsx?part=paid';
 import { sqlGuide } from '../guides/data';
+import { sqlSteps } from '../guides/sql-steps.js?part=paid';
 import { withGuide } from './util';
 
-export default withGuide({ lessons: sqlCourse.lessons }, sqlGuide).lessons;
+export default withGuide({ lessons: sqlCourse.lessons }, sqlGuide, sqlSteps).lessons;

@@ -1,4 +1,4 @@
-// Step-by-step material for each Python lesson, merged into guides/python.js:
+// Step-by-step material for each Python lesson, attached to the lessons in content/ (see withGuide):
 //   terms    every keyword the lesson uses (glossary ids), shown with its definition and an everyday comparison
 //   process  what happens, in order: { title, stages: [[name, what happens], …] }
 //   steps    a hands-on walkthrough done in the practice box: { do, code?, see? }

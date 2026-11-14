@@ -1,5 +1,6 @@
 // Attach each lesson's beginner guide (idea, terms, mistakes, faq, recap) to the lesson.
-export const withGuide = (course, guide) => ({ ...course, lessons: course.lessons.map((l) => ({ ...l, guide: guide[l.id] })) });
+// `steps` (optional) adds a course's step-by-step material, kept in its own file when it brings a practice tool.
+export const withGuide = (course, guide, steps = {}) => ({ ...course, lessons: course.lessons.map((l) => ({ ...l, guide: { ...guide[l.id], ...steps[l.id] } })) });
 
 /**
  * The "Start here" guide shown on a course page. Every course's lessons follow the same six stages, so only

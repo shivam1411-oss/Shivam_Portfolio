@@ -1,5 +1,6 @@
 import { sqlCourse } from '../data/sql';
 import { sqlGuide } from '../guides/data';
+import { sqlSteps } from '../guides/sql-steps';
 import { startGuide, withGuide } from './util';
 
 export default withGuide(
@@ -26,5 +27,6 @@ export default withGuide(
       doing: 'A numbered walkthrough in a practice box that already has the practice database loaded: one small action per step, exactly what to type, and what you should see. Tick each step as you go.',
     }),
   },
-  sqlGuide
+  sqlGuide,
+  sqlSteps
 );

@@ -1024,10 +1024,13 @@ function Lesson({ course, lesson, progress, setDone, answer, solve, resetQuiz })
           </div>
 
           {steps.length > 0 && (
-            <StepByStep steps={steps} checks={checks} toggle={toggleCheck}>
-              {course.usesPython && (
-                <PyRunner key={key} code={guide.practice ?? '# Type your code below this line, then press Run\n'} storageKey={`py-code:steps:${key}`} title="Practice box" />
-              )}
+            <StepByStep steps={steps} checks={checks} toggle={toggleCheck} intro={guide.stepsIntro}>
+              {/* Where the steps are done: the course's own practice tool, or the Python practice box. */}
+              {typeof guide.practice === 'function'
+                ? guide.practice(key)
+                : course.usesPython && (
+                    <PyRunner key={key} code={guide.practice ?? '# Type your code below this line, then press Run\n'} storageKey={`py-code:steps:${key}`} title="Practice box" />
+                  )}
             </StepByStep>
           )}
 
