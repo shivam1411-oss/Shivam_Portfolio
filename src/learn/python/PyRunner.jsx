@@ -166,7 +166,10 @@ export default function PyRunner({ code: initial, tests, stdin, storageKey, hint
     };
     const res = await run(code, { stdin: input, tests: withTests ? tests : [], onOut });
     if (flush) cancelAnimationFrame(flush);
-    setLines((l) => [...l, ...buffer.splice(0)].slice(-500));
+    // Take the remaining lines out of the buffer here, not inside the updater: React runs updaters twice in
+    // development, and the second pass would find the buffer already empty and drop the output.
+    const rest = buffer.splice(0);
+    setLines((l) => [...l, ...rest].slice(-500));
     setResult({ ...res, checked: withTests });
     setRunning(false);
     if (withTests && !res.error && res.results?.every((r) => r.passed)) onPass?.();
