@@ -124,6 +124,11 @@ footer {
 /* Solid colour panels such as bg-[#0d1014] (the Analytical Lab, code editors, terminals). A "/" elsewhere in their
    classes (border-white/5) must not bring the halo back: a light-theme glow on their white text looks glossy. */
 :is(main, footer) [class*="bg-[#"]:not([class*="]/"]),
+/* Callouts mix a colour into the solid surface (bg-[color-mix(…)]): also solid. */
+:is(main, footer) [class*="bg-[color-mix"],
+/* The solid theme backgrounds, matched as whole class names (~=), so a "/" in another class (left-1/2 on the
+   keyword pop-up) cannot bring the halo back either. bg-accent/5 is a different word, so tints still keep it. */
+:is(main, footer) :is([class~="bg-fg"], [class~="bg-bg"], [class~="bg-surface"], [class~="bg-surface-2"], [class~="bg-accent"], [class~="bg-accent-2"], [class~="bg-white"]),
 :is(main, footer) :is(.glass, .text-gradient, .shine-text, svg, canvas, img) {
   text-shadow: none;
 }
