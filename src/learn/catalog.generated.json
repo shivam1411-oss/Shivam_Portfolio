@@ -20,6 +20,47 @@
      "label": "What changed, in order"
     }
    ],
+   "start": {
+    "intro": "This course explains how this very website was built, one change at a time, for someone who has never coded. You will not write a program here. Instead, every idea comes with a small playground to click, drag and break, and many steps send you to look at the real site.",
+    "need": [
+     "No coding experience and nothing to install.",
+     "About 10 minutes for each lesson.",
+     "A computer is best for a few steps that look at the page source or resize the window; everything else works on a phone."
+    ],
+    "order": [
+     "Start with \"From one HTML file to a React app\" for the big picture.",
+     "Then go module by module: Foundations, Look & feel, The effects, Speed & devices, Features, Shipping it.",
+     "The last two modules explain the Learning Lab itself: Python in the browser, then accounts and payments.",
+     "\"What changed, in order\", at the bottom of this page, is the timeline of every change the lessons describe."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough using the lesson's own playground or the live site: one small action per step, and what you should see. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
    "modules": [
     {
      "id": "foundations",
