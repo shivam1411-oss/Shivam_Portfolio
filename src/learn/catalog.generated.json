@@ -55,6 +55,11 @@
      "id": "python-lab",
      "title": "Learning Lab & Python",
      "blurb": "How the course pages work, and how Python was made to run, get tested and deploy in the browser."
+    },
+    {
+     "id": "accounts",
+     "title": "Accounts & payments",
+     "blurb": "Sign-in and synced progress, free and paid lessons, Razorpay payments, and a checkout that never gets stuck."
     }
    ],
    "paid": false,
@@ -138,6 +143,19 @@
      "exercises": []
     },
     {
+     "id": "readable",
+     "module": "look",
+     "title": "Keeping text readable over the effects",
+     "minutes": 8,
+     "goals": [
+      "Why the moving code made some words hard to read",
+      "How one inherited text-shadow fixes every line at once",
+      "Which places switch it off, and the light-theme gloss bug that taught us why"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
      "id": "animation",
      "module": "look",
      "title": "Animations with Motion",
@@ -172,6 +190,19 @@
       "How the decoding name works",
       "Why it shows only once per visit (sessionStorage)",
       "How the site is mounted when you enter"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
+     "id": "tilt-shine",
+     "module": "effects",
+     "title": "The shine that follows your tilt",
+     "minutes": 8,
+     "goals": [
+      "How a gradient clipped to text makes a glossy name",
+      "How the phone's gyroscope (or the mouse) moves the gleam",
+      "Why the shine eases and why it settles back to the middle"
      ],
      "free": true,
      "exercises": []
@@ -271,11 +302,11 @@
      "id": "deploy",
      "module": "shipping",
      "title": "Git, GitHub Actions and Pages",
-     "minutes": 9,
+     "minutes": 11,
      "goals": [
       "Commits and branches in plain words",
       "What the deploy workflow does, step by step",
-      "How a change reaches the live site"
+      "How a change reaches shivam-soni.com, and how shared links get a preview card"
      ],
      "free": true,
      "exercises": []
@@ -284,11 +315,11 @@
      "id": "android",
      "module": "shipping",
      "title": "The Android app",
-     "minutes": 6,
+     "minutes": 9,
      "goals": [
       "How Capacitor turns the website into an app",
-      "What npm run apk does",
-      "Why you rebuild the app after site changes"
+      "What npm run apk does, including the automatic version number",
+      "Why the signing key decides whether an update installs"
      ],
      "free": true,
      "exercises": []
@@ -341,6 +372,58 @@
       "Why Python is hosted on your own site instead of a CDN",
       "What scripts/copy-pyodide.mjs does and when it runs",
       "How the deploy includes it, and what visitors download"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
+     "id": "accounts",
+     "module": "accounts",
+     "title": "Accounts and synced progress",
+     "minutes": 10,
+     "goals": [
+      "What Supabase does for the Lab",
+      "How row-level security keeps each learner's data private",
+      "How progress follows you between devices"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
+     "id": "paywall",
+     "module": "accounts",
+     "title": "Free and paid lessons",
+     "minutes": 11,
+     "goals": [
+      "Which lessons are free",
+      "How the build splits paid lessons into separate files",
+      "How only owners can download them"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
+     "id": "payments",
+     "module": "accounts",
+     "title": "Taking payments with Razorpay",
+     "minutes": 12,
+     "goals": [
+      "Why the price and the secret key stay on the server",
+      "How a payment is proved genuine with a signature",
+      "The webhook safety net and the owner dashboard"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
+     "id": "checkout-guard",
+     "module": "accounts",
+     "title": "A checkout that never gets stuck",
+     "minutes": 9,
+     "goals": [
+      "Why the page froze when \"Unlock\" was pressed",
+      "How time limits keep every step from waiting forever",
+      "How the page is put back if the payment window cannot open"
      ],
      "free": true,
      "exercises": []

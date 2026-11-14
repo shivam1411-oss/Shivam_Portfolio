@@ -3,6 +3,7 @@ import { ComponentTree, DataToUI, MotionPlayground, PropsPlayground, StateCalcul
 import { BlurVsGradient, BreakpointPreview, ChunkTimeline, DecodeDemo, DeviceInspector, MaskDemo, MatrixMini, StorageInspector } from './widgets/effects';
 import { ChatFlow, MaskPhone, ZTestStepper } from './widgets/features';
 import { RouteExplorer, ThreadDemo } from './widgets/lab';
+import { HaloDemo, ShineDemo } from './widgets/recent';
 import PyRunner from './python/PyRunner';
 
 // Every lesson explains one part of how the portfolio was built, with the real code, a playground and a quiz.
@@ -16,6 +17,7 @@ export const modules = [
   { id: 'features', title: 'Features', blurb: 'The Analytical Lab maths, contact pop-up, resume and AI chat.' },
   { id: 'shipping', title: 'Shipping it', blurb: 'Git, automatic deploys to GitHub Pages, and the Android app.' },
   { id: 'python-lab', title: 'Learning Lab & Python', blurb: 'How the course pages work, and how Python was made to run, get tested and deploy in the browser.' },
+  { id: 'accounts', title: 'Accounts & payments', blurb: 'Sign-in and synced progress, free and paid lessons, Razorpay payments, and a checkout that never gets stuck.' },
 ];
 
 const P = ({ children }) => <p className="my-4 leading-relaxed text-muted">{children}</p>;
@@ -439,6 +441,85 @@ const toggleTheme = (event) => {
     ],
   },
   {
+    id: 'readable',
+    module: 'look',
+    title: 'Keeping text readable over the effects',
+    minutes: 8,
+    commits: ['c852408', '0e03fc2', '66be771'],
+    goals: ['Why the moving code made some words hard to read', 'How one inherited text-shadow fixes every line at once', 'Which places switch it off, and the light-theme gloss bug that taught us why'],
+    body: () => (
+      <>
+        <P>
+          The code matrix and the cursor trail are drawn on <Term id="canvas">canvases</Term> <B>behind</B> the page. That looks great, but wherever a bright line of code
+          passed under a sentence, the letters and the code blurred together. The fix had to work for every paragraph on the site and in this Lab, in both themes, without
+          touching hundreds of components.
+        </P>
+        <H>One rule, inherited everywhere</H>
+        <P>
+          A <Term id="textshadow">text-shadow</Term> with no offset and a blur draws a soft glow around each letter. If that glow is the <B>page's own background colour</B>,
+          it quietly erases the code just around the words. Because text-shadow is <B>inherited</B>, setting it once on <F>main</F> and <F>footer</F> reaches every line inside.
+        </P>
+        <Code file="src/index.css">{`
+main,
+footer {
+  /* three soft layers in the page colour: light grey in light theme, near-black in dark */
+  text-shadow: 0 0 4px var(--bg), 0 0 10px var(--bg), 0 0 18px var(--bg);
+}`}</Code>
+        <HaloDemo />
+        <H>Where it must be switched off</H>
+        <P>
+          Text sitting on its own solid background (a card, a button, a badge) has nothing showing through it, so the halo is pointless there, and on gradient text it would
+          smudge the colours. Those places turn it off:
+        </P>
+        <Code file="src/index.css">{`
+/* Browsers reset text-shadow on <button>; let background-less buttons inherit it */
+:is(main, footer) button { text-shadow: inherit; }
+
+/* Solid backgrounds: bg-surface, bg-accent… (a "/" like bg-accent/5 is a faint tint, so it keeps the halo) */
+:is(main, footer) :is([class^="bg-"], [class*=" bg-"]):not([class*="/"]),
+/* Solid colour panels such as bg-[#0d1014], even if another class has a "/" */
+:is(main, footer) [class*="bg-[#"]:not([class*="]/"]),
+:is(main, footer) :is(.glass, .text-gradient, .shine-text, svg, canvas, img) {
+  text-shadow: none;
+}`}</Code>
+        <Callout tone="warn" title="The light-theme gloss bug (66be771)">
+          The dark Analytical Lab panel has the class <F>bg-[#0d1014]</F>, but also <F>border-white/5</F>. That "/" made the first rule think it was a faint tint, so the
+          halo stayed on. In the light theme the halo is <B>white</B>, so every white word on the dark panel got a white glow and looked glossy. The extra rule for{' '}
+          <F>bg-[#…]</F> panels fixed it, and also covered the dark code editors and terminals in this Lab. Try "Halo, old rule" on a dark panel in the playground above.
+        </Callout>
+        <P>
+          The cursor trail also moved: it now sits just above the matrix (<F>-z-[4]</F>) instead of over everything, and only goes on top on the welcome screen, where
+          there is no reading to do.
+        </P>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'Why is the halo set on main and footer instead of on every paragraph?',
+        options: ['It is faster to type', 'text-shadow is inherited, so one rule reaches every line of text inside', 'Paragraphs cannot have shadows', 'Tailwind requires it'],
+        answer: 1,
+        why: 'Inherited properties flow down to every child unless something sets its own value.',
+      },
+      {
+        q: 'What colour is the halo in the light theme?',
+        options: ['Black', 'The accent colour', 'The page background, a near-white', 'Transparent'],
+        answer: 2,
+        why: 'It uses var(--bg), which is the page colour in whichever theme is on.',
+      },
+      {
+        q: 'Why did the Analytical Lab panel look glossy in the light theme?',
+        options: [
+          'The panel had a gradient',
+          'A "/" in another class (border-white/5) fooled the opt-out rule, so a white halo surrounded white text',
+          'The font was too thin',
+          'The canvas was drawn on top',
+        ],
+        answer: 1,
+        why: 'The opt-out skipped any class list with a "/". The fix added a rule just for solid bg-[#…] panels.',
+      },
+    ],
+  },
+  {
     id: 'animation',
     module: 'look',
     title: 'Animations with Motion',
@@ -644,6 +725,94 @@ const [entered, setEntered] = useState(introSeen);
         options: ['Nothing', 'Random code symbols', 'The real letters', 'Dots'],
         answer: 1,
         why: 'The next six positions show randomGlyph(), which gives the scrambling look.',
+      },
+    ],
+  },
+  {
+    id: 'tilt-shine',
+    module: 'effects',
+    title: 'The shine that follows your tilt',
+    minutes: 8,
+    commits: ['94372b5'],
+    goals: ['How a gradient clipped to text makes a glossy name', 'How the phone\'s gyroscope (or the mouse) moves the gleam', 'Why the shine eases and why it settles back to the middle'],
+    body: () => (
+      <>
+        <P>
+          On the welcome screen a gleam slides across "SHIVAM SONI" as you tilt your phone, or move the mouse on a computer. It is the same idea as the glossy glass plaques on
+          the app icon, made with plain CSS and a few lines of JavaScript.
+        </P>
+        <H>Step 1: paint the text with a gradient</H>
+        <P>
+          The letters are made transparent, and a wide gradient (base colour, a bright band, base colour) is painted behind them and <B>clipped to the shape of the text</B>.
+          The gradient is three times wider than the word, so moving it sideways slides the bright band across the letters. Its position comes from a{' '}
+          <Term id="cssvar">CSS variable</Term>, <F>--shine</F>.
+        </P>
+        <Code file="src/index.css">{`
+.shine-text {
+  color: transparent;
+  background-image: linear-gradient(105deg,
+    var(--shine-base) 38%, var(--accent) 44%, #fff 50%,
+    var(--accent-2) 56%, var(--shine-base) 62%);
+  background-size: 300% 100%;                     /* three words wide */
+  background-position: var(--shine, 50%) 0;       /* moved by JavaScript */
+  background-clip: text;                          /* only inside the letters */
+}`}</Code>
+        <ShineDemo />
+        <H>Step 2: read the tilt</H>
+        <P>
+          Phones report their angle through the <Term id="gyroscope">deviceorientation</Term> event: <F>gamma</F> is left/right tilt and <F>beta</F> is front/back. The code
+          measures tilt from a <B>baseline</B>, how you were already holding the phone, and lets that baseline slowly follow you. So holding the phone at any angle starts the
+          shine in the middle, and if you stop moving it drifts back there.
+        </P>
+        <Code file="src/components/Intro.jsx (useTiltShine)">{`
+const onTilt = (e) => {
+  if (!base) base = { g: e.gamma, b: e.beta };   // how the phone was held
+  base.g += (e.gamma - base.g) * 0.02;            // the baseline slowly follows
+  base.b += (e.beta - base.b) * 0.02;
+  aim(50 + (e.gamma - base.g) * 2 + (e.beta - base.b) * 0.8);
+};
+const onMouse = (e) => aim((e.clientX / innerWidth) * 140 - 20);   // computers
+
+// Ease towards the target, writing the variable straight to the element
+const loop = () => {
+  pos += (target - pos) * 0.12;
+  el.style.setProperty('--shine', pos + '%');
+  frame = Math.abs(target - pos) > 0.05 ? requestAnimationFrame(loop) : 0;
+};`}</Code>
+        <Callout title="Why not use React state?">
+          The gyroscope fires dozens of times a second. Writing <F>--shine</F> straight onto the element with <F>style.setProperty</F> moves the gleam without asking React to
+          re-render anything, and the <Term id="raf">animation loop</Term> stops by itself once the shine has arrived. People who ask for{' '}
+          <Term id="reducedmotion">reduced motion</Term> get no moving shine at all.
+        </Callout>
+        <P>
+          The app icon uses the same look: <F>scripts/app-icon.swift</F> draws "SHIVAM SONI" on three stacked glass plaques with a glossy sheen over the code-matrix tiles, and
+          writes every size Android needs.
+        </P>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'How does the gradient appear only inside the letters?',
+        options: ['The letters are an image', 'background-clip: text, with the text colour set to transparent', 'A mask made in Photoshop', 'The canvas draws it'],
+        answer: 1,
+        why: 'The background is clipped to the glyph shapes, and transparent text lets it show through.',
+      },
+      {
+        q: 'Why is tilt measured from a slowly moving baseline?',
+        options: [
+          'Gyroscopes are inaccurate',
+          'So the shine starts in the middle however you hold the phone, and drifts back when you stop moving',
+          'To save battery',
+          'Android requires it',
+        ],
+        answer: 1,
+        why: 'Only the change from how you were holding it moves the gleam.',
+      },
+      {
+        q: 'Why is --shine written with style.setProperty instead of React state?',
+        options: ['React cannot set CSS variables', 'It changes many times a second; skipping React re-renders keeps it smooth', 'It is shorter', 'For security'],
+        answer: 1,
+        why: 'Fast-changing visual values are best written straight to the element.',
       },
     ],
   },
@@ -1068,9 +1237,9 @@ const API_URL = import.meta.env.VITE_CHAT_API_URL;  // filled in at build time
     id: 'deploy',
     module: 'shipping',
     title: 'Git, GitHub Actions and Pages',
-    minutes: 9,
-    commits: ['d1fd86a', 'e123564'],
-    goals: ['Commits and branches in plain words', 'What the deploy workflow does, step by step', 'How a change reaches the live site'],
+    minutes: 11,
+    commits: ['d1fd86a', 'e123564', 'd0d27a0', 'a77c041', '5258fec'],
+    goals: ['Commits and branches in plain words', 'What the deploy workflow does, step by step', 'How a change reaches shivam-soni.com, and how shared links get a preview card'],
     body: () => (
       <>
         <P>
@@ -1084,10 +1253,11 @@ const API_URL = import.meta.env.VITE_CHAT_API_URL;  // filled in at build time
             { label: 'Commit', body: 'Save a snapshot with a message that says what and why.', code: 'git add src/data/content.js\ngit commit -m "Update current role"' },
             { label: 'Push', body: 'Send your commits to GitHub. If you are on a branch, open a pull request and merge it into main.', code: 'git push' },
             { label: 'Actions builds', body: 'The push to main starts .github/workflows/deploy.yml on a fresh GitHub computer: it installs exactly the versions in package-lock.json (npm ci) and runs npm run build.' },
-            { label: 'Pages serves', body: 'The dist/ folder is uploaded and published at shivam1411-oss.github.io/Shivam_Portfolio. Usually live within a couple of minutes.' },
+            { label: 'Paid lessons upload', body: 'With paid courses on, scripts/upload-paid.mjs puts the paid lesson files into private storage first, so the new site never points to files that are not there yet.' },
+            { label: 'Pages serves', body: 'The dist/ folder is uploaded and published on GitHub Pages at shivam-soni.com. Usually live within a couple of minutes.' },
           ]}
         />
-        <Code file=".github/workflows/deploy.yml">{`
+        <Code file=".github/workflows/deploy.yml (shortened)">{`
 on:
   push:
     branches: [main]        # run on every push to main
@@ -1095,18 +1265,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4        # get the code
-      - uses: actions/setup-node@v4      # install Node 22
+      - uses: actions/checkout@v5        # get the code
+      - uses: actions/setup-node@v5      # Node 22 for the build
       - run: npm ci                      # install exact dependencies
       - run: npm run build               # create dist/
-      - uses: actions/upload-pages-artifact@v3
+        env:
+          VITE_PAYWALL: \${{ vars.PAYWALL }}           # "on" = paid courses
+      - run: node scripts/upload-paid.mjs              # paid lessons → private storage
+        env:
+          SUPABASE_SECRET_KEY: \${{ secrets.SUPABASE_SECRET_KEY }}
+      - uses: actions/upload-pages-artifact@v5
         with: { path: dist }
   deploy:
     needs: build
     steps:
-      - uses: actions/deploy-pages@v4    # publish`}</Code>
+      - uses: actions/deploy-pages@v5    # publish`}</Code>
+        <Callout title="Variables and secrets">
+          <F>vars.PAYWALL</F> is a plain repository setting anyone with access can read. <F>secrets.SUPABASE_SECRET_KEY</F> is a hidden secret: GitHub hands it to the
+          workflow but never shows it in logs, and it is never written into the repository or the website.
+        </Callout>
+        <Callout title="Why the actions moved to v5 and v6 (d0d27a0)">
+          Each <F>uses:</F> step is a small program that itself runs on Node.js. GitHub is retiring Node 20 for actions, so every action was moved to a version that runs on
+          Node 24. Your own build still uses Node 22; that is a separate setting.
+        </Callout>
+        <H>Link previews</H>
+        <P>
+          When someone shares shivam-soni.com on WhatsApp, LinkedIn or X, the app reads <Term id="opengraph">Open Graph</Term> tags in the page's <F>{'<head>'}</F> to draw a
+          card with a title, a description and a 1200×630 picture.
+        </P>
+        <Code file="index.html">{`
+<meta property="og:title" content="Shivam Soni | Collection Strategy & Credit Risk Leader" />
+<meta property="og:image" content="https://shivam-soni.com/assets/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />`}</Code>
         <Callout title="Why vite.config.js sets base: './'">
-          Your site lives in a sub-folder (<F>/Shivam_Portfolio/</F>), not at the domain root. Relative paths make the built files work wherever they are hosted.
+          Relative paths make the built files work wherever they are hosted: the custom domain today, or the old <F>/Shivam_Portfolio/</F> sub-folder address.
         </Callout>
       </>
     ),
@@ -1129,9 +1323,9 @@ jobs:
     id: 'android',
     module: 'shipping',
     title: 'The Android app',
-    minutes: 6,
-    commits: ['1917bba'],
-    goals: ['How Capacitor turns the website into an app', 'What npm run apk does', 'Why you rebuild the app after site changes'],
+    minutes: 9,
+    commits: ['1917bba', '94372b5', 'c22669d', 'a317d5e'],
+    goals: ['How Capacitor turns the website into an app', 'What npm run apk does, including the automatic version number', 'Why the signing key decides whether an update installs'],
     body: () => (
       <>
         <P>
@@ -1148,6 +1342,11 @@ jobs:
         <Steps
           title="What npm run apk does"
           steps={[
+            {
+              label: 'Bump the version',
+              body: 'scripts/bump-android-version.mjs raises versionCode by 1 and the last number of versionName (1.9 → 1.10) in android/app/build.gradle, so every build installs as an update.',
+              code: 'Android app version 1.10 (code 11)',
+            },
             { label: 'vite build', body: 'Builds the website into dist/, exactly like for GitHub Pages.' },
             { label: 'cap sync android', body: 'Copies dist/ into the android/ project and updates its plugins.' },
             { label: 'Remove iCloud copies', body: 'iCloud Drive sometimes creates "name 2" duplicates that break Android builds; scripts/remove-icloud-duplicates.mjs deletes identical ones.' },
@@ -1159,8 +1358,30 @@ jobs:
           The website is <B>inside</B> the <Term id="apk">APK</Term>. After changing the site, run <F>npm run apk</F> again and reinstall, or the app keeps showing the old
           version.
         </Callout>
+        <H>Version numbers</H>
+        <Code file="android/app/build.gradle">{`
+defaultConfig {
+    versionCode 10        // a whole number Android compares: higher = newer
+    versionName "1.9"     // what people see in Settings → Apps
+}`}</Code>
         <P>
-          The app icon (code-matrix cubes spelling "SHIVAM SONI") is drawn by a Swift script, <F>scripts/app-icon.swift</F>, which writes every icon size Android needs.
+          Android only installs a new APK over the old one if its <Term id="versioncode">versionCode</Term> is higher. Forgetting to raise it means "App not installed", so the
+          bump is the first step of <F>npm run apk</F> and can never be skipped.
+        </P>
+        <H>The signing key</H>
+        <P>
+          Every APK is <Term id="signing">signed</Term> with a key. Android installs an update only if it is signed with the <B>same key</B> as the app already on the phone;
+          otherwise you would have to uninstall first and lose the saved progress. Builds made on the Mac all share one key. The GitHub workflow{' '}
+          <F>.github/workflows/android.yml</F> can also build the app, but on GitHub's computer the key is different, which is why app 1.7 was rebuilt on the Mac: it had to
+          update the 1.5 already shared on Google Drive.
+        </P>
+        <Callout title="Build it like the live site">
+          With paid courses on, the app must be built with <F>VITE_PAYWALL=on</F>, just like the live site, so its paid lessons are the same files that sit in private storage.
+          A quick check: the app's <F>paid-manifest.json</F> should match the live one.
+        </Callout>
+        <P>
+          The app icon (code-matrix cubes with "SHIVAM SONI" on stacked glass plaques) is drawn by a Swift script, <F>scripts/app-icon.swift</F>, which writes every icon size
+          Android needs. The lesson "The shine that follows your tilt" explains the matching gleam on the welcome screen.
         </P>
       </>
     ),
@@ -1176,6 +1397,12 @@ jobs:
         options: ['It updates automatically', 'Rebuild with npm run apk and reinstall, because the site is bundled inside', 'Delete the app', 'Nothing can be done'],
         answer: 1,
         why: 'The APK contains a copy of the site from when it was built.',
+      },
+      {
+        q: 'A new APK says "App not installed" over the old one. Which two things must match or rise?',
+        options: ['The app name and icon', 'A higher versionCode, and the same signing key', 'The Android version and screen size', 'The Wi-Fi network'],
+        answer: 1,
+        why: 'Android accepts an update only from the same key and with a higher versionCode.',
       },
     ],
   },
@@ -1531,6 +1758,314 @@ Matplotlib + its parts        9.1 MB   only when code imports matplotlib`}</Code
     ],
   },
 
+  // ---------------------------------------------------------------- Accounts & payments
+  {
+    id: 'accounts',
+    module: 'accounts',
+    title: 'Accounts and synced progress',
+    minutes: 10,
+    commits: ['1c66864', '40d5d32', 'c22669d'],
+    goals: ['What Supabase does for the Lab', 'How row-level security keeps each learner\'s data private', 'How progress follows you between devices'],
+    body: () => (
+      <>
+        <P>
+          GitHub Pages can only serve files; it cannot remember who you are. Accounts come from <Term id="supabase">Supabase</Term>, a hosted database with sign-in built in.
+          The website talks to it directly from the browser with a <B>public</B> key, which is safe because the database itself decides what each person may see.
+        </P>
+        <H>Three tables</H>
+        <Code file="supabase/schema.sql (shortened)">{`
+products   (id, title, price_paise, active)        -- 'python', 'pandas', … and 'all'
+purchases  (user_id, product_id, amount_paise, status, razorpay_order_id, …)
+progress   (user_id, data jsonb, updated_at)       -- your finished lessons and answers`}</Code>
+        <H>Row-level security: the database guards itself</H>
+        <P>
+          Every table has <Term id="rls">row-level security</Term> switched on. A <B>policy</B> is a rule the database checks on every single read or write, using the
+          signed-in person's id from their <Term id="token">access token</Term>.
+        </P>
+        <Code file="supabase/schema.sql">{`
+-- anyone may read active prices
+create policy "products are public" on products for select using (active);
+
+-- you can read only your own purchases, and nobody can write them from the browser
+create policy "read own purchases" on purchases for select to authenticated
+  using (user_id = (select auth.uid()));
+
+-- your progress row is yours alone, to read and write
+create policy "own progress" on progress for all to authenticated
+  using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));`}</Code>
+        <Callout tone="warn" title="Why purchases have no write policy">
+          If the browser could insert a purchase, anyone could unlock a course from the console. Only the payment functions on the server, holding the{' '}
+          <B>secret</B> key, can mark a purchase as paid (next lessons).
+        </Callout>
+        <H>Signing in without slowing anyone down</H>
+        <Steps
+          title="What happens when the Lab opens"
+          steps={[
+            { label: 'No account yet', body: 'If this browser has never signed in, the Supabase library is not downloaded at all. Free lessons open as fast as before.' },
+            { label: 'Signed in before', body: 'A saved session is found, so the library loads in the background and checks it.', code: "import('./client')   // only now" },
+            { label: 'Email links', body: 'Confirm-sign-up and reset-password emails come back to learn.html with a one-time token, which the page exchanges for a session. In the Android app, links point to shivam-soni.com, because a phone cannot open the app\'s internal https://localhost address from an email.' },
+            { label: 'Back to learning', body: 'After signing in you return to the lesson you came from, not the account page.' },
+          ]}
+        />
+        <H>Progress on every device</H>
+        <P>
+          Progress is still saved in <Term id="localstorage">localStorage</Term> first, so it works offline and without an account. Once you sign in, the browser's progress and
+          the account's progress are <B>merged</B> (a lesson done on either device stays done), and every change is saved to the account a moment and a half after it happens.
+        </P>
+        <Code file="src/learn/LearnApp.jsx">{`
+function mergeProgress(local, remote = {}) {
+  return {
+    done:   { ...remote.done,   ...onlyTrue(local.done) },   // done anywhere = done
+    solved: { ...remote.solved, ...local.solved },
+    answers: /* local answers win, remote ones are kept */,
+  };
+}
+// afterwards: save 1.5 s after the last change (debounced)
+setTimeout(() => saveRemoteProgress({ lessons: progress, kb }), 1500);`}</Code>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'The Supabase key in the website is public. Why can nobody read other learners\' purchases with it?',
+        options: ['The key is encrypted', 'Row-level security policies only return rows whose user_id matches the signed-in person', 'GitHub hides it', 'Purchases are stored on the phone'],
+        answer: 1,
+        why: 'The database checks the policy on every query, whatever key is used.',
+      },
+      {
+        q: 'Why is the Supabase library not loaded for a first-time visitor?',
+        options: ['It is paid', 'They have no session, so there is nothing to check; free lessons stay fast', 'It does not work on phones', 'It is loaded from the Android app'],
+        answer: 1,
+        why: 'It loads only when a saved session or an email link exists, or the account page is opened.',
+      },
+      {
+        q: 'You finished a lesson on your phone and a different one on your laptop. After signing in on both?',
+        options: ['Only the phone\'s counts', 'Only the laptop\'s counts', 'Both are done: progress is merged', 'Both are reset'],
+        answer: 2,
+        why: 'mergeProgress keeps everything marked done on either side.',
+      },
+    ],
+  },
+  {
+    id: 'paywall',
+    module: 'accounts',
+    title: 'Free and paid lessons',
+    minutes: 11,
+    commits: ['960d631', '5258fec', '1c66864'],
+    goals: ['Which lessons are free', 'How the build splits paid lessons into separate files', 'How only owners can download them'],
+    body: () => (
+      <>
+        <P>
+          This course is free from start to finish, and so is the first module of every other course. A lock on a button is not enough on its own: anyone can open the
+          browser's developer tools. So paid lessons are <B>not on the public website at all</B>.
+        </P>
+        <Code file="src/learn/paywall.config.js">{`
+export const FREE_COURSES = ['site'];          // "Learn the Code" is always free
+
+export const isLessonFree = (course, lesson) =>
+  FREE_COURSES.includes(course.id) || lesson.module === course.modules[0].id;`}</Code>
+        <Steps
+          title="How a paid lesson leaves the public site"
+          steps={[
+            { label: 'One file per course', body: 'Each course keeps all its lessons in one file, so writing them stays easy.' },
+            { label: 'Split while building', body: 'A small Vite plugin (scripts/vite-lesson-parts.mjs) serves each course file twice: ?part=free keeps only the free lessons, ?part=paid only the paid ones. Vite then builds the paid part into its own files.', code: "import course from './course.jsx?part=paid'" },
+            { label: 'Move them out', body: 'After the build, scripts/split-paid.mjs follows the build manifest from every page, finds the files that only paid lessons need, moves them to dist-paid/ and writes a small paid-manifest.json listing them.' },
+            { label: 'Private storage', body: 'During deploy, scripts/upload-paid.mjs uploads dist-paid/ to a private Supabase storage bucket, paid-lessons, then the public site is published without them.' },
+            { label: 'Download for owners', body: 'When an owner opens a paid lesson, the Lab downloads the file with their access token, and runs it in the page like any other part of the site.' },
+          ]}
+        />
+        <H>The storage bucket checks ownership</H>
+        <Code file="supabase/schema.sql">{`
+-- does the signed-in learner own this course (or the all-access pass)?
+create function owns(course text) returns boolean as $$
+  select exists (select 1 from purchases
+    where user_id = auth.uid() and status = 'paid'
+      and (product_id = course or product_id = 'all'));
+$$;
+
+-- files live at paid-lessons/<course>/<file>.js
+create policy "owners read paid lessons" on storage.objects for select to authenticated
+  using (bucket_id = 'paid-lessons' and owns(split_part(name, '/', 1)));`}</Code>
+        <Code file="src/learn/access.js (simplified)">{`
+const res = await fetch(PAID_BASE + course + '/' + file, {
+  headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + accessToken },
+});
+if ([400, 401, 403, 404].includes(res.status)) throw new LockedError(course);
+// point its imports at the public React, editor… files, then run it
+return import(URL.createObjectURL(new Blob([text], { type: 'text/javascript' })));`}</Code>
+        <Callout title="Testing it locally">
+          Without <F>VITE_PAYWALL=on</F> everything is free and paid lessons load like normal files, which keeps everyday development simple.{' '}
+          <F>VITE_PAYWALL_TEST_OWNED=react</F> pretends this browser owns a course, to test the unlocked view.
+        </Callout>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'Why are paid lessons removed from the public site instead of just hidden behind a lock?',
+        options: ['To make the site smaller', 'Anything published can be downloaded by anyone; a lock in the page can be bypassed', 'GitHub Pages forbids it', 'For SEO'],
+        answer: 1,
+        why: 'Only files that are never published, and are handed out by the server to owners, are truly protected.',
+      },
+      {
+        q: 'Who decides whether a learner may download python/lessons-abc123.js?',
+        options: ['The lesson page', 'The storage policy, which calls owns(\'python\') with the learner\'s token', 'GitHub', 'The Android app'],
+        answer: 1,
+        why: 'The first folder of the file path is the course id, checked by owns() on every download.',
+      },
+      {
+        q: 'What does paid-manifest.json contain?',
+        options: ['Prices', 'Which paid file to request for each course', 'Learners\' emails', 'The secret key'],
+        answer: 1,
+        why: 'It lists file names only; the files themselves sit in private storage.',
+      },
+    ],
+  },
+  {
+    id: 'payments',
+    module: 'accounts',
+    title: 'Taking payments with Razorpay',
+    minutes: 12,
+    commits: ['9382ad2', 'a0fc707', '8f04521', 'bb1e78e', '5ae85a8'],
+    goals: ['Why the price and the secret key stay on the server', 'How a payment is proved genuine with a signature', 'The webhook safety net and the owner dashboard'],
+    body: () => (
+      <>
+        <P>
+          <Term id="razorpay">Razorpay</Term> takes the money. Three small server programs, <Term id="edgefunction">Edge Functions</Term> running on Supabase, sit between the
+          page and Razorpay. They hold the secret keys, which must never reach a browser.
+        </P>
+        <Steps
+          title="Buying a course"
+          steps={[
+            { label: 'create-order', body: 'The page sends only the course id. The function checks who you are, reads the price from the products table (never from the browser), refuses if you already own it, asks Razorpay for an order and records a "created" purchase.', code: "POST /functions/v1/create-order  { product: 'python' }" },
+            { label: 'Payment window', body: 'Razorpay\'s own window opens with that order. Card, UPI and bank details go to Razorpay only; this site never sees them.' },
+            { label: 'verify-payment', body: 'Razorpay hands the page an order id, a payment id and a signature. The function checks the signature, checks the order is yours, asks Razorpay what really happened (capturing the payment if needed), and only then marks the purchase paid.' },
+            { label: 'Unlocked', body: 'The page re-reads your purchases, paid lessons become available, and a thank-you message appears.' },
+          ]}
+        />
+        <H>The signature: proof that Razorpay sent it</H>
+        <P>
+          Anyone could send made-up payment ids to verify-payment. The <Term id="hmac">HMAC</Term> signature stops that: Razorpay mixes the order id and payment id with the{' '}
+          <B>secret key</B>, which only Razorpay and the function know. If our own calculation gives the same result, the message is genuine.
+        </P>
+        <Code file="supabase/functions/verify-payment/index.ts">{`
+const expected = await hmacHex(KEY_SECRET, orderId + '|' + paymentId);
+if (!safeEqual(expected, signature)) return json(400, { error: 'signature mismatch' });
+
+// then: is the order this learner's? does Razorpay agree on the amount and status?
+if (payment.order_id !== orderId || payment.amount !== purchase.amount_paise) return json(400, …);
+if (payment.status === 'authorized') payment = await capture(payment);
+if (payment.status !== 'captured') return json(400, …);
+// only now: status = 'paid'`}</Code>
+        <Callout title="safeEqual, not ===">
+          A normal comparison stops at the first different character, so how long it takes leaks how much of a guess was right. <F>safeEqual</F> always checks every
+          character.
+        </Callout>
+        <H>The webhook: a safety net</H>
+        <P>
+          If you close the tab right after paying, verify-payment never runs. So Razorpay also calls a <Term id="webhook">webhook</Term>, <F>razorpay-webhook</F>, from its own
+          servers when a payment is captured. It checks its own signature over the exact bytes received and marks the purchase paid. If saving fails it answers 500, and
+          Razorpay simply tries again later.
+        </P>
+        <H>Lessons from setting it up</H>
+        <P>
+          The functions name missing settings without ever printing their values, strip stray spaces and quotes that sneak in when keys are pasted, and check the key id
+          really starts with <F>rzp_test_</F> or <F>rzp_live_</F>, so a swapped id and secret is caught with a clear message.
+        </P>
+        <Callout title="The owner dashboard">
+          A private admin page (<F>#/admin</F>) lists sales, accounts and course progress, refunds a payment through Razorpay, and can grant a course for free. The page shows
+          nothing to anyone else, and the <F>admin</F> function checks the <F>admins</F> table again on every request, because hiding a page is never real security.
+        </Callout>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'Why does create-order read the price from the database instead of the page?',
+        options: ['It is faster', 'A price sent by the browser could be changed to ₹1 by anyone', 'Razorpay requires it', 'To support discounts'],
+        answer: 1,
+        why: 'Anything coming from the browser can be edited. The server decides the amount.',
+      },
+      {
+        q: 'What does the HMAC signature prove?',
+        options: ['That the card is valid', 'That the order and payment ids came from Razorpay, who knows the secret key', 'That the learner is signed in', 'That the price is right'],
+        answer: 1,
+        why: 'Only someone with the secret can produce a matching signature.',
+      },
+      {
+        q: 'A learner pays and immediately closes the tab. What unlocks the course?',
+        options: ['Nothing; they must pay again', 'The razorpay-webhook function, which Razorpay calls server-to-server', 'The Android app', 'An email'],
+        answer: 1,
+        why: 'The webhook is the safety net for exactly this case.',
+      },
+    ],
+  },
+  {
+    id: 'checkout-guard',
+    module: 'accounts',
+    title: 'A checkout that never gets stuck',
+    minutes: 9,
+    commits: ['d3335df'],
+    goals: ['Why the page froze when "Unlock" was pressed', 'How time limits keep every step from waiting forever', 'How the page is put back if the payment window cannot open'],
+    body: () => (
+      <>
+        <P>
+          A learner pressed <B>Unlock</B> and the whole page froze. The cause was outside our code: Razorpay's script could not open its window (for example while the website
+          is waiting for approval in the Razorpay account), so it showed a browser <F>alert()</F>, which blocks everything, and left the page with scrolling switched off and
+          an invisible window on top. The fix makes every step of checkout <B>give up cleanly</B>.
+        </P>
+        <H>Rule 1: every wait has a time limit</H>
+        <Code file="src/learn/account/checkout.js">{`
+const SCRIPT_TIMEOUT_MS = 20000;   // loading Razorpay's script
+const ORDER_TIMEOUT_MS  = 25000;   // creating the order
+const VERIFY_TIMEOUT_MS = 60000;   // checking a finished payment: money has moved, wait longer
+const WINDOW_TIMEOUT_MS = 15000;   // Razorpay's window appearing after open()
+
+fetch(url, { …, signal: AbortSignal.timeout(timeoutMs) });   // the request is cancelled after the limit`}</Code>
+        <P>
+          <Term id="timeout">AbortSignal.timeout</Term> cancels a request that takes too long, and the learner sees a plain message instead of a spinner that never stops. A{' '}
+          <F>busy</F> flag also stops a second click from starting a second payment.
+        </P>
+        <H>Rule 2: check that the window really opened</H>
+        <Steps
+          title="Opening the payment window safely"
+          steps={[
+            { label: 'Remember the page', body: 'Before opening, the page notes its scroll settings and temporarily catches alert() calls, so Razorpay cannot freeze the page with one.' },
+            { label: 'Open and watch', body: 'Every quarter of a second the page checks whether Razorpay\'s window is actually on screen with a size.', code: "document.querySelectorAll('.razorpay-container')" },
+            { label: 'It appeared', body: 'Normal alerts are given back to Razorpay, and the payment carries on as usual.' },
+            { label: 'It did not', body: 'If Razorpay raised an alert, or nothing appeared within 15 seconds: close Razorpay, remove its invisible window, restore scrolling, and say "The payment window could not open … You have not been charged."' },
+          ]}
+        />
+        <H>Rule 3: say exactly where the money is</H>
+        <P>
+          Every message says whether you have been charged. If the payment went through but checking it failed, the message gives the payment reference and says the course will
+          unlock shortly, because the webhook from the last lesson will still mark it paid.
+        </P>
+        <Callout tone="warn" title="What this fix cannot do">
+          It stops the page getting stuck; it cannot make Razorpay open. When the window refuses, the real fix is in the Razorpay account: the website must be approved under
+          "Website and app details", and live mode switched on. Inside the Android app, Razorpay's alert comes from its own frame and cannot be caught, but pressing OK now
+          leaves the page usable.
+        </Callout>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'Why did the page freeze when the payment window could not open?',
+        options: ['The internet was down', 'Razorpay showed a blocking alert() and left scrolling locked with an invisible window on top', 'React crashed', 'The course was already owned'],
+        answer: 1,
+        why: 'alert() blocks the whole page, and the leftovers kept it unusable afterwards.',
+      },
+      {
+        q: 'Why does verifying a payment get a longer time limit (60 s) than creating an order (25 s)?',
+        options: ['It is a bigger request', 'Money has already moved, so it is worth waiting longer before giving up', 'Razorpay is slower at night', 'No reason'],
+        answer: 1,
+        why: 'Giving up early would leave a paid learner confused; patience is worth more there.',
+      },
+      {
+        q: 'What does AbortSignal.timeout(25000) do to a fetch?',
+        options: ['Retries it 25 times', 'Cancels it if no answer arrives within 25 seconds', 'Delays it by 25 seconds', 'Caches it for 25 seconds'],
+        answer: 1,
+        why: 'The request is aborted and throws a TimeoutError, which the code turns into a friendly message.',
+      },
+    ],
+  },
 ];
 
 export const lessonById = Object.fromEntries(lessons.map((l) => [l.id, l]));

@@ -252,6 +252,7 @@ export const changelog = [
     title: 'Publishing moved to Node 24',
     plain: 'The automatic publishing workflow was updated to actions that run on Node 24, clearing GitHub\'s deprecation warning.',
     commits: ['d0d27a0'],
+    lessons: ['deploy'],
   },
   {
     phase: 'lab',
@@ -276,6 +277,7 @@ export const changelog = [
     title: 'Glass app icon and a name that shines as you tilt',
     plain: 'A new stacked-glass app icon, a gleam across the name that follows the phone\'s tilt, and automatic app version numbers.',
     commits: ['94372b5'],
+    lessons: ['tilt-shine', 'android'],
   },
   {
     phase: 'lab',
@@ -316,6 +318,7 @@ export const changelog = [
     title: 'Android app 1.5',
     plain: 'The app now includes the data courses, and the privacy policy covers them.',
     commits: ['f35d48f'],
+    lessons: ['android'],
   },
   {
     phase: 'lab',
@@ -364,6 +367,7 @@ export const changelog = [
     title: 'Link previews when the site is shared',
     plain: 'Sharing shivam-soni.com on WhatsApp, LinkedIn or X now shows a proper preview card with a title, description and a 1200×630 share image (Open Graph and Twitter tags).',
     commits: ['a77c041'],
+    lessons: ['deploy'],
   },
   {
     phase: 'lab',
@@ -372,6 +376,7 @@ export const changelog = [
     title: 'Accounts and paid courses in the Learning Lab',
     plain: 'Learners can sign up, sign in and keep their progress across devices. "Learn the Code" and the first module of every course stay free; the rest of each course and its knowledge base unlock with a one-time payment through Razorpay, and paid lessons are delivered only to accounts that own them.',
     commits: ['1c66864', '960d631', '40d5d32', '9382ad2', 'a0fc707', '8f04521', 'bb1e78e', '747199f', '5258fec'],
+    lessons: ['accounts', 'paywall', 'payments'],
   },
   {
     phase: 'lab',
@@ -388,6 +393,7 @@ export const changelog = [
     title: 'An owner dashboard',
     plain: 'A private admin page for sales, accounts and course progress, with refunds through Razorpay and free course grants.',
     commits: ['5ae85a8'],
+    lessons: ['payments'],
   },
   {
     phase: 'lab',
@@ -396,6 +402,7 @@ export const changelog = [
     title: 'The Learning Lab is live',
     plain: 'The Learning Lab opened to everyone with paid courses switched on: anyone can sign up, learn the free lessons, and buy a course to unlock the rest. The Terms of Use, Refund Policy and Privacy Policy took effect the same day.',
     commits: ['59d4f99'],
+    lessons: ['paywall', 'payments'],
   },
   {
     phase: 'lab',
@@ -404,6 +411,7 @@ export const changelog = [
     title: 'Android app 1.6 with accounts and paid courses',
     plain: 'The Android app now includes accounts and paid courses, built automatically on GitHub. After signing in, learners go straight back to the Learning Lab instead of the account page.',
     commits: ['c22669d', 'c3bba1c'],
+    lessons: ['android', 'accounts'],
   },
   {
     phase: 'lab',
@@ -412,6 +420,7 @@ export const changelog = [
     title: 'Android builds move to Node 24',
     plain: 'The GitHub workflow that builds the Android app now uses the latest Java setup and artifact upload steps, which run on Node 24, ahead of GitHub retiring Node 20.',
     commits: ['2f2f242'],
+    lessons: ['deploy', 'android'],
   },
   {
     phase: 'lab',
@@ -420,6 +429,52 @@ export const changelog = [
     title: 'Android app 1.7: a straight update',
     plain: 'Version 1.7 has everything in 1.6 and is signed with the same key as the earlier app shared on Google Drive, so it installs as an ordinary update and learners keep their progress.',
     commits: ['a317d5e'],
+    lessons: ['android'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-14',
+    category: 'design',
+    title: 'Text stays readable over the background effects',
+    plain: 'A soft halo in the page colour now surrounds the text on the portfolio and in the Learning Lab, so the moving code behind it never makes words hard to read, in either theme. The cursor trail moved behind the content.',
+    commits: ['c852408', '0e03fc2'],
+    lessons: ['readable'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-14',
+    category: 'app',
+    title: 'Android app 1.8',
+    plain: 'The app picks up the readability improvements.',
+    commits: ['60b5f4e'],
+    lessons: ['android'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-14',
+    category: 'learning',
+    title: 'Checkout never leaves the Learning Lab stuck',
+    plain: 'If the payment window cannot open, the page now recovers by itself and says you have not been charged, instead of freezing. Every payment step has a time limit.',
+    commits: ['d3335df'],
+    lessons: ['checkout-guard'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-14',
+    category: 'app',
+    title: 'Android app 1.9',
+    plain: 'The app picks up the checkout fix.',
+    commits: ['ba7fbf4'],
+    lessons: ['android'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-14',
+    category: 'design',
+    title: 'No more glossy text on dark panels in the light theme',
+    plain: 'The readability halo no longer reaches dark panels such as the Analytical Lab and code editors, where it gave white text a glossy glow in the light theme.',
+    commits: ['66be771'],
+    lessons: ['readable'],
   },
 ];
 
