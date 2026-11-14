@@ -476,6 +476,15 @@ export const changelog = [
     commits: ['66be771'],
     lessons: ['readable'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-14',
+    category: 'learning',
+    title: '"Learn the Code" catches up',
+    plain: 'Six new lessons explain the latest changes: readable text over the effects, the tilting shine, and a new Accounts & payments module on sign-in, free and paid lessons, Razorpay payments and the checkout fix. The Android and Deploy lessons were brought up to date.',
+    commits: ['dcdd2cc'],
+    lessons: ['readable', 'tilt-shine', 'accounts', 'paywall', 'payments', 'checkout-guard'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
