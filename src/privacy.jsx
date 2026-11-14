@@ -7,7 +7,69 @@ import ThemeToggle from './components/ThemeToggle';
 import { Reveal, ease } from './components/motion';
 import './index.css';
 
+const EFFECTIVE_DATE = 'November 15, 2026';
+
+// Section headings become link targets (#your-rights) for the contents list.
+const slug = (title) =>
+  title
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+// One row per kind of information: what it is, why it is used, where it is kept, and for how long.
+const dataSummary = [
+  ['Theme choice, welcome-screen flag', 'To remember your settings', 'Only on your device', 'Until you clear your browser or app data'],
+  [
+    'Lesson progress, quiz answers, solved exercises, checklist and step ticks, code you type',
+    'To let you carry on where you left off',
+    'Only on your device (progress is also saved to your account if you have one; ticks and code are not)',
+    'Until you clear your browser or app data',
+  ],
+  ['A copy of the Python engine and its libraries', 'So lessons start quickly next time', 'Only on your device (browser cache)', 'Until you clear your browser or app data'],
+  ['Name and email for "Get Resume"', 'To email you the resume', 'Sent to EmailJS; no copy is kept by Shivam Soni', 'As long as EmailJS keeps its delivery logs'],
+  ['Account name, email and scrambled password', 'To sign you in and send account emails', 'Supabase (emails are delivered by Brevo)', 'Until you delete your account'],
+  ['Learning progress saved to your account', 'To follow you across devices', 'Supabase', 'Until you delete your account'],
+  ['Purchase records and payment reference numbers', 'To unlock your courses, give refunds and keep accounts', 'Supabase and Razorpay', 'As long as Indian tax and accounting laws require'],
+  ['Card, UPI or bank details', 'To take your payment', 'Razorpay only; never seen by Shivam Soni', "Under Razorpay's own policy"],
+  ['Messages you type to the AI assistant', 'To answer your question', 'Passed through Cloudflare to Anthropic; not stored by Shivam Soni', 'Gone from your page when you close or reload it'],
+];
+
 const sections = [
+  {
+    title: 'At a Glance',
+    body: (
+      <>
+        <p>The short version. The sections below give the detail.</p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>
+            <strong>You can use almost everything without giving any information:</strong> the portfolio, the free lessons, the Python
+            exercises and the Android app.
+          </li>
+          <li>
+            <strong>No tracking:</strong> no cookies, no analytics, no advertising and no location data.
+          </li>
+          <li>
+            <strong>Information is collected only when you choose to give it:</strong> your name and email to get the resume, your name, email
+            and password to create a Learning Lab account, or the messages you type to the AI assistant.
+          </li>
+          <li>
+            <strong>Your code stays on your device:</strong> Python, pandas, SQL and Matplotlib run inside your browser or the app. Nothing you
+            type in a code box is uploaded.
+          </li>
+          <li>
+            <strong>Payments go through Razorpay:</strong> Shivam Soni never sees your card, UPI or bank details.
+          </li>
+          <li>
+            <strong>Nothing is sold or used for marketing.</strong>
+          </li>
+          <li>
+            <strong>You are in control:</strong> you can see, correct or delete your account information by emailing the address under Contact.
+          </li>
+        </ul>
+      </>
+    ),
+  },
   {
     title: 'Overview',
     body: (
@@ -42,11 +104,42 @@ const sections = [
         </p>
         <p className="mt-3">
           <strong>Stored on your device:</strong> your light/dark theme choice, a note that you have already seen the welcome screen
-          during the current visit, and, if you use the Learning Lab, your lesson progress, quiz answers, solved exercises, the code you write
-          there and, if you sign in, a sign-in token that keeps you logged in. These stay in your browser or in the app on your device and can be
-          removed by clearing your browser data, clearing the app's storage, or uninstalling the app. If you have a Learning Lab account, your
-          progress is also saved to it, as described below; the code you type in the editors is never uploaded.
+          during the current visit, and, if you use the Learning Lab, your lesson progress, quiz answers, solved exercises, the ticks you make
+          on a lesson's checklist and step-by-step walkthrough, the code you write in the code boxes and practice boxes and, if you sign in, a
+          sign-in token that keeps you logged in. The first time you run Python, your browser also keeps a copy of the Python engine and its
+          libraries so later lessons start quickly. All of this stays in your browser or in the app on your device and can be removed by
+          clearing your browser data, clearing the app's storage, or uninstalling the app. If you have a Learning Lab account, your progress
+          is also saved to it, as described below; your checklist ticks and the code you type are never uploaded.
         </p>
+      </>
+    ),
+  },
+  {
+    title: 'Summary: What Is Kept, Where and for How Long',
+    body: (
+      <>
+        <p>Each row is one kind of information. Anything marked "only on your device" never reaches Shivam Soni or anyone else.</p>
+        <div className="mt-4 space-y-3">
+          {dataSummary.map(([what, why, where, howLong]) => (
+            <div key={what} className="p-4 rounded-xl bg-surface-2 border border-line">
+              <div className="font-bold text-fg">{what}</div>
+              <dl className="mt-2 grid sm:grid-cols-3 gap-x-4 gap-y-2 text-sm">
+                <div>
+                  <dt className="eyebrow text-subtle">Why</dt>
+                  <dd>{why}</dd>
+                </div>
+                <div>
+                  <dt className="eyebrow text-subtle">Where it is kept</dt>
+                  <dd>{where}</dd>
+                </div>
+                <div>
+                  <dt className="eyebrow text-subtle">How long</dt>
+                  <dd>{howLong}</dd>
+                </div>
+              </dl>
+            </div>
+          ))}
+        </div>
       </>
     ),
   },
@@ -73,6 +166,10 @@ const sections = [
             so no app store collects data about you on Shivam Soni's behalf.
           </li>
           <li>
+            <strong>Updates:</strong> the app does not update itself or check for updates in the background. A new version reaches your device
+            only when you install a newer installation file. Installing it over the old version keeps what the app stored on your device.
+          </li>
+          <li>
             <strong>Links to other apps:</strong> contact links open your email, WhatsApp, phone, LinkedIn or GitHub apps, which handle any
             information under their own privacy policies.
           </li>
@@ -94,15 +191,16 @@ const sections = [
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
-            <strong>Your progress:</strong> without an account, completed lessons, quiz answers, solved exercises and the code you type are saved
-            only in your browser or the app on your device. With an account, your progress (but not your code) is also saved to your account so it
-            follows you to other devices.
+            <strong>Your progress:</strong> without an account, completed lessons, quiz answers, solved exercises, checklist and step ticks and
+            the code you type are saved only in your browser or the app on your device. With an account, your progress (but not your ticks or
+            your code) is also saved to your account so it follows you to other devices.
           </li>
           <li>
             <strong>Python runs on your device:</strong> code you run in the Python, pandas, SQL and Matplotlib exercises is executed entirely
             inside your browser or the app. The Python engine and its data libraries are served from this site itself (and are built into the
             Android app), not from a third-party service. Your code, its output, the charts it draws and any query results are never sent
-            anywhere.
+            anywhere. The other practice tools work the same way: the live React editor, the practice Kubernetes cluster and the sample Jira
+            board and search all run on your device.
           </li>
           <li>
             <strong>Sample data is made up:</strong> the customer accounts, payments and other records used in the data courses are fictional
@@ -152,6 +250,16 @@ const sections = [
           whether the payment succeeded, the amount and Razorpay's reference numbers.
         </p>
         <p className="mt-3">
+          Razorpay's checkout window is loaded from Razorpay's own servers only when you press an Unlock button, so Razorpay receives standard
+          technical information, such as your IP address and browser type, at that moment. If the window cannot open, no payment is started
+          and nothing is charged.
+        </p>
+        <p className="mt-3">
+          <strong>Who can see your account information:</strong> only you and Shivam Soni. As the owner of the site, Shivam Soni can see
+          account names and email addresses, purchases and course progress on a private administration page, in order to answer your
+          questions, give refunds and grant access to courses. Passwords and payment details are not visible there. Nobody else has access.
+        </p>
+        <p className="mt-3">
           <strong>Emails you will receive:</strong> only account emails you trigger, such as confirming your email address, resetting your
           password and purchase confirmations. Your email address is not used for marketing or newsletters and is never sold or shared for
           advertising.
@@ -195,8 +303,9 @@ const sections = [
     body: (
       <>
         <p>
-          The website and app include an optional AI assistant that answers questions about receivables, record to report, collections and
-          automation. It only runs when you open it and send a message.
+          The website and app can show an optional AI assistant that answers questions about receivables, record to report, collections and
+          automation. It appears only while the feature is switched on, and it only runs when you open it and send a message. If you do not
+          see an "Ask my AI" button, the assistant is switched off and this section does not apply to your visit.
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
@@ -399,10 +508,36 @@ const sections = [
   {
     title: 'Changes to This Policy',
     body: (
-      <p>
-        This policy may be updated occasionally to reflect changes to the features of the website or app. The effective date at the top of this page will always reflect
-        the most recent version.
-      </p>
+      <>
+        <p>
+          This policy may be updated occasionally to reflect changes to the features of the website or app. The effective date at the top of
+          this page will always reflect the most recent version.
+        </p>
+        <p className="mt-3">
+          <strong>What changed in this version ({EFFECTIVE_DATE}):</strong>
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>Added the "At a Glance" summary, a contents list and the table of what is kept, where and for how long.</li>
+          <li>
+            Described what the new step-by-step lessons save on your device: checklist and step ticks, and the code in practice boxes. None of
+            it is uploaded.
+          </li>
+          <li>Explained that your browser keeps a copy of the Python engine so lessons start quickly.</li>
+          <li>Stated who can see account information, and that Razorpay's checkout is loaded only when you press Unlock.</li>
+          <li>Explained how the Android app is updated, and that the AI assistant appears only while it is switched on.</li>
+        </ul>
+        <p className="mt-3">
+          <strong>Related pages:</strong> the{' '}
+          <a href="terms.html" className="underline hover:text-fg">
+            Terms of Use
+          </a>{' '}
+          and the{' '}
+          <a href="refund.html" className="underline hover:text-fg">
+            Refund &amp; Cancellation Policy
+          </a>{' '}
+          cover buying and using the Learning Lab courses.
+        </p>
+      </>
     ),
   },
   {
@@ -454,12 +589,30 @@ function PrivacyPage() {
           transition={{ delay: 0.3 }}
           className="eyebrow text-subtle mb-12"
         >
-          Effective Date: November 13, 2026
+          Effective Date: {EFFECTIVE_DATE}
         </motion.p>
+
+        <nav aria-label="Contents" className="mb-5 p-6 md:p-8 rounded-2xl bg-surface border border-line shadow-soft">
+          <h2 className="eyebrow text-subtle mb-3">On this page</h2>
+          <ol className="grid sm:grid-cols-2 gap-x-6 gap-y-1.5 text-sm list-decimal list-inside text-muted">
+            {sections.map((s) => (
+              <li key={s.title}>
+                <a href={`#${slug(s.title)}`} className="font-semibold text-fg hover:text-accent hover:underline">
+                  {s.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
 
         <div className="space-y-5 text-muted leading-relaxed">
           {sections.map((s) => (
-            <Reveal key={s.title} as="section" className="p-6 md:p-8 rounded-2xl bg-surface border border-line shadow-soft [&_strong]:text-fg">
+            <Reveal
+              key={s.title}
+              as="section"
+              id={slug(s.title)}
+              className="p-6 md:p-8 rounded-2xl bg-surface border border-line shadow-soft scroll-mt-6 [&_strong]:text-fg"
+            >
               <h2 className="text-xl font-extrabold text-fg mb-3">{s.title}</h2>
               {s.body}
             </Reveal>
