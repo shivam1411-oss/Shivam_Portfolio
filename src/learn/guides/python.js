@@ -1,5 +1,8 @@
 // Beginner guide for each Python lesson: the big idea, words to know (glossary ids), common
 // mistakes [mistake, fix], questions beginners ask [question, answer], and a recap.
+// python-steps.js adds the step-by-step material to each: the full keyword list, the process in
+// numbered stages, and the hands-on walkthrough.
+import { pythonSteps } from './python-steps';
 
 export const pythonGuide = {
   hello: {
@@ -308,3 +311,5 @@ export const pythonGuide = {
     recap: ['Break a problem into small functions.', 'Convert data types once, at the start.', 'Return results as a dict so they are easy to print, test or save.'],
   },
 };
+
+for (const [id, extra] of Object.entries(pythonSteps)) pythonGuide[id] = { ...pythonGuide[id], ...extra };

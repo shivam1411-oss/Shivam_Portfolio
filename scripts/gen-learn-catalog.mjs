@@ -32,7 +32,7 @@ const { courses } = await load('src/learn/courses.js', 'courses');
 const { knowledgeBases } = await load('src/learn/kb/all.js', 'kb');
 const { isCoursePaid, isLessonFree } = await load('src/learn/paywall.config.js', 'paywall');
 
-const COURSE_FIELDS = ['id', 'title', 'tagline', 'blurb', 'levels', 'icon', 'audience', 'needs', 'outcomes', 'extras', 'usesPython'];
+const COURSE_FIELDS = ['id', 'title', 'tagline', 'blurb', 'levels', 'icon', 'audience', 'needs', 'outcomes', 'extras', 'usesPython', 'start'];
 const catalog = {
   courses: courses.map((c) => ({
     ...Object.fromEntries(COURSE_FIELDS.filter((k) => c[k] !== undefined).map((k) => [k, c[k]])),
