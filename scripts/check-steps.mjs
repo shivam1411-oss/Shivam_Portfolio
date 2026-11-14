@@ -32,6 +32,8 @@ py.runPython(`
 import io, os, sys
 import matplotlib
 matplotlib.use("Agg")
+import matplotlib.pyplot as _plt
+_plt.show = lambda *args, **kwargs: None  # charts are counted after the run, as in the Lab
 os.chdir("/work")
 
 def _run(code, stdin):
