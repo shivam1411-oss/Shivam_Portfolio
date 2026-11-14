@@ -485,6 +485,24 @@ export const changelog = [
     commits: ['dcdd2cc'],
     lessons: ['readable', 'tilt-shine', 'accounts', 'paywall', 'payments', 'checkout-guard'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-14',
+    category: 'learning',
+    title: 'Every lesson is now step by step',
+    plain: 'All 96 lessons in the eight courses now open with a checklist, define every keyword in plain words with an everyday comparison, show how the idea works in numbered stages, and end with a hands-on walkthrough: one small action per step, and what you should see. Each course page has a Start-here guide. Walkthroughs for paid lessons stay private.',
+    commits: ['ec88ede', 'b87c504', 'e51ff67', '6e823dd'],
+    lessons: ['learning-lab', 'paywall'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-14',
+    category: 'design',
+    title: 'No glow on keyword pop-ups in the light theme',
+    plain: 'The pop-up that explains a keyword no longer has a glossy glow around its text in the light theme. Solid backgrounds are now recognised by name, so the readability halo cannot reach them.',
+    commits: ['87e6835'],
+    lessons: ['readable'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
