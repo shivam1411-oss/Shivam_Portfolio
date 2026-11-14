@@ -3,7 +3,7 @@
 //   process  what happens, in order: { title, stages: [[name, what happens], …] }
 //   steps    a hands-on walkthrough done in the practice box: { do, code?, see? }
 //            `fresh: true` steps start from an empty box; the others add to what is already there.
-// Every step's code is run by scripts/check-python-steps.mjs, so "You should see" stays true.
+// Every step's code is run by scripts/check-steps.mjs, so "You should see" stays true.
 
 const ADD = 'Add this line under what you have, then press Run.';
 const ADD_LINES = 'Add these lines under what you have, then press Run.';
