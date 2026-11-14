@@ -121,6 +121,9 @@ footer {
 }
 /* Faint tints such as bg-accent/5 (a "/" opacity) still let the code show through, so they keep the halo. */
 :is(main, footer) :is([class^="bg-"], [class*=" bg-"]):not([class*="/"]),
+/* Solid colour panels such as bg-[#0d1014] (the Analytical Lab, code editors, terminals). A "/" elsewhere in their
+   classes (border-white/5) must not bring the halo back: a light-theme glow on their white text looks glossy. */
+:is(main, footer) [class*="bg-[#"]:not([class*="]/"]),
 :is(main, footer) :is(.glass, .text-gradient, .shine-text, svg, canvas, img) {
   text-shadow: none;
 }
