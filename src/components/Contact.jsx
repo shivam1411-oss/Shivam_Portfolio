@@ -10,7 +10,14 @@ export default function Contact({ onResume }) {
     <section id="contact" className="py-28 px-6 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         <div className="lg:col-span-5">
-          <SectionHeading eyebrow="Contact" title="Let's talk">
+          <SectionHeading
+            eyebrow="Contact"
+            title={
+              <>
+                Let's talk <span className="text-gradient">collections.</span>
+              </>
+            }
+          >
             For conversations about collection strategy, credit risk and portfolio analytics. Email is the quickest way to reach me.
           </SectionHeading>
           <Reveal delay={0.15} as="p" className="eyebrow text-subtle mt-6">

@@ -30,6 +30,8 @@ export const navLinks = [
 
 // "About" section. Every statement here comes from the experience list below; nothing is added.
 export const about = {
+  // Shown large in the About section; `hl` words take the accent gradient.
+  quote: [{ t: 'Where ' }, { t: 'finance', hl: true }, { t: ' meets ' }, { t: 'tech', hl: true }, { t: ', every rupee recovered is engineered, not chased.' }],
   experience: '7+ years in credit: banking, NBFC and fintech',
   paragraphs: [
     'I am a collections and credit-risk professional with 7+ years across Bandhan Bank, HDFC Bank and OneCard. I started in micro-lending and SME credit, ran collections for a consumer durable and point-of-sale credit portfolio, and now design the collection strategy for an unsecured credit card book.',
@@ -38,7 +40,7 @@ export const about = {
   ],
 };
 
-// Hero proof points: how collections were automated, tested and measured.
+// How the work is done, shown as three cards in the About section.
 export const heroPillars = [
   {
     key: 'automation',
@@ -72,6 +74,34 @@ export const techStack = [
   'Python for Analysis',
   'CRM Platforms (One Accord)',
   'MIS & Reporting',
+  'Jira (boards, sprints, JQL)',
+  'React',
+];
+
+// The Skills section: the same skills as above, grouped by what they are used for, each group with
+// one line of evidence taken from the experience list or from this site itself.
+export const skillGroups = [
+  {
+    key: 'strategy',
+    title: 'Collection strategy',
+    blurb: 'Deciding who to contact, through which channel, when, and at what cost.',
+    items: competencies,
+    proof: 'Collection efficiency 50% → 65% on the DPD 30–150 buckets.',
+  },
+  {
+    key: 'data',
+    title: 'Data & analysis',
+    blurb: 'Getting the numbers myself instead of waiting for a report.',
+    items: ['SQL (hands-on query writing)', 'Python for Analysis', 'Advanced Excel (Power Query, Pivot Tables, Index-Match)', 'Power BI', 'MIS & Reporting'],
+    proof: 'I write the SQL that checks test results independently of MIS.',
+  },
+  {
+    key: 'tools',
+    title: 'Tools & delivery',
+    blurb: 'The systems the work runs on, and the tools used to plan and ship it.',
+    items: ['CRM Platforms (One Accord)', 'Jira (boards, sprints, JQL)', 'React'],
+    proof: 'Led the move from Excel tracking to a CRM-driven model. This site and its Learning Lab are built in React.',
+  },
 ];
 
 export const education = [
