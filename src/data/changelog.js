@@ -503,6 +503,14 @@ export const changelog = [
     commits: ['87e6835'],
     lessons: ['readable'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-15',
+    category: 'privacy',
+    title: 'A clearer, up-to-date privacy policy',
+    plain: 'The privacy policy now opens with a short summary, has a contents list and a table of what is kept, where and for how long. It covers what the step-by-step lessons save on your device, who can see account information, and how the Android app is updated.',
+    commits: ['a37aa9b'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
