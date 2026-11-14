@@ -2,10 +2,12 @@ import { useCallback, useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
+import About from './components/About';
 import Metrics from './components/Metrics';
 import Experience from './components/Experience';
+import Skills from './components/Skills';
 import Lab from './components/Lab';
-import Updates from './components/Updates';
+import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import ResumeModal from './components/ResumeModal';
@@ -29,10 +31,12 @@ export default function Site() {
       <main>
         <Hero onConnect={openContact} />
         <Marquee />
+        <About />
         <Metrics />
         <Experience />
+        <Skills />
         <Lab />
-        <Updates />
+        <Contact onResume={openResume} />
       </main>
       <Footer onResume={openResume} />
 

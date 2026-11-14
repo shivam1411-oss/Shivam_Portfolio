@@ -88,7 +88,7 @@ function TiltPhoto() {
         {/* Spinning gradient ring */}
         <div className="ring-spin absolute -inset-[3px] rounded-[3.2rem] opacity-70" />
         <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-[3rem] overflow-hidden bg-surface-2 border-[6px] border-surface shadow-2xl">
-          <img src={profile.photo} alt="Shivam Soni - Finance Manager" className="w-full h-full object-cover scale-105" />
+          <img src={profile.photo} alt="Illustrated portrait of Shivam Soni" className="w-full h-full object-cover scale-105" />
         </div>
 
         {/* Floating stat cards (desktop; smaller screens show them in a row below the photo) */}
@@ -158,14 +158,13 @@ export default function Hero({ onConnect }) {
               <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 animate-ping" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            {profile.role}
+            {profile.location} · Open to relocation
           </motion.div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-extrabold text-fg leading-[0.98] mb-8 tracking-tighter">
-            <SplitWords text="Data-Driven" delay={0.15} />
+            <SplitWords text="Collection strategy," delay={0.15} />
             <br />
-            <SplitWords text="Recovery" delay={0.25} wordClassName="text-gradient" />{' '}
-            <SplitWords text="Control." delay={0.3} />
+            <SplitWords text="proven" delay={0.25} wordClassName="text-gradient" /> <SplitWords text="by data." delay={0.3} />
           </h1>
 
           <motion.p
@@ -174,8 +173,7 @@ export default function Hero({ onConnect }) {
             transition={{ duration: 0.6, ease, delay: 0.4 }}
             className="text-xl sm:text-2xl font-bold text-fg leading-snug mb-4 max-w-2xl"
           >
-            I build collections that run on <span className="text-gradient">strategy</span> and{' '}
-            <span className="text-gradient">code</span>, not chasing.
+            {profile.role} at OneCard, with <span className="text-gradient">7+ years</span> in credit across banking, NBFC and fintech.
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -183,10 +181,10 @@ export default function Hero({ onConnect }) {
             transition={{ duration: 0.6, ease, delay: 0.48 }}
             className="text-base sm:text-lg text-muted mb-8 leading-relaxed font-medium max-w-2xl"
           >
-            For 7+ years across banking, NBFC and fintech, I&apos;ve turned unsecured credit collections into an{' '}
-            <span className="text-fg font-bold underline decoration-accent/40 decoration-2 underline-offset-4">automated, data-led cash-flow engine</span>:
-            accounts segmented by risk and behaviour, worked through a CRM-driven model, and every change proven by champion-challenger testing
-            and SQL before it scales.
+            I raised collection efficiency from{' '}
+            <span className="text-fg font-bold underline decoration-accent/40 decoration-2 underline-offset-4">50% to 65%</span>, cut forward roll
+            rates by 15% and reduced DSO by 12 days. I did it by segmenting accounts by risk and behaviour, moving collections onto a CRM-driven
+            model, and proving every change with champion-challenger tests and SQL before it scales.
           </motion.p>
 
 
@@ -209,10 +207,10 @@ export default function Hero({ onConnect }) {
             </Magnetic>
             <Magnetic>
               <a
-                href="#lab"
+                href="#experience"
                 className="flex items-center bg-surface text-fg border border-line px-8 py-4 rounded-xl font-bold hover:border-line-strong transition-colors"
               >
-                Explore Analytical Lab
+                View Experience
               </a>
             </Magnetic>
           </motion.div>
@@ -251,8 +249,8 @@ export default function Hero({ onConnect }) {
       </motion.div>
 
       <motion.a
-        href="#impact"
-        aria-label="Scroll to metrics"
+        href="#about"
+        aria-label="Scroll to about"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.9 }}

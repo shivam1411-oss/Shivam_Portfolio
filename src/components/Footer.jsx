@@ -63,6 +63,9 @@ export default function Footer({ onResume }) {
             Crack the Code → see how this site was built
           </a>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <a href="learn.html#/timeline" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
+              Site Updates
+            </a>
             <a href="privacy.html" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
               Privacy Policy
             </a>

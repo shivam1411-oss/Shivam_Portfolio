@@ -4,7 +4,8 @@ export const profile = {
   role: 'Manager, Business & Collection Strategy',
   location: 'Pune, India',
   relocation: 'Open to relocation: Gurgaon or Indore',
-  photo: 'assets/profile-photo.jpg',
+  // An illustrated version of design/profile-photo.jpg, made by scripts/profile-art.swift.
+  photo: 'assets/profile-art.jpg',
   resume: 'assets/Shivam-Soni-Resume.pdf',
 };
 
@@ -17,12 +18,25 @@ export const contacts = [
   { key: 'phone', label: 'Phone', value: '+91 ••••• ••456', href: 'tel:+918962882456' },
 ];
 
+// The page's sections, in order. Each id is the section's element id.
 export const navLinks = [
+  { id: 'about', label: 'About' },
   { id: 'impact', label: 'Metrics' },
   { id: 'experience', label: 'Timeline' },
-  { id: 'lab', label: 'Analytical Lab' },
-  { id: 'updates', label: 'Updates' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'lab', label: 'Lab' },
+  { id: 'contact', label: 'Contact' },
 ];
+
+// "About" section. Every statement here comes from the experience list below; nothing is added.
+export const about = {
+  experience: '7+ years in credit: banking, NBFC and fintech',
+  paragraphs: [
+    'I am a collections and credit-risk professional with 7+ years across Bandhan Bank, HDFC Bank and OneCard. I started in micro-lending and SME credit, ran collections for a consumer durable and point-of-sale credit portfolio, and now design the collection strategy for an unsecured credit card book.',
+    'My work combines strategy with hands-on analysis. I segment accounts by risk, behaviour and recovery likelihood, test changes to channel mix and messaging with champion-challenger experiments, and write the SQL to check the results myself.',
+    'Most recently I led the move from Excel-based tracking to a CRM-driven operating model, which cut the number of collection agencies needed and lowered the cost of collections.',
+  ],
+};
 
 // Hero proof points: how collections were automated, tested and measured.
 export const heroPillars = [
