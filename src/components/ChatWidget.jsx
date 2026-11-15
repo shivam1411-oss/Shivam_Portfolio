@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowUp, Bot, Loader2, RotateCcw, X } from 'lucide-react';
-import { profile } from '../data/content';
+import Avatar from './Avatar';
 
 // AI assistant for AR, R2R, collections and automation questions. Answers come from Claude via
 // the Cloudflare Worker in chat-worker/ (the API key lives there, never in the site). The widget
@@ -194,7 +194,7 @@ export default function ChatWidget() {
             className="fixed z-[95] inset-x-2 bottom-2 h-[85svh] sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[420px] sm:h-[min(640px,calc(100svh-3rem))] flex flex-col rounded-3xl bg-surface border border-line shadow-2xl overflow-hidden origin-bottom-right"
           >
             <header className="flex items-center gap-3 px-4 py-3 border-b border-line">
-              <img src={profile.photo} alt="" className="w-9 h-9 rounded-full object-cover ring-2 ring-accent/40" />
+              <Avatar className="w-9 h-9 rounded-full ring-2 ring-accent/40" />
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-extrabold text-fg">Shivam&apos;s AI assistant</div>
                 <div className="text-[11px] text-subtle font-semibold truncate">AR · R2R · Collections · Automation</div>

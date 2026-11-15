@@ -511,6 +511,15 @@ export const changelog = [
     plain: 'The privacy policy now opens with a short summary, has a contents list and a table of what is kept, where and for how long. It covers what the step-by-step lessons save on your device, who can see account information, and how the Android app is updated.',
     commits: ['a37aa9b'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-15',
+    category: 'design',
+    title: 'A more professional portfolio',
+    plain: 'The home page is reorganised in the order a recruiter reads: a clearer opening, a new About section, results, career timeline, Skills & Education, the Analytical Lab and a Contact section. The opening shows the three headline results as large numbers, skills are grouped with one line of evidence each, and the site changelog moved to the Learning Lab timeline. The profile picture is a plain initials placeholder until a new photo is chosen.',
+    commits: ['18eab6c'],
+    lessons: ['components', 'data'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;

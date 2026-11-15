@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from 'motion/react';
 import { Code2, FileText, Menu, X } from 'lucide-react';
 import { navLinks, profile } from '../data/content';
+import Avatar from './Avatar';
 import ThemeToggle from './ThemeToggle';
 
 function useActiveSection(ids) {
@@ -51,7 +52,7 @@ export default function Navbar({ onConnect, onResume }) {
               whileHover={{ rotate: -8, scale: 1.06 }}
               className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-line"
             >
-              <img src={profile.photo} alt="" className="w-full h-full object-cover" />
+              <Avatar />
             </motion.div>
             <div className="hidden min-[400px]:flex flex-col leading-tight">
               <span className="text-sm font-extrabold tracking-tight text-fg uppercase">{profile.name}</span>

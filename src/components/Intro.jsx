@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionTemplate, useMotionValue } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { profile } from '../data/content';
+import Avatar from './Avatar';
 import { createMatrix, currentMatrixTheme, randomGlyph } from './codeMatrix';
 import ThemeToggle from './ThemeToggle';
 import { ease } from './motion';
@@ -249,7 +250,7 @@ export default function Intro({ onEnter, onDone }) {
           transition={{ duration: 0.5, ease, delay: 0.1 }}
           className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden ring-2 ring-accent/50 ring-offset-4 ring-offset-bg mb-6 sm:mb-8 shadow-soft"
         >
-          <img src={profile.photo} alt="" className="w-full h-full object-cover" />
+          <Avatar />
         </motion.div>
 
         <h1 ref={nameRef} className="shine-text font-mono font-semibold text-[2.6rem] leading-none sm:text-7xl md:text-8xl tracking-tight mb-4 sm:mb-5">

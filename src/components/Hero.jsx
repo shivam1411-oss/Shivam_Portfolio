@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react';
-import { ArrowDown, ArrowRight, Briefcase, FlaskConical, TrendingUp, Workflow } from 'lucide-react';
-import { heroPillars, profile } from '../data/content';
+import { ArrowDown, ArrowRight, Briefcase, TrendingUp } from 'lucide-react';
+import { profile } from '../data/content';
+import Avatar from './Avatar';
+import { impactMetrics } from '../data/impact';
 import { Counter, Magnetic, SplitWords, ease } from './motion';
 
-const pillarIcons = { automation: Workflow, testing: FlaskConical, results: TrendingUp };
+// The headline results under the buttons, read from the same figures as the Metrics section.
+const metric = (key) => impactMetrics.find((m) => m.key === key);
+const results = [
+  { ...metric('cei'), label: 'Collection efficiency', note: `up from ${metric('cei').before}` },
+  { ...metric('roll'), label: 'Forward roll rate', note: 'fewer accounts sliding to the next bucket' },
+  { ...metric('dso'), label: 'Days sales outstanding', note: 'cash arrives almost two weeks sooner' },
+];
 
 const stats = [
   { icon: TrendingUp, value: 15, suffix: '%', label: 'CEI Growth', tone: 'bg-accent/12 text-accent' },
@@ -88,7 +96,7 @@ function TiltPhoto() {
         {/* Spinning gradient ring */}
         <div className="ring-spin absolute -inset-[3px] rounded-[3.2rem] opacity-70" />
         <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-[3rem] overflow-hidden bg-surface-2 border-[6px] border-surface shadow-2xl">
-          <img src={profile.photo} alt="Shivam Soni - Finance Manager" className="w-full h-full object-cover scale-105" />
+          <Avatar alt="Shivam Soni" imgClassName="object-cover scale-105" />
         </div>
 
         {/* Floating stat cards (desktop; smaller screens show them in a row below the photo) */}
@@ -158,42 +166,58 @@ export default function Hero({ onConnect }) {
               <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 animate-ping" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            {profile.role}
+            {profile.location} · Open to relocation
           </motion.div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-extrabold text-fg leading-[0.98] mb-8 tracking-tighter">
-            <SplitWords text="Data-Driven" delay={0.15} />
+            <SplitWords text="Collection strategy," delay={0.15} />
             <br />
-            <SplitWords text="Recovery" delay={0.25} wordClassName="text-gradient" />{' '}
-            <SplitWords text="Control." delay={0.3} />
+            <SplitWords text="proven" delay={0.25} wordClassName="text-gradient" /> <SplitWords text="by data." delay={0.3} />
           </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease, delay: 0.4 }}
-            className="text-xl sm:text-2xl font-bold text-fg leading-snug mb-4 max-w-2xl"
+            className="text-xl sm:text-2xl font-bold text-fg leading-snug mb-8 max-w-2xl"
           >
-            I build collections that run on <span className="text-gradient">strategy</span> and{' '}
-            <span className="text-gradient">code</span>, not chasing.
+            {profile.role} at OneCard, with <span className="text-gradient">7+ years</span> in credit across banking, NBFC and fintech.
           </motion.p>
+          {/* The three headline results, large enough to read at a glance */}
+          <motion.dl
+            initial="hidden"
+            animate="show"
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.45 } } }}
+            className="grid grid-cols-3 gap-4 sm:gap-8 mb-8 max-w-3xl"
+          >
+            {results.map((r) => (
+              <motion.div key={r.label} variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } } }}>
+                <dt className="text-3xl sm:text-5xl xl:text-6xl font-extrabold tracking-tight text-gradient leading-none whitespace-nowrap">
+                  <Counter value={r.value} prefix={r.prefix} suffix={r.suffix} />
+                  {r.unit && <span className="ml-1 text-base sm:text-2xl">{r.unit}</span>}
+                </dt>
+                <dd className="mt-3 text-xs sm:text-sm font-bold text-fg leading-snug">{r.label}</dd>
+                <dd className="mt-1 text-[11px] sm:text-xs text-subtle leading-snug">{r.note}</dd>
+              </motion.div>
+            ))}
+          </motion.dl>
+
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease, delay: 0.48 }}
+            transition={{ duration: 0.6, ease, delay: 0.55 }}
             className="text-base sm:text-lg text-muted mb-8 leading-relaxed font-medium max-w-2xl"
           >
-            For 7+ years across banking, NBFC and fintech, I&apos;ve turned unsecured credit collections into an{' '}
-            <span className="text-fg font-bold underline decoration-accent/40 decoration-2 underline-offset-4">automated, data-led cash-flow engine</span>:
-            accounts segmented by risk and behaviour, worked through a CRM-driven model, and every change proven by champion-challenger testing
-            and SQL before it scales.
+            Delivered by segmenting accounts by risk and behaviour, moving collections onto a{' '}
+            <span className="text-fg font-bold underline decoration-accent/40 decoration-2 underline-offset-4">CRM-driven model</span>, and proving
+            every change with champion-challenger tests and SQL before it scales.
           </motion.p>
 
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease, delay: 0.55 }}
+            transition={{ duration: 0.6, ease, delay: 0.62 }}
             className="flex flex-wrap gap-4"
           >
             <Magnetic>
@@ -209,39 +233,13 @@ export default function Hero({ onConnect }) {
             </Magnetic>
             <Magnetic>
               <a
-                href="#lab"
+                href="#experience"
                 className="flex items-center bg-surface text-fg border border-line px-8 py-4 rounded-xl font-bold hover:border-line-strong transition-colors"
               >
-                Explore Analytical Lab
+                View Experience
               </a>
             </Magnetic>
           </motion.div>
-
-          <motion.ul
-            initial="hidden"
-            animate="show"
-            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.65 } } }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-10 max-w-3xl"
-          >
-            {heroPillars.map((p) => {
-              const Icon = pillarIcons[p.key];
-              return (
-                <motion.li
-                  key={p.key}
-                  variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } } }}
-                  className="flex sm:flex-col gap-3 sm:gap-2 p-4 rounded-2xl bg-surface/80 border border-line shadow-soft"
-                >
-                  <span className="w-9 h-9 shrink-0 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
-                    <Icon size={18} />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-extrabold text-fg mb-1">{p.title}</span>
-                    <span className="block text-xs sm:text-[13px] text-muted leading-relaxed">{p.body}</span>
-                  </span>
-                </motion.li>
-              );
-            })}
-          </motion.ul>
         </div>
 
         <div className="lg:col-span-5 flex flex-col items-center order-first lg:order-none">
@@ -251,8 +249,8 @@ export default function Hero({ onConnect }) {
       </motion.div>
 
       <motion.a
-        href="#impact"
-        aria-label="Scroll to metrics"
+        href="#about"
+        aria-label="Scroll to about"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.9 }}

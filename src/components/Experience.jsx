@@ -1,28 +1,8 @@
 import { useRef } from 'react';
 import { motion, useScroll, useSpring } from 'motion/react';
-import { ChevronRight, GraduationCap } from 'lucide-react';
-import { competencies, education, experience, techStack } from '../data/content';
+import { ChevronRight } from 'lucide-react';
+import { experience } from '../data/content';
 import { Reveal, SectionHeading, Spotlight, ease, fadeUp, stagger } from './motion';
-
-function ChipGroup({ title, items }) {
-  return (
-    <Spotlight className="p-6 rounded-2xl bg-surface border border-line shadow-soft">
-      <h4 className="eyebrow text-subtle mb-4">{title}</h4>
-      <motion.div variants={stagger(0.05)} initial="hidden" whileInView="show" viewport={{ once: true }} className="flex flex-wrap gap-2">
-        {items.map((item) => (
-          <motion.span
-            key={item}
-            variants={{ hidden: { opacity: 0, scale: 0.85 }, show: { opacity: 1, scale: 1, transition: { duration: 0.4, ease } } }}
-            whileHover={{ y: -2 }}
-            className="px-3 py-1.5 rounded-lg bg-surface-2 border border-line text-xs font-bold text-muted hover:text-fg hover:border-accent/40 transition-colors cursor-default"
-          >
-            {item}
-          </motion.span>
-        ))}
-      </motion.div>
-    </Spotlight>
-  );
-}
 
 function TimelineItem({ job, index }) {
   return (
@@ -93,31 +73,20 @@ export default function Experience() {
               <span className="italic">A transition from traditional banking frameworks to high-growth fintech environments.</span>
             </SectionHeading>
 
-            <div className="space-y-4 mt-10">
-              <Reveal>
-                <ChipGroup title="Core Competencies" items={competencies} />
-              </Reveal>
-              <Reveal delay={0.05}>
-                <ChipGroup title="Technical Stack" items={techStack} />
-              </Reveal>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-                {education.map((ed, i) => (
-                  <Reveal key={ed.degree} delay={0.08 * (i + 1)}>
-                    <Spotlight className="h-full p-6 rounded-2xl bg-surface border border-line shadow-soft flex gap-4">
-                      <span className="w-10 h-10 shrink-0 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
-                        <GraduationCap size={18} />
-                      </span>
-                      <div>
-                        <h4 className="text-sm font-extrabold uppercase tracking-widest text-fg mb-1">{ed.degree}</h4>
-                        <p className="text-xs text-muted">
-                          {ed.school} ({ed.year})
-                        </p>
-                      </div>
-                    </Spotlight>
-                  </Reveal>
+            <Reveal delay={0.15}>
+              <dl className="mt-10 grid grid-cols-3 lg:grid-cols-1 gap-4 max-w-md">
+                {[
+                  [String(experience.length), 'roles'],
+                  [String(new Set(experience.map((job) => job.company.split(/[(,]/)[0].trim())).size), 'organisations'],
+                  ['7+', 'years in credit'],
+                ].map(([value, label]) => (
+                  <div key={label} className="p-4 rounded-2xl bg-surface border border-line shadow-soft">
+                    <dt className="text-2xl font-extrabold text-fg tabular-nums">{value}</dt>
+                    <dd className="eyebrow text-subtle mt-1">{label}</dd>
+                  </div>
                 ))}
-              </div>
-            </div>
+              </dl>
+            </Reveal>
           </div>
         </div>
 

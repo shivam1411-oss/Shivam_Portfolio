@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowUp } from 'lucide-react';
 import { contacts, profile } from '../data/content';
+import Avatar from './Avatar';
 import { contactIcons } from './icons';
 import { Reveal, ease, stagger } from './motion';
 
@@ -11,7 +12,7 @@ export default function Footer({ onResume }) {
       <div className="max-w-7xl mx-auto">
         <Reveal>
           <motion.div whileHover={{ scale: 1.06, rotate: 3 }} className="w-20 h-20 rounded-full mx-auto mb-6 overflow-hidden ring-4 ring-surface shadow-soft">
-            <img src={profile.photo} alt="Shivam Soni" className="w-full h-full object-cover" />
+            <Avatar alt="Shivam Soni" />
           </motion.div>
         </Reveal>
         <Reveal delay={0.05} as="h3" className="text-4xl md:text-6xl font-extrabold text-fg mb-3 tracking-tighter uppercase">
@@ -63,6 +64,9 @@ export default function Footer({ onResume }) {
             Crack the Code → see how this site was built
           </a>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <a href="learn.html#/timeline" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
+              Site Updates
+            </a>
             <a href="privacy.html" className="text-[10px] font-bold text-subtle hover:text-muted uppercase tracking-widest transition-colors">
               Privacy Policy
             </a>

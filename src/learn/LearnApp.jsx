@@ -1154,8 +1154,7 @@ function Timeline() {
       <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-fg">What changed, in order</h1>
       <p className="mt-4 text-muted leading-relaxed">
         Every change since the first page in July 2026, oldest first. Each item lists its <b className="text-fg">commits</b>: the short codes (like{' '}
-        <span className="font-mono">d1fd86a</span>) are their ids, and clicking one opens it on GitHub. The same list appears on the portfolio under{' '}
-        <a href="./index.html#updates" className="font-bold text-fg underline underline-offset-2">Site updates</a>.
+        <span className="font-mono">d1fd86a</span>) are their ids, and clicking one opens it on GitHub.
       </p>
       <ol className="mt-10 relative border-l-2 border-line ml-2">
         {timeline.map((t, i) => (
