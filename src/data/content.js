@@ -4,8 +4,9 @@ export const profile = {
   role: 'Manager, Business & Collection Strategy',
   location: 'Pune, India',
   relocation: 'Open to relocation: Gurgaon or Indore',
-  // An illustrated version of design/profile-photo.jpg, made by scripts/profile-art.swift.
-  photo: 'assets/profile-art.jpg',
+  // No photo for now: the Avatar component shows the initials instead. To add one, put the file in
+  // public/assets/ and set this to its path, e.g. 'assets/profile-photo.jpg'.
+  photo: '',
   resume: 'assets/Shivam-Soni-Resume.pdf',
 };
 

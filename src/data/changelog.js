@@ -516,7 +516,7 @@ export const changelog = [
     date: '2026-11-15',
     category: 'design',
     title: 'A more professional portfolio',
-    plain: 'The home page is reorganised in the order a recruiter reads: a clearer opening, a new About section, results, career timeline, Skills & Education, the Analytical Lab and a Contact section. The photo is now an illustrated portrait in the site\'s colours, and the site changelog moved to the Learning Lab timeline.',
+    plain: 'The home page is reorganised in the order a recruiter reads: a clearer opening, a new About section, results, career timeline, Skills & Education, the Analytical Lab and a Contact section. The opening shows the three headline results as large numbers, skills are grouped with one line of evidence each, and the site changelog moved to the Learning Lab timeline. The profile picture is a plain initials placeholder until a new photo is chosen.',
     commits: ['18eab6c'],
     lessons: ['components', 'data'],
   },

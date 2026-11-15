@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react';
 import { ArrowDown, ArrowRight, Briefcase, TrendingUp } from 'lucide-react';
 import { profile } from '../data/content';
+import Avatar from './Avatar';
 import { impactMetrics } from '../data/impact';
 import { Counter, Magnetic, SplitWords, ease } from './motion';
 
@@ -95,7 +96,7 @@ function TiltPhoto() {
         {/* Spinning gradient ring */}
         <div className="ring-spin absolute -inset-[3px] rounded-[3.2rem] opacity-70" />
         <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-[3rem] overflow-hidden bg-surface-2 border-[6px] border-surface shadow-2xl">
-          <img src={profile.photo} alt="Illustrated portrait of Shivam Soni" className="w-full h-full object-cover scale-105" />
+          <Avatar alt="Shivam Soni" imgClassName="object-cover scale-105" />
         </div>
 
         {/* Floating stat cards (desktop; smaller screens show them in a row below the photo) */}

@@ -68,7 +68,7 @@ const TREE = {
       children: [
         { name: 'CursorReveal', file: 'src/components/CursorReveal.jsx', does: 'The hidden code matrix that "water droplets" reveal wherever the cursor moves.' },
         { name: 'Navbar', file: 'src/components/Navbar.jsx', does: 'Top bar with section links, theme toggle, and Resume / Connect buttons. Receives onConnect and onResume props.' },
-        { name: 'Hero', file: 'src/components/Hero.jsx', does: 'The first screen: headline, illustrated portrait with spinning ring, and the three headline results.' },
+        { name: 'Hero', file: 'src/components/Hero.jsx', does: 'The first screen: headline, profile picture frame with spinning ring, and the three headline results.' },
         { name: 'Marquee', file: 'src/components/Marquee.jsx', does: 'The endlessly scrolling strip of skills.' },
         { name: 'About', file: 'src/components/About.jsx', does: 'A short professional summary beside an "At a glance" card, a pull quote, and three cards on how the work is done.' },
         { name: 'Metrics', file: 'src/components/Metrics.jsx', does: '"Impact by the numbers": before/after result cards with bars, read from src/data/impact.js.' },
