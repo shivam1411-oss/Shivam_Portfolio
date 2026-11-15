@@ -520,6 +520,15 @@ export const changelog = [
     commits: ['18eab6c'],
     lessons: ['components', 'data'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-15',
+    category: 'performance',
+    title: 'Pages load with far fewer requests',
+    plain: 'Each page used to fetch 17 to 21 small files plus fonts from Google. Shared code is now grouped into two files and the fonts are served from the site itself, so the home page needs 6 files and the Learning Lab 9. Fewer requests means fewer chances for one of them to stall on a slow connection.',
+    commits: ['110a033'],
+    lessons: ['splitting', 'performance'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;

@@ -366,18 +366,14 @@ const sections = [
           Payments section above.
         </p>
         <p className="mt-3">
-          <strong>Hosting and fonts:</strong> the website is hosted on <strong>GitHub Pages</strong>, and its fonts are loaded from{' '}
-          <strong>Google Fonts</strong>. Like any website host, these services receive standard technical information, such as your IP
-          address and browser type, when your browser requests the site's pages or fonts, and may keep it in their logs under their own privacy
-          policies (
+          <strong>Hosting and fonts:</strong> the website is hosted on <strong>GitHub Pages</strong>. Like any website host, it receives
+          standard technical information, such as your IP address and browser type, when your browser requests the site's pages, and may
+          keep it in its logs under its own privacy policy (
           <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" className="underline hover:text-fg" target="_blank" rel="noreferrer">
             GitHub
           </a>
-          ,{' '}
-          <a href="https://policies.google.com/privacy" className="underline hover:text-fg" target="_blank" rel="noreferrer">
-            Google
-          </a>
-          ). Shivam Soni does not receive or use this information.
+          ). Shivam Soni does not receive or use this information. The site's fonts are served from the site itself and are built into the
+          Android app; they are no longer loaded from Google Fonts, so Google receives nothing when you visit.
         </p>
         <p className="mt-3">
           No other third parties receive your information. The website and app do not sell, rent, or share your data with advertisers or data brokers.
@@ -525,6 +521,7 @@ const sections = [
           <li>Explained that your browser keeps a copy of the Python engine so lessons start quickly.</li>
           <li>Stated who can see account information, and that Razorpay's checkout is loaded only when you press Unlock.</li>
           <li>Explained how the Android app is updated, and that the AI assistant appears only while it is switched on.</li>
+          <li>Fonts are now served from this site instead of Google Fonts, so no request goes to Google when you visit.</li>
         </ul>
         <p className="mt-3">
           <strong>Related pages:</strong> the{' '}
