@@ -27,6 +27,17 @@ export default defineConfig({
   build: {
     manifest: true, // read by scripts/split-paid.mjs, then removed from the published site
     rollupOptions: {
+      output: {
+        // Every page uses React, the animation library and a handful of icons. Left alone, each icon becomes
+        // its own 0.3 KB file and a page needs 15 to 20 requests, any one of which can stall on a slow
+        // connection. One shared file is fetched once, cached, and reused by every page.
+        manualChunks(id) {
+          if (/node_modules\/(react|react-dom|scheduler|motion|motion-dom|motion-utils|framer-motion|lucide-react)\//.test(id)) return 'vendor';
+          // The site's own small pieces that every page shares (theme, animation helpers, the code matrix).
+          if (id.includes('vite/preload-helper') || /\/src\/(theme\/|components\/(motion|codeMatrix|CodeTrail|CursorReveal|ThemeToggle)\.)/.test(id)) return 'shared';
+          return undefined;
+        },
+      },
       input: {
         main: resolve(__dirname, 'index.html'),
         privacy: resolve(__dirname, 'privacy.html'),
