@@ -8,21 +8,23 @@ import { contacts, emailjsConfig, profile } from '../data/content';
 const linkedin = contacts.find((c) => c.key === 'linkedin');
 import Modal from './Modal';
 
+/** Tiles the website's address across a preview page, so a screenshot of the preview still says where it came from. */
 function drawWatermark(ctx, width, height) {
   ctx.save();
-  ctx.globalAlpha = 0.12;
-  ctx.fillStyle = '#000000';
-  ctx.font = `bold ${Math.round(width * 0.045)}px sans-serif`;
+  ctx.globalAlpha = 0.1;
+  ctx.fillStyle = '#0f766e';
+  ctx.font = `800 ${Math.round(width * 0.05)}px "Plus Jakarta Sans", sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  const text = 'PREVIEW ONLY – REQUEST FULL COPY VIA EMAIL';
+  const text = 'shivam-soni.com';
   const angle = (-30 * Math.PI) / 180;
-  const stepY = height / 5;
-  const stepX = width / 1.3;
+  const stepY = height / 6;
+  const stepX = width / 2;
 
-  for (let y = 0; y < height + stepY; y += stepY) {
-    for (let x = 0; x < width + stepX; x += stepX) {
+  for (let row = 0, y = 0; y < height + stepY; row++, y += stepY) {
+    // Every other row shifts half a step, so the address forms a diagonal pattern, not columns.
+    for (let x = row % 2 ? stepX / 2 : 0; x < width + stepX; x += stepX) {
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle);
