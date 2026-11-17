@@ -14,7 +14,7 @@ export const profile = {
 export const contacts = [
   { key: 'email', label: 'Email', value: 'Shivam.soni1495@outlook.com', href: 'mailto:Shivam.soni1495@outlook.com' },
   { key: 'whatsapp', label: 'WhatsApp', value: '+91 ••••• ••456', href: 'https://wa.me/918962882456', external: true },
-  { key: 'linkedin', label: 'LinkedIn', value: 'shivam-soni-99240584', href: 'https://www.linkedin.com/in/shivam-soni-99240584', external: true },
+  { key: 'linkedin', label: 'LinkedIn', value: 'shivamsoni-strategy', href: 'https://www.linkedin.com/in/shivamsoni-strategy', external: true },
   { key: 'github', label: 'GitHub', value: 'shivam1411-oss', href: 'https://github.com/shivam1411-oss', external: true },
   { key: 'phone', label: 'Phone', value: '+91 ••••• ••456', href: 'tel:+918962882456' },
 ];
