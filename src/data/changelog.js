@@ -529,6 +529,15 @@ export const changelog = [
     commits: ['110a033'],
     lessons: ['splitting', 'performance'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-17',
+    category: 'infra',
+    title: 'Delivered through Cloudflare',
+    plain: 'The site is now served through Cloudflare in front of GitHub Pages, which avoids the occasional stalled connection some visitors saw and caches files closer to them. Emails to @shivam-soni.com addresses are forwarded by Cloudflare too, and the privacy policy says so.',
+    commits: ['6b22877'],
+    lessons: ['deploy'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
