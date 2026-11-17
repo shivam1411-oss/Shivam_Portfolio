@@ -1,26 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { CheckCircle2, FileText, Loader2, Send } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, FileText, Loader2, Send } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-import { emailjsConfig, profile } from '../data/content';
+import { contacts, emailjsConfig, profile } from '../data/content';
+
+const linkedin = contacts.find((c) => c.key === 'linkedin');
 import Modal from './Modal';
 
+/** Tiles the website's address across a preview page, so a screenshot of the preview still says where it came from. */
 function drawWatermark(ctx, width, height) {
   ctx.save();
-  ctx.globalAlpha = 0.12;
-  ctx.fillStyle = '#000000';
-  ctx.font = `bold ${Math.round(width * 0.045)}px sans-serif`;
+  ctx.globalAlpha = 0.1;
+  ctx.fillStyle = '#0f766e';
+  ctx.font = `800 ${Math.round(width * 0.05)}px "Plus Jakarta Sans", sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  const text = 'PREVIEW ONLY – REQUEST FULL COPY VIA EMAIL';
+  const text = 'shivam-soni.com';
   const angle = (-30 * Math.PI) / 180;
-  const stepY = height / 5;
-  const stepX = width / 1.3;
+  const stepY = height / 6;
+  const stepX = width / 2;
 
-  for (let y = 0; y < height + stepY; y += stepY) {
-    for (let x = 0; x < width + stepX; x += stepX) {
+  for (let row = 0, y = 0; y < height + stepY; row++, y += stepY) {
+    // Every other row shifts half a step, so the address forms a diagonal pattern, not columns.
+    for (let x = row % 2 ? stepX / 2 : 0; x < width + stepX; x += stepX) {
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle);
@@ -31,8 +35,52 @@ function drawWatermark(ctx, width, height) {
   ctx.restore();
 }
 
+// Phone numbers and email addresses in the preview are painted over with masked versions, so the preview
+// cannot be used to harvest them. The full details are in the PDF that is emailed.
+const PHONE = /\+?\d[\d\s-]{8,}\d/g;
+const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
+const maskPhone = (s) => {
+  const digits = s.replace(/\D/g, '');
+  return `+${digits.slice(0, 2)} ••••• ••${digits.slice(-3)}`;
+};
+const maskEmail = (s) => {
+  const [user, domain] = s.split('@');
+  return `${user[0]}${'•'.repeat(Math.min(Math.max(user.length - 1, 3), 6))}@${domain}`;
+};
+
+function maskContacts(ctx, items, viewport, transform) {
+  ctx.save();
+  ctx.textBaseline = 'alphabetic';
+  for (const item of items) {
+    if (!item.str || !(/\d{5}/.test(item.str) || item.str.includes('@'))) continue;
+    const [a, b, c, d, x0, baseline] = transform(viewport.transform, item.transform);
+    const size = Math.hypot(c, d) || Math.hypot(a, b);
+    const totalWidth = item.width * viewport.scale;
+    const font = `600 ${size}px "Plus Jakarta Sans", sans-serif`;
+    ctx.font = font;
+    const fullWidth = ctx.measureText(item.str).width || 1;
+    // Positions inside the text run are found by measuring the text before each match in the same font.
+    const at = (index) => x0 + totalWidth * (ctx.measureText(item.str.slice(0, index)).width / fullWidth);
+    const matches = [
+      ...[...item.str.matchAll(PHONE)].map((m) => [m, maskPhone(m[0])]),
+      ...[...item.str.matchAll(EMAIL)].map((m) => [m, maskEmail(m[0])]),
+    ];
+    for (const [m, masked] of matches) {
+      const left = at(m.index);
+      const right = at(m.index + m[0].length);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(left - size * 0.1, baseline - size * 1.05, right - left + size * 0.2, size * 1.4);
+      ctx.fillStyle = '#14171c';
+      ctx.font = font;
+      ctx.fillText(masked, left, baseline, right - left); // never wider than the original, so separators stay visible
+    }
+  }
+  ctx.restore();
+}
+
 // PDF.js renders to canvas only, so there are no native toolbar/download controls.
-function ResumePreview() {
+// Pages are drawn at the screen's pixel density (up to 2x) so text stays sharp on phones and high-resolution laptops.
+function ResumePreview({ onPages }) {
   const containerRef = useRef(null);
   const [status, setStatus] = useState('loading');
 
@@ -44,20 +92,28 @@ function ResumePreview() {
         pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
         const pdf = await pdfjs.getDocument(profile.resume).promise;
         if (cancelled) return;
+        onPages?.(pdf.numPages);
         const container = containerRef.current;
         container.innerHTML = '';
+        const density = Math.min(window.devicePixelRatio || 1, 2);
         for (let n = 1; n <= pdf.numPages; n++) {
           const page = await pdf.getPage(n);
           if (cancelled) return;
-          const viewport = page.getViewport({ scale: 1.3 });
+          const viewport = page.getViewport({ scale: 1.3 * density });
           const canvas = document.createElement('canvas');
-          canvas.className = 'w-full h-auto mb-3 rounded-lg shadow-sm border border-line bg-white';
+          canvas.className = 'w-full h-auto rounded-lg shadow-sm border border-line bg-white';
           canvas.width = viewport.width;
           canvas.height = viewport.height;
+          canvas.setAttribute('aria-label', `Resume page ${n} of ${pdf.numPages}`);
           canvas.oncontextmenu = () => false;
           container.appendChild(canvas);
+          const label = document.createElement('p');
+          label.className = 'mt-1.5 mb-4 text-center text-[11px] font-semibold text-subtle';
+          label.textContent = `Page ${n} of ${pdf.numPages}`;
+          container.appendChild(label);
           const ctx = canvas.getContext('2d');
           await page.render({ canvasContext: ctx, viewport }).promise;
+          maskContacts(ctx, (await page.getTextContent()).items, viewport, pdfjs.Util.transform);
           drawWatermark(ctx, canvas.width, canvas.height);
         }
         if (!cancelled) setStatus('ready');
@@ -69,7 +125,7 @@ function ResumePreview() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [onPages]);
 
   return (
     <div className="relative mb-7 rounded-2xl overflow-hidden border border-line bg-surface-2">
@@ -98,6 +154,7 @@ export default function ResumeModal({ open, onClose }) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [state, setState] = useState('form'); // form | sending | sent
+  const [pages, setPages] = useState(null);
 
   // Reset each time the modal opens.
   useEffect(() => {
@@ -141,10 +198,24 @@ export default function ResumeModal({ open, onClose }) {
             <div className="w-12 h-12 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mb-4">
               <FileText size={22} />
             </div>
-            <h2 className="text-2xl font-extrabold text-fg mb-2">Get Resume</h2>
-            <p className="text-sm text-muted mb-6">Preview Shivam's resume below, then enter your details to have it emailed to you.</p>
+            <h2 className="text-2xl font-extrabold text-fg mb-1">Get Resume</h2>
+            <p className="eyebrow text-subtle mb-3">
+              {profile.name} · {profile.tagline} · {pages ? `${pages} page${pages > 1 ? 's' : ''} · ` : ''}Updated {profile.resumeUpdated}
+            </p>
+            <p className="text-sm text-muted mb-6">
+              Preview the resume below, then enter your details to have the PDF emailed to you.
+              {linkedin && (
+                <>
+                  {' '}
+                  Prefer LinkedIn?{' '}
+                  <a href={linkedin.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 font-bold text-fg hover:text-accent">
+                    View the profile <ArrowUpRight size={13} />
+                  </a>
+                </>
+              )}
+            </p>
 
-            <ResumePreview />
+            <ResumePreview onPages={setPages} />
 
             <form onSubmit={submit} noValidate>
               <div className="grid sm:grid-cols-2 gap-3 mb-3">

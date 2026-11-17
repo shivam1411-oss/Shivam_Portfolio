@@ -18,7 +18,7 @@ export default function Contact({ onResume }) {
               </>
             }
           >
-            For conversations about collection strategy, credit risk and portfolio analytics. Email is the quickest way to reach me.
+            For conversations about business and collection strategy, product rollout and portfolio analytics. Email is the quickest way to reach me.
           </SectionHeading>
           <Reveal delay={0.15} as="p" className="eyebrow text-subtle mt-6">
             {profile.location} · {profile.relocation}

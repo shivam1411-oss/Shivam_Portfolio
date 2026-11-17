@@ -1,0 +1,360 @@
+<!doctype html>
+<!--
+  Shivam Soni's resume. This file is the source; the PDF the website serves is made from it by
+  `npm run resume` (scripts/build-resume.mjs), which prints it with headless Chrome to
+  public/assets/Shivam-Soni-Resume.pdf. Edit the text here, run the script, and commit both files.
+  Kept to one simple column with real text and standard headings, so applicant tracking systems can read it.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shivam Soni – Resume</title>
+    <style>
+      @font-face {
+        font-family: 'Plus Jakarta Sans';
+        font-weight: 300 800;
+        src: url('../src/fonts/plus-jakarta-sans-latin.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: 'Plus Jakarta Sans';
+        font-weight: 300 800;
+        src: url('../src/fonts/plus-jakarta-sans-latin-ext.woff2') format('woff2');
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+      }
+
+      @page {
+        size: A4;
+        margin: 16mm 17mm 15mm;
+      }
+      :root {
+        --ink: #14171c;
+        --muted: #4a505a;
+        --accent: #0f766e;
+        --line: #d9dde3;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      body {
+        margin: 0;
+        font-family: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 9.6pt;
+        line-height: 1.42;
+        color: var(--ink);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      header {
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 9pt;
+        margin-bottom: 4pt;
+      }
+      h1 {
+        margin: 0;
+        font-size: 23pt;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+      .headline {
+        margin: 5pt 0 0;
+        font-size: 10.6pt;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .contact {
+        margin: 6pt 0 0;
+        font-size: 8.8pt;
+        color: var(--muted);
+      }
+      .contact a {
+        color: var(--ink);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .nowrap {
+        white-space: nowrap;
+      }
+      .contact .sep {
+        margin: 0 5pt;
+        color: var(--line);
+      }
+
+      h2 {
+        margin: 13pt 0 5pt;
+        font-size: 9pt;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        break-after: avoid;
+      }
+      p {
+        margin: 0;
+      }
+      .summary {
+        color: var(--ink);
+      }
+
+      .highlights {
+        display: flex;
+        gap: 8pt;
+        margin: 8pt 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .highlights li {
+        flex: 1;
+        border: 1px solid var(--line);
+        border-radius: 5pt;
+        padding: 6pt 8pt;
+      }
+      .highlights b {
+        display: block;
+        font-size: 14pt;
+        font-weight: 800;
+        color: var(--accent);
+        line-height: 1.1;
+      }
+      .highlights span {
+        font-size: 8pt;
+        color: var(--muted);
+      }
+
+      .skills {
+        display: grid;
+        grid-template-columns: 26mm 1fr;
+        gap: 3pt 8pt;
+        margin: 0;
+      }
+      .skills dt {
+        font-weight: 700;
+      }
+      .skills dd {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .company {
+        margin-top: 9pt;
+      }
+      .company-name {
+        break-after: avoid;
+      }
+      .company-name {
+        font-size: 10.6pt;
+        font-weight: 800;
+      }
+      .company-name span {
+        font-weight: 500;
+        color: var(--muted);
+      }
+      .role {
+        display: flex;
+        justify-content: space-between;
+        gap: 10pt;
+        margin-top: 5pt;
+        font-weight: 700;
+        break-after: avoid;
+      }
+      .role .dates {
+        flex-shrink: 0;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      ul.points {
+        margin: 3pt 0 0;
+        padding-left: 12pt;
+      }
+      ul.points li {
+        margin: 2pt 0;
+        padding-left: 1pt;
+        break-inside: avoid;
+      }
+      ul.points li::marker {
+        color: var(--accent);
+      }
+      .edu {
+        display: flex;
+        justify-content: space-between;
+        gap: 10pt;
+        margin: 3pt 0;
+      }
+      .edu b {
+        font-weight: 700;
+      }
+      .edu .dates {
+        flex-shrink: 0;
+        color: var(--muted);
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Shivam Soni</h1>
+      <p class="headline">Business &amp; Collection Strategy · Product Rollout · Credit Card Analytics</p>
+      <p class="contact">
+        <span class="nowrap">Pune, India</span><span class="sep">|</span><a href="tel:+918962882456">+91 89628 82456</a><span class="sep">|</span><a
+          href="mailto:Shivam.soni1495@outlook.com"
+          >Shivam.soni1495@outlook.com</a
+        ><span class="sep">|</span><a href="https://www.linkedin.com/in/shivamsoni-strategy">linkedin.com/in/shivamsoni-strategy</a
+        ><span class="sep">|</span><a href="https://shivam-soni.com/">shivam-soni.com</a>
+      </p>
+    </header>
+
+    <h2>Summary</h2>
+    <p class="summary">
+      Business and collection strategy manager with 7+ years in consumer credit across a bank, an NBFC and a fintech card issuer. I turn
+      portfolio data into decisions: segmenting customers, testing ideas through champion-challenger experiments, and scaling only what
+      proves itself. At OneCard I led the end-to-end rollout of One Accord, a CRM platform, from requirements and workflow design through
+      UAT to adoption by every internal team and partner agency. Hands-on with SQL, Power BI and Python, with an MBA in Finance.
+    </p>
+    <ul class="highlights">
+      <li><b>50% → 65%</b><span>Collection efficiency, within six months</span></li>
+      <li><b>−15%</b><span>Forward roll rates</span></li>
+      <li><b>−12 days</b><span>Days sales outstanding</span></li>
+      <li><b>−1.5%</b><span>Net slippage</span></li>
+    </ul>
+
+    <h2>Skills</h2>
+    <dl class="skills">
+      <dt>Strategy</dt>
+      <dd>
+        Collection and treatment strategy · Customer and portfolio segmentation · Go-to-market strategy and execution · Business case
+        development · Competitive analysis · Opportunity sizing · Prioritization of competing initiatives
+      </dd>
+      <dt>Product delivery</dt>
+      <dd>
+        Product rollout and adoption · Requirements definition · User acceptance testing (UAT) · Agile delivery (sprint planning, backlog
+        prioritization) · User and partner onboarding
+      </dd>
+      <dt>Analytics</dt>
+      <dd>Champion-challenger (A/B) testing · KPI and dashboard design · Portfolio analytics · Business intelligence and MIS</dd>
+      <dt>Credit</dt>
+      <dd>
+        Credit cards · Personal loans · Lending partnerships · Credit risk · Delinquency management · Cost budgeting · Cost-to-serve and
+        unit economics · Incentive and payout pricing
+      </dd>
+      <dt>Leadership</dt>
+      <dd>
+        Stakeholder management · Cross-functional leadership (Operations, Finance, Risk, Legal, Data Science) · Executive communication ·
+        Vendor management
+      </dd>
+      <dt>Tools</dt>
+      <dd>SQL · Power BI · Advanced Excel (Power Query, Pivot Tables) · Python · Jira · CRM platforms (One Accord)</dd>
+    </dl>
+
+    <h2>Professional Experience</h2>
+
+    <div class="company">
+      <div class="company-name">FPL Technologies (OneCard) <span>· Pune</span></div>
+      <div class="role"><span>Manager, Business &amp; Collection Strategy</span><span class="dates">June 2026 – Present</span></div>
+      <ul class="points">
+        <li>
+          Own treatment strategy for the credit card portfolio. Accounts are segmented by risk, payment behavior and recovery likelihood, and
+          each segment gets a channel and cost level that matches what it is worth.
+        </li>
+        <li>
+          Run champion-challenger experiments on channel mix, contact timing and message content. Winning variants become standard logic;
+          losing ones are retired with the data to show why.
+        </li>
+        <li>
+          Led the rollout of One Accord, a CRM platform replacing Excel tracking, now used by the collections, legal and quality teams. Ran a
+          competitive analysis of other CRMs, wrote the requirements for allocation logic, workflows and reporting, ran UAT, and onboarded
+          every internal user and partner agency.
+        </li>
+        <li>
+          Rollout outcome: fewer agencies needed, a larger share of the book moved to digital channels, and a lower cost of collections, with
+          organization-wide adoption and tighter data security.
+        </li>
+        <li>
+          Built the collections strategy for a new Personal Loan product while onboarding L&amp;T Finance as the lending partner, and proposed
+          and managed its collection cost budget.
+        </li>
+        <li>
+          Wrote business cases and secured leadership approval for several initiatives: a callback mechanism for the field channel on One
+          Accord, data privacy checks, and the collection balance set-up for Personal Loans.
+        </li>
+        <li>
+          Deliver strategy and product changes through Agile sprints: initiatives become a prioritized backlog, are scoped with
+          cross-functional teams at sprint planning, and ship sprint by sprint.
+        </li>
+        <li>Designed the incentive plan for the in-house collections channel and the payout pricing for hybrid centers.</li>
+        <li>
+          Write SQL against the collections database to build performance views, size opportunities and check test results independently of
+          standard MIS.
+        </li>
+        <li>
+          Set KPI thresholds for every strategy and present a monthly pack to senior management on what is on track, what is next on the
+          roadmap, and where results missed plan.
+        </li>
+        <li>
+          Work with Operations and Data Science to close gaps in data capture and account tagging, so the impact of each program can be
+          measured.
+        </li>
+      </ul>
+
+      <div class="role"><span>Manager, Repayments</span><span class="dates">June 2023 – May 2026</span></div>
+      <ul class="points">
+        <li>Owned the DPD 30–150 credit card receivables book against collection, recovery and delinquency targets.</li>
+        <li>Raised collection efficiency from 50% to 65% within six months.</li>
+        <li>Cut forward roll rates by 15% and net slippage by 1.5%, using roll-rate and flow analysis to catch deteriorating segments early.</li>
+        <li>Reduced DSO by 12 days through changes to the collection cycle, and lifted normalization and rollback rates by 7%.</li>
+        <li>Built field allocation logic around risk segment and recovery probability, and tracked CE%, CEI and ACR by segment.</li>
+        <li>
+          Managed field, tele-calling and tracing agencies on productivity and compliance, including disputes, skip cases and deceased
+          accounts.
+        </li>
+      </ul>
+    </div>
+
+    <div class="company">
+      <div class="company-name">HDFC Bank <span>· Pune</span></div>
+      <div class="role">
+        <span>Retail Portfolio Management, Collections (Consumer Durables and Point of Sale Credit)</span
+        ><span class="dates">Sep 2020 – June 2023</span>
+      </div>
+      <ul class="points">
+        <li>Ran collections for a consumer durables and point-of-sale credit portfolio across Pune and Nashik through <span class="nowrap">7–8</span> partner agencies and an in-house team.</li>
+        <li>
+          Used ageing, roll-rate and slippage analysis to decide where recovery effort should go, and designed field follow-up logic against
+          resolution, rollback and normalization targets.
+        </li>
+        <li>Set productivity benchmarks for agencies (resolutions, recoveries, ACR) and ran periodic partner reviews on output, staffing and process adherence.</li>
+        <li>Kept the team within budgeted ACR and resolved disputes and expired accounts before they escalated.</li>
+      </ul>
+    </div>
+
+    <div class="company">
+      <div class="company-name">Bandhan Bank <span>· Indore</span></div>
+      <div class="role"><span>Area Manager</span><span class="dates">July 2019 – July 2020</span></div>
+      <ul class="points">
+        <li>Appraised, sanctioned and disbursed micro-lending and SME credit, covering the full lifecycle from origination to delinquency management.</li>
+        <li>
+          Accountable for business growth in micro-lending and SME products across the area, and set up a support function spanning
+          appraisal, documentation, disbursement and repayment.
+        </li>
+        <li>Produced weekly, monthly and quarterly MIS and monthly review presentations for senior management, and trained branch staff on SOPs.</li>
+      </ul>
+    </div>
+
+    <h2>Education</h2>
+    <div class="edu">
+      <span><b>Master of Business Administration, Finance</b> · International Institute of Professional Studies, DAVV, Indore</span
+      ><span class="dates">2019</span>
+    </div>
+    <div class="edu">
+      <span><b>Bachelor of Business Administration, Finance and Marketing</b> · Shri RGP Gujrati Professional Institute, DAVV, Indore</span
+      ><span class="dates">2017</span>
+    </div>
+  </body>
+</html>

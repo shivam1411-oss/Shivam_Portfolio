@@ -263,7 +263,7 @@ export default function Intro({ onEnter, onDone }) {
           transition={{ duration: 0.5, delay: 0.55 }}
           className="eyebrow text-muted mb-8 sm:mb-10"
         >
-          Collection Strategy &amp; Credit Risk Leader
+          Business &amp; Collection Strategy
         </motion.p>
 
         <motion.blockquote

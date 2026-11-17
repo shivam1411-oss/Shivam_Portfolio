@@ -538,6 +538,15 @@ export const changelog = [
     commits: ['6b22877'],
     lessons: ['deploy'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-17',
+    category: 'design',
+    title: 'A new resume, and one message across the site',
+    plain: 'The resume is rebuilt as a two-page PDF with clickable links, made from a source file so it is easy to update. The site now leads with the same positioning, business and collection strategy, with a new Product delivery skill group, and the Get Resume window shows sharper pages with page numbers.',
+    commits: ['76780df'],
+    lessons: ['contact', 'data'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;

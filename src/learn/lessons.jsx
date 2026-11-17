@@ -1296,7 +1296,7 @@ jobs:
           card with a title, a description and a 1200×630 picture.
         </P>
         <Code file="index.html">{`
-<meta property="og:title" content="Shivam Soni | Collection Strategy & Credit Risk Leader" />
+<meta property="og:title" content="Shivam Soni | Business & Collection Strategy" />
 <meta property="og:image" content="https://shivam-soni.com/assets/og-image.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
