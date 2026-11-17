@@ -7,7 +7,7 @@ import ThemeToggle from './components/ThemeToggle';
 import { Reveal, ease } from './components/motion';
 import './index.css';
 
-const EFFECTIVE_DATE = 'November 15, 2026';
+const EFFECTIVE_DATE = 'November 17, 2026';
 
 // Section headings become link targets (#your-rights) for the contents list.
 const slug = (title) =>
@@ -366,14 +366,25 @@ const sections = [
           Payments section above.
         </p>
         <p className="mt-3">
-          <strong>Hosting and fonts:</strong> the website is hosted on <strong>GitHub Pages</strong>. Like any website host, it receives
+          <strong>Hosting, delivery and fonts:</strong> the website is hosted on <strong>GitHub Pages</strong> and delivered through{' '}
+          <strong>Cloudflare</strong>, which sits in front of it to make pages load quickly and reliably. Like any website host, both receive
           standard technical information, such as your IP address and browser type, when your browser requests the site's pages, and may
-          keep it in its logs under its own privacy policy (
+          keep it in their logs under their own privacy policies (
           <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" className="underline hover:text-fg" target="_blank" rel="noreferrer">
             GitHub
           </a>
-          ). Shivam Soni does not receive or use this information. The site's fonts are served from the site itself and are built into the
-          Android app; they are no longer loaded from Google Fonts, so Google receives nothing when you visit.
+          ,{' '}
+          <a href="https://www.cloudflare.com/privacypolicy/" className="underline hover:text-fg" target="_blank" rel="noreferrer">
+            Cloudflare
+          </a>
+          ). Cloudflare is used only to deliver the site: it does not set cookies or run analytics on it. Shivam Soni does not receive or use
+          this information. The site's fonts are served from the site itself and are built into the Android app; they are not loaded from
+          Google Fonts, so Google receives nothing when you visit.
+        </p>
+        <p className="mt-3">
+          <strong>Emails to @shivam-soni.com addresses:</strong> if you email an address at shivam-soni.com, Cloudflare's email routing
+          service passes the message on to Shivam Soni's inbox. Cloudflare does not keep a copy of the message beyond what is needed to
+          deliver it.
         </p>
         <p className="mt-3">
           No other third parties receive your information. The website and app do not sell, rent, or share your data with advertisers or data brokers.
@@ -511,6 +522,12 @@ const sections = [
         </p>
         <p className="mt-3">
           <strong>What changed in this version ({EFFECTIVE_DATE}):</strong>
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>The website is now delivered through Cloudflare, in front of GitHub Pages, and Cloudflare forwards emails sent to @shivam-soni.com addresses.</li>
+        </ul>
+        <p className="mt-3">
+          <strong>Changes on November 15, 2026:</strong>
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>Added the "At a Glance" summary, a contents list and the table of what is kept, where and for how long.</li>
