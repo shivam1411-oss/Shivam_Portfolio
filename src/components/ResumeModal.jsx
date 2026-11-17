@@ -35,6 +35,49 @@ function drawWatermark(ctx, width, height) {
   ctx.restore();
 }
 
+// Phone numbers and email addresses in the preview are painted over with masked versions, so the preview
+// cannot be used to harvest them. The full details are in the PDF that is emailed.
+const PHONE = /\+?\d[\d\s-]{8,}\d/g;
+const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
+const maskPhone = (s) => {
+  const digits = s.replace(/\D/g, '');
+  return `+${digits.slice(0, 2)} ••••• ••${digits.slice(-3)}`;
+};
+const maskEmail = (s) => {
+  const [user, domain] = s.split('@');
+  return `${user[0]}${'•'.repeat(Math.min(Math.max(user.length - 1, 3), 6))}@${domain}`;
+};
+
+function maskContacts(ctx, items, viewport, transform) {
+  ctx.save();
+  ctx.textBaseline = 'alphabetic';
+  for (const item of items) {
+    if (!item.str || !(/\d{5}/.test(item.str) || item.str.includes('@'))) continue;
+    const [a, b, c, d, x0, baseline] = transform(viewport.transform, item.transform);
+    const size = Math.hypot(c, d) || Math.hypot(a, b);
+    const totalWidth = item.width * viewport.scale;
+    const font = `600 ${size}px "Plus Jakarta Sans", sans-serif`;
+    ctx.font = font;
+    const fullWidth = ctx.measureText(item.str).width || 1;
+    // Positions inside the text run are found by measuring the text before each match in the same font.
+    const at = (index) => x0 + totalWidth * (ctx.measureText(item.str.slice(0, index)).width / fullWidth);
+    const matches = [
+      ...[...item.str.matchAll(PHONE)].map((m) => [m, maskPhone(m[0])]),
+      ...[...item.str.matchAll(EMAIL)].map((m) => [m, maskEmail(m[0])]),
+    ];
+    for (const [m, masked] of matches) {
+      const left = at(m.index);
+      const right = at(m.index + m[0].length);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(left - size * 0.1, baseline - size * 1.05, right - left + size * 0.2, size * 1.4);
+      ctx.fillStyle = '#14171c';
+      ctx.font = font;
+      ctx.fillText(masked, left, baseline, right - left); // never wider than the original, so separators stay visible
+    }
+  }
+  ctx.restore();
+}
+
 // PDF.js renders to canvas only, so there are no native toolbar/download controls.
 // Pages are drawn at the screen's pixel density (up to 2x) so text stays sharp on phones and high-resolution laptops.
 function ResumePreview({ onPages }) {
@@ -70,6 +113,7 @@ function ResumePreview({ onPages }) {
           container.appendChild(label);
           const ctx = canvas.getContext('2d');
           await page.render({ canvasContext: ctx, viewport }).promise;
+          maskContacts(ctx, (await page.getTextContent()).items, viewport, pdfjs.Util.transform);
           drawWatermark(ctx, canvas.width, canvas.height);
         }
         if (!cancelled) setStatus('ready');
