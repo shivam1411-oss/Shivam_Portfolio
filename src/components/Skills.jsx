@@ -1,9 +1,9 @@
 import { motion } from 'motion/react';
-import { BadgeCheck, ChartNoAxesCombined, GraduationCap, Target, Wrench } from 'lucide-react';
+import { BadgeCheck, ChartNoAxesCombined, GraduationCap, Rocket, Target, Wrench } from 'lucide-react';
 import { education, skillGroups } from '../data/content';
 import { Reveal, SectionHeading, Spotlight, ease, stagger } from './motion';
 
-const groupIcons = { strategy: Target, data: ChartNoAxesCombined, tools: Wrench };
+const groupIcons = { strategy: Target, delivery: Rocket, data: ChartNoAxesCombined, tools: Wrench };
 
 function SkillGroup({ group }) {
   const Icon = groupIcons[group.key];
@@ -50,10 +50,10 @@ export default function Skills() {
           }
           className="mb-12"
         >
-          Three kinds of skill, each with the result or the work that shows it, followed by my formal training in finance.
+          Four kinds of skill, each with the result or the work that shows it, followed by my formal training in finance.
         </SectionHeading>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {skillGroups.map((group, i) => (
             <Reveal key={group.key} delay={0.06 * i} className="h-full">
               <SkillGroup group={group} />

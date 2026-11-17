@@ -170,7 +170,7 @@ export default function Hero({ onConnect }) {
           </motion.div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-extrabold text-fg leading-[0.98] mb-8 tracking-tighter">
-            <SplitWords text="Collection strategy," delay={0.15} />
+            <SplitWords text="Business strategy," delay={0.15} />
             <br />
             <SplitWords text="proven" delay={0.25} wordClassName="text-gradient" /> <SplitWords text="by data." delay={0.3} />
           </h1>
@@ -208,9 +208,9 @@ export default function Hero({ onConnect }) {
             transition={{ duration: 0.6, ease, delay: 0.55 }}
             className="text-base sm:text-lg text-muted mb-8 leading-relaxed font-medium max-w-2xl"
           >
-            Delivered by segmenting accounts by risk and behaviour, moving collections onto a{' '}
-            <span className="text-fg font-bold underline decoration-accent/40 decoration-2 underline-offset-4">CRM-driven model</span>, and proving
-            every change with champion-challenger tests and SQL before it scales.
+            Delivered by segmenting accounts by risk and behaviour, leading a{' '}
+            <span className="text-fg font-bold underline decoration-accent/40 decoration-2 underline-offset-4">CRM platform rollout</span> from
+            requirements to full adoption, and proving every change with champion-challenger tests and SQL before it scales.
           </motion.p>
 
 

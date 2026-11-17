@@ -56,16 +56,16 @@ export default function Navbar({ onConnect, onResume }) {
             </motion.div>
             <div className="hidden min-[400px]:flex flex-col leading-tight">
               <span className="text-sm font-extrabold tracking-tight text-fg uppercase">{profile.name}</span>
-              <span className="text-[10px] font-bold text-subtle uppercase tracking-widest">{profile.tagline}</span>
+              <span className="text-[10px] font-bold text-subtle uppercase tracking-widest whitespace-nowrap">{profile.tagline}</span>
             </div>
           </a>
 
-          <div className="hidden lg:flex items-center gap-1 p-1 rounded-xl">
+          <div className="hidden xl:flex items-center gap-1 p-1 rounded-xl">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={`#${link.id}`}
-                className={`relative px-4 py-2 eyebrow transition-colors ${active === link.id ? 'text-fg' : 'text-subtle hover:text-muted'}`}
+                className={`relative px-2.5 2xl:px-4 py-2 eyebrow whitespace-nowrap transition-colors ${active === link.id ? 'text-fg' : 'text-subtle hover:text-muted'}`}
               >
                 {active === link.id && (
                   <motion.span
@@ -77,7 +77,7 @@ export default function Navbar({ onConnect, onResume }) {
                 <span className="relative">{link.label}</span>
               </a>
             ))}
-            <a href="learn.html" className="group relative ml-1 px-4 py-2 eyebrow flex items-center gap-1.5 rounded-lg border border-accent/30 hover:border-accent/60 transition-colors">
+            <a href="learn.html" className="group relative ml-1 px-3 2xl:px-4 py-2 eyebrow whitespace-nowrap flex items-center gap-1.5 rounded-lg border border-accent/30 hover:border-accent/60 transition-colors">
               <Code2 size={13} className="text-accent group-hover:rotate-12 transition-transform" />
               <span className="text-gradient">Crack the Code</span>
             </a>
@@ -87,7 +87,7 @@ export default function Navbar({ onConnect, onResume }) {
             <button
               type="button"
               onClick={onResume}
-              className="hidden sm:flex items-center gap-2 px-4 h-10 rounded-xl border border-line bg-surface text-[10px] font-bold tracking-widest text-muted hover:text-fg hover:border-line-strong transition-colors"
+              className="hidden sm:flex items-center gap-2 px-4 h-10 whitespace-nowrap rounded-xl border border-line bg-surface text-[10px] font-bold tracking-widest text-muted hover:text-fg hover:border-line-strong transition-colors"
             >
               <FileText size={14} /> GET RESUME
             </button>
@@ -106,7 +106,7 @@ export default function Navbar({ onConnect, onResume }) {
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Menu"
               aria-expanded={menuOpen}
-              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl border border-line bg-surface text-fg"
+              className="xl:hidden w-10 h-10 flex items-center justify-center rounded-xl border border-line bg-surface text-fg"
             >
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
@@ -121,7 +121,7 @@ export default function Navbar({ onConnect, onResume }) {
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="lg:hidden overflow-hidden"
+              className="xl:hidden overflow-hidden"
             >
               <div className="px-5 pb-5 pt-1 flex flex-col gap-1 border-t border-line">
                 {navLinks.map((link, i) => (

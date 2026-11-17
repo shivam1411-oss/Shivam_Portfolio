@@ -1,13 +1,15 @@
 export const profile = {
   name: 'Shivam Soni',
-  tagline: 'Collection Strategy Leader',
+  tagline: 'Business & Collection Strategy',
   role: 'Manager, Business & Collection Strategy',
   location: 'Pune, India',
   relocation: 'Open to relocation: Gurgaon or Indore',
   // No photo for now: the Avatar component shows the initials instead. To add one, put the file in
   // public/assets/ and set this to its path, e.g. 'assets/profile-photo.jpg'.
   photo: '',
+  // Built from resume/resume.html by `npm run resume`; change the month here when you rebuild it.
   resume: 'assets/Shivam-Soni-Resume.pdf',
+  resumeUpdated: 'November 2026',
 };
 
 // Phone numbers are shown masked; the links still open WhatsApp / the dialler.
@@ -35,9 +37,9 @@ export const about = {
   quote: [{ t: 'Where ' }, { t: 'finance', hl: true }, { t: ' meets ' }, { t: 'tech', hl: true }, { t: ', every rupee recovered is engineered, not chased.' }],
   experience: '7+ years in credit: banking, NBFC and fintech',
   paragraphs: [
-    'I am a collections and credit-risk professional with 7+ years across Bandhan Bank, HDFC Bank and OneCard. I started in micro-lending and SME credit, ran collections for a consumer durable and point-of-sale credit portfolio, and now design the collection strategy for an unsecured credit card book.',
-    'My work combines strategy with hands-on analysis. I segment accounts by risk, behaviour and recovery likelihood, test changes to channel mix and messaging with champion-challenger experiments, and write the SQL to check the results myself.',
-    'Most recently I led the move from Excel-based tracking to a CRM-driven operating model, which cut the number of collection agencies needed and lowered the cost of collections.',
+    'I am a business and collection strategy manager with 7+ years in consumer credit across Bandhan Bank, HDFC Bank and OneCard. I started in micro-lending and SME credit, ran collections for a consumer durable and point-of-sale credit portfolio, and now own the treatment strategy for OneCard\'s credit card book.',
+    'My work combines strategy with hands-on analysis. I segment accounts by risk, behaviour and recovery likelihood, test changes to channel mix, timing and messaging with champion-challenger experiments, and write the SQL to check the results myself.',
+    'I also take changes from idea to rollout. I led One Accord, a CRM platform that replaced Excel tracking, from requirements and UAT to adoption by every internal team and partner agency, built the collections strategy for a new Personal Loan product with L&T Finance, and write the business cases that get initiatives approved.',
   ],
 };
 
@@ -64,9 +66,13 @@ export const competencies = [
   'Treatment Strategy Design',
   'Champion-Challenger Testing',
   'Portfolio Segmentation',
-  'Digital Collection Campaigns',
+  'Go-to-Market Strategy',
+  'Business Case Development',
   'Cost of Collections',
 ];
+
+// Taking a change from idea to adoption (the One Accord rollout, the Personal Loan launch).
+export const deliverySkills = ['Product Rollout & Adoption', 'Requirements Definition', 'User Acceptance Testing (UAT)', 'Agile Delivery (Sprints, Backlog)', 'Stakeholder Management'];
 
 export const techStack = [
   'SQL (hands-on query writing)',
@@ -84,10 +90,17 @@ export const techStack = [
 export const skillGroups = [
   {
     key: 'strategy',
-    title: 'Collection strategy',
-    blurb: 'Deciding who to contact, through which channel, when, and at what cost.',
+    title: 'Business & collection strategy',
+    blurb: 'Deciding who to contact, through which channel, when, and at what cost, and making the case for it.',
     items: competencies,
     proof: 'Collection efficiency 50% → 65% on the DPD 30–150 buckets.',
+  },
+  {
+    key: 'delivery',
+    title: 'Product delivery',
+    blurb: 'Taking a change from requirements to the day every team is using it.',
+    items: deliverySkills,
+    proof: 'Led One Accord from requirements and UAT to adoption by every internal team and partner agency.',
   },
   {
     key: 'data',
@@ -98,7 +111,7 @@ export const skillGroups = [
   },
   {
     key: 'tools',
-    title: 'Tools & delivery',
+    title: 'Tools',
     blurb: 'The systems the work runs on, and the tools used to plan and ship it.',
     items: ['CRM Platforms (One Accord)', 'Jira (boards, sprints, JQL)', 'React'],
     proof: 'Led the move from Excel tracking to a CRM-driven model. This site and its Learning Lab are built in React.',
@@ -117,12 +130,14 @@ export const experience = [
     company: 'FPL Technologies (OneCard), Pune',
     current: true,
     points: [
-      'Build treatment strategies segmenting accounts by risk, behaviour, and recovery likelihood.',
-      'Run champion-challenger tests on channel mix and messaging, scaling the winning variant.',
-      'Write SQL queries to build performance views and check test results independently of MIS.',
-      'Led migration from Excel-based tracking to One Accord, a CRM-based operating model.',
-      'Migration cut the number of collection agencies needed and lowered cost of collections.',
-      'Prepare monthly performance packs for senior management on strategy tracking.',
+      'Own treatment strategy for the credit card portfolio, segmenting accounts by risk, payment behaviour and recovery likelihood.',
+      'Run champion-challenger experiments on channel mix, contact timing and messaging; winners become standard logic.',
+      'Led the rollout of One Accord, a CRM platform replacing Excel tracking: requirements, UAT and onboarding of every team and agency.',
+      'Rollout outcome: fewer agencies needed, more of the book on digital channels, and a lower cost of collections.',
+      'Built the collections strategy for a new Personal Loan product while onboarding L&T Finance as the lending partner.',
+      'Write business cases that secured leadership approval for initiatives such as a field-channel callback mechanism.',
+      'Deliver strategy and product changes through Agile sprints with cross-functional teams.',
+      'Write SQL to build performance views, size opportunities and check test results independently of MIS.',
     ],
   },
   {
@@ -130,10 +145,11 @@ export const experience = [
     title: 'Manager, Repayments',
     company: 'FPL Technologies (OneCard), Pune',
     points: [
-      'Managed DPD 30–150 buckets, improving Collection Efficiency from 50% to 65%.',
-      'Reduced forward roll rates by 15% through data-led risk segmentation.',
-      'Directed agency productivity (field/tele-calling) via MoM analysis.',
-      'Optimized collection cycles, cutting DSO by 12 days.',
+      'Owned the DPD 30–150 credit card book, raising collection efficiency from 50% to 65% within six months.',
+      'Cut forward roll rates by 15% and net slippage by 1.5% using roll-rate and flow analysis.',
+      'Reduced DSO by 12 days through changes to the collection cycle.',
+      'Built field allocation logic around risk segment and recovery probability.',
+      'Managed field, tele-calling and tracing agencies on productivity and compliance.',
     ],
   },
   {

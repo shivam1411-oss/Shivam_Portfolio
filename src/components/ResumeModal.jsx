@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { CheckCircle2, FileText, Loader2, Send } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, FileText, Loader2, Send } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-import { emailjsConfig, profile } from '../data/content';
+import { contacts, emailjsConfig, profile } from '../data/content';
+
+const linkedin = contacts.find((c) => c.key === 'linkedin');
 import Modal from './Modal';
 
 function drawWatermark(ctx, width, height) {
@@ -32,7 +34,8 @@ function drawWatermark(ctx, width, height) {
 }
 
 // PDF.js renders to canvas only, so there are no native toolbar/download controls.
-function ResumePreview() {
+// Pages are drawn at the screen's pixel density (up to 2x) so text stays sharp on phones and high-resolution laptops.
+function ResumePreview({ onPages }) {
   const containerRef = useRef(null);
   const [status, setStatus] = useState('loading');
 
@@ -44,18 +47,25 @@ function ResumePreview() {
         pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
         const pdf = await pdfjs.getDocument(profile.resume).promise;
         if (cancelled) return;
+        onPages?.(pdf.numPages);
         const container = containerRef.current;
         container.innerHTML = '';
+        const density = Math.min(window.devicePixelRatio || 1, 2);
         for (let n = 1; n <= pdf.numPages; n++) {
           const page = await pdf.getPage(n);
           if (cancelled) return;
-          const viewport = page.getViewport({ scale: 1.3 });
+          const viewport = page.getViewport({ scale: 1.3 * density });
           const canvas = document.createElement('canvas');
-          canvas.className = 'w-full h-auto mb-3 rounded-lg shadow-sm border border-line bg-white';
+          canvas.className = 'w-full h-auto rounded-lg shadow-sm border border-line bg-white';
           canvas.width = viewport.width;
           canvas.height = viewport.height;
+          canvas.setAttribute('aria-label', `Resume page ${n} of ${pdf.numPages}`);
           canvas.oncontextmenu = () => false;
           container.appendChild(canvas);
+          const label = document.createElement('p');
+          label.className = 'mt-1.5 mb-4 text-center text-[11px] font-semibold text-subtle';
+          label.textContent = `Page ${n} of ${pdf.numPages}`;
+          container.appendChild(label);
           const ctx = canvas.getContext('2d');
           await page.render({ canvasContext: ctx, viewport }).promise;
           drawWatermark(ctx, canvas.width, canvas.height);
@@ -69,7 +79,7 @@ function ResumePreview() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [onPages]);
 
   return (
     <div className="relative mb-7 rounded-2xl overflow-hidden border border-line bg-surface-2">
@@ -98,6 +108,7 @@ export default function ResumeModal({ open, onClose }) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [state, setState] = useState('form'); // form | sending | sent
+  const [pages, setPages] = useState(null);
 
   // Reset each time the modal opens.
   useEffect(() => {
@@ -141,10 +152,24 @@ export default function ResumeModal({ open, onClose }) {
             <div className="w-12 h-12 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mb-4">
               <FileText size={22} />
             </div>
-            <h2 className="text-2xl font-extrabold text-fg mb-2">Get Resume</h2>
-            <p className="text-sm text-muted mb-6">Preview Shivam's resume below, then enter your details to have it emailed to you.</p>
+            <h2 className="text-2xl font-extrabold text-fg mb-1">Get Resume</h2>
+            <p className="eyebrow text-subtle mb-3">
+              {profile.name} · {profile.tagline} · {pages ? `${pages} page${pages > 1 ? 's' : ''} · ` : ''}Updated {profile.resumeUpdated}
+            </p>
+            <p className="text-sm text-muted mb-6">
+              Preview the resume below, then enter your details to have the PDF emailed to you.
+              {linkedin && (
+                <>
+                  {' '}
+                  Prefer LinkedIn?{' '}
+                  <a href={linkedin.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 font-bold text-fg hover:text-accent">
+                    View the profile <ArrowUpRight size={13} />
+                  </a>
+                </>
+              )}
+            </p>
 
-            <ResumePreview />
+            <ResumePreview onPages={setPages} />
 
             <form onSubmit={submit} noValidate>
               <div className="grid sm:grid-cols-2 gap-3 mb-3">

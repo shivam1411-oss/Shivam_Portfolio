@@ -517,7 +517,7 @@ export function BreakpointPreview() {
         <div style={{ width, transform: `scale(${scale})`, transformOrigin: 'top left' }} className="p-6">
           <div className={`flex gap-6 ${lg ? 'flex-row items-center' : 'flex-col'}`}>
             <div className={`${lg ? 'order-1 flex-1' : 'order-2'}`}>
-              <div className="eyebrow text-accent">Collection Strategy Leader</div>
+              <div className="eyebrow text-accent">Business &amp; Collection Strategy</div>
               <div className={`font-extrabold text-fg leading-tight mt-2 ${md ? 'text-5xl' : 'text-3xl'}`}>Collections that run on strategy and code</div>
               <div className="mt-4 flex gap-2">
                 <span className="px-4 py-2 rounded-lg bg-fg text-bg text-sm font-bold">Connect</span>
