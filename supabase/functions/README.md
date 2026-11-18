@@ -1,4 +1,4 @@
-# Payment functions (Supabase Edge Functions)
+# Supabase Edge Functions: payments and resume emails
 
 The site is static (GitHub Pages), so the payment server code runs as three Supabase Edge Functions.
 The Razorpay **key secret lives only in Supabase's secrets**: never in this repository or the website.
@@ -50,3 +50,23 @@ mock bank page. The course unlocks and the purchase appears as `paid` in Supabas
 Test cards: https://razorpay.com/docs/payments/payments/test-card-details/
 
 Before going live: complete Razorpay KYC, generate **live** keys, replace both secrets, and add a live-mode webhook.
+
+## Resume emails (`send-resume`)
+
+The portfolio's **Get Resume** form calls `send-resume`, which emails the resume PDF from `resume@shivam-soni.com`
+through Brevo (replies go to `hello@shivam-soni.com`). It limits each address to 3 emails a day, each visitor (IP) to
+10 an hour and the whole site to 250 a day, keeping only hashed records for two days. Set it up **before** the site
+change that uses it goes live:
+
+1. **Table:** Supabase → SQL Editor → run `supabase/resume.sql`.
+2. **Sender:** Brevo → Senders, Domains & Dedicated IPs → **Senders** → add `resume@shivam-soni.com`
+   (the domain is already authenticated, so no confirmation email is needed).
+3. **API key:** Brevo → SMTP & API → **API Keys** → generate one, then Supabase → Edge Functions → **Secrets** →
+   add `BREVO_API_KEY`. Optional: `RESUME_FROM` and `RESUME_REPLY_TO` to change the two addresses.
+4. **Deploy:** Edge Functions → Deploy a new function → Via Editor, named exactly `send-resume`, with
+   `send-resume/index.ts`; then turn **off** "Verify JWT". Or: `supabase functions deploy send-resume --no-verify-jwt`.
+5. **Check without sending anything:** a request with the hidden `company` field filled is accepted but sends no email:
+   ```bash
+   curl -s -X POST https://jiwvwgrtxgmrinikmgyb.supabase.co/functions/v1/send-resume -H 'Content-Type: application/json' -d '{"name":"Test","email":"test@example.com","company":"check"}'
+   ```
+   It should print `{"ok":true}`.

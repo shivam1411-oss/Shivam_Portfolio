@@ -7,7 +7,7 @@ import ThemeToggle from './components/ThemeToggle';
 import { Reveal, ease } from './components/motion';
 import './index.css';
 
-const EFFECTIVE_DATE = 'November 17, 2026';
+const EFFECTIVE_DATE = 'November 18, 2026';
 
 // Section headings become link targets (#your-rights) for the contents list.
 const slug = (title) =>
@@ -27,7 +27,8 @@ const dataSummary = [
     'Until you clear your browser or app data',
   ],
   ['A copy of the Python engine and its libraries', 'So lessons start quickly next time', 'Only on your device (browser cache)', 'Until you clear your browser or app data'],
-  ['Name and email for "Get Resume"', 'To email you the resume', 'Sent to EmailJS; no copy is kept by Shivam Soni', 'As long as EmailJS keeps its delivery logs'],
+  ['Name and email for "Get Resume"', 'To email you the resume', 'Passed through a Supabase function to Brevo, which sends the email; not stored by Shivam Soni', 'As long as Brevo keeps its delivery logs'],
+  ['Scrambled (hashed) email address and IP for "Get Resume"', 'To stop the form being used to flood inboxes', 'Supabase', 'Two days'],
   ['Account name, email and scrambled password', 'To sign you in and send account emails', 'Supabase (emails are delivered by Brevo)', 'Until you delete your account'],
   ['Learning progress saved to your account', 'To follow you across devices', 'Supabase', 'Until you delete your account'],
   ['Purchase records and payment reference numbers', 'To unlock your courses, give refunds and keep accounts', 'Supabase and Razorpay', 'As long as Indian tax and accounting laws require'],
@@ -96,6 +97,10 @@ const sections = [
           </li>
           <li>
             <strong>Email address</strong> — used solely to send you a copy of the resume.
+          </li>
+          <li>
+            <strong>A scrambled record of the request</strong> — a one-way code made from your email address and your IP address, kept for
+            two days so the form cannot be used to send large numbers of emails. Neither can be read back from it.
           </li>
         </ul>
         <p className="mt-3">
@@ -353,12 +358,13 @@ const sections = [
     body: (
       <>
         <p>
-          To deliver the resume by email, the website or app sends your name and email address to <strong>EmailJS</strong>, a third-party email delivery service,
-          which processes the request and sends the message. EmailJS's own handling of this data is governed by their privacy policy, available at{' '}
-          <a href="https://www.emailjs.com/legal/privacy-policy/" className="underline hover:text-fg" target="_blank" rel="noreferrer">
-            emailjs.com/legal/privacy-policy
+          To deliver the resume by email, the website or app sends your name and email address to a small server function hosted on{' '}
+          <strong>Supabase</strong>, which passes them to <strong>Brevo</strong>, the email delivery service that sends the message from
+          shivam-soni.com. Brevo handles this data under its privacy policy (
+          <a href="https://www.brevo.com/legal/privacypolicy/" className="underline hover:text-fg" target="_blank" rel="noreferrer">
+            brevo.com/legal/privacypolicy
           </a>
-          .
+          ). If you reply to the email, your reply reaches Shivam Soni through Cloudflare's email forwarding.
         </p>
         <p className="mt-3">
           Messages you type into the AI assistant are handled by Cloudflare and Anthropic, as described in the AI Assistant section above.
@@ -397,9 +403,10 @@ const sections = [
     body: (
       <>
         <p>
-          <strong>Get Resume:</strong> Shivam Soni does not keep a database of names or email addresses submitted through this feature. Your
-          information is sent directly to EmailJS to send the email and is not separately stored, logged, or retained beyond what EmailJS itself
-          keeps in its standard email delivery logs.
+          <strong>Get Resume:</strong> Shivam Soni does not keep a database of names or email addresses submitted through this feature. They are
+          passed to Brevo to send the email and are not stored beyond what Brevo keeps in its standard delivery logs. The only record kept is a
+          scrambled (hashed) code made from the email address and IP address, which cannot be turned back into either, and which is deleted
+          after two days.
         </p>
         <p className="mt-3">
           <strong>Learning Lab accounts:</strong> your account information and progress are kept for as long as your account exists. When you ask
@@ -438,7 +445,8 @@ const sections = [
           30 days. If you are not satisfied with the response, you may complain to the Data Protection Board of India.
         </p>
         <p className="mt-3">
-          For "Get Resume" requests, we will help you or direct you to EmailJS's own data request process.
+          For "Get Resume" requests, there is nothing to look up beyond the two-day scrambled record described above; we will help you with
+          anything Brevo holds about the email that was sent.
         </p>
       </>
     ),
@@ -522,6 +530,13 @@ const sections = [
         </p>
         <p className="mt-3">
           <strong>What changed in this version ({EFFECTIVE_DATE}):</strong>
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>"Get Resume" emails are now sent from shivam-soni.com through Brevo, by a server function on Supabase, instead of EmailJS.</li>
+          <li>Added the two-day scrambled record that stops the form being used to flood inboxes.</li>
+        </ul>
+        <p className="mt-3">
+          <strong>Changes on November 17, 2026:</strong>
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>The website is now delivered through Cloudflare, in front of GitHub Pages, and Cloudflare forwards emails sent to @shivam-soni.com addresses.</li>

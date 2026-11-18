@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowUpRight, CheckCircle2, FileText, Loader2, Send } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-import { contacts, emailjsConfig, profile } from '../data/content';
+import { contacts, profile } from '../data/content';
+import { SUPABASE_URL } from '../learn/supabase.config';
+
+// Sends the resume from shivam-soni.com through Brevo (see supabase/functions/send-resume).
+const SEND_RESUME_URL = `${SUPABASE_URL}/functions/v1/send-resume`;
 
 const linkedin = contacts.find((c) => c.key === 'linkedin');
 import Modal from './Modal';
@@ -152,6 +155,7 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function ResumeModal({ open, onClose }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [company, setCompany] = useState(''); // hidden from people; bots fill it in
   const [error, setError] = useState('');
   const [state, setState] = useState('form'); // form | sending | sent
   const [pages, setPages] = useState(null);
@@ -161,6 +165,7 @@ export default function ResumeModal({ open, onClose }) {
     if (open) {
       setName('');
       setEmail('');
+      setCompany('');
       setError('');
       setState('form');
     }
@@ -173,16 +178,25 @@ export default function ResumeModal({ open, onClose }) {
     setError('');
     setState('sending');
     try {
-      await emailjs.send(
-        emailjsConfig.serviceId,
-        emailjsConfig.templateId,
-        { to_email: email.trim(), to_name: name.trim() },
-        { publicKey: emailjsConfig.publicKey }
-      );
+      const res = await fetch(SEND_RESUME_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), company }),
+        signal: AbortSignal.timeout(30000),
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(out.error || 'Something went wrong sending the email. Please try again.');
       setState('sent');
     } catch (err) {
-      console.error('EmailJS error:', err);
-      setError('Something went wrong sending the email. Please try again.');
+      const timedOut = err?.name === 'TimeoutError';
+      const offline = err instanceof TypeError;
+      setError(
+        timedOut
+          ? 'This is taking too long. Please try again in a minute.'
+          : offline
+            ? 'Could not reach the server. Check your connection and try again.'
+            : err.message
+      );
       setState('form');
     }
   };
@@ -218,6 +232,17 @@ export default function ResumeModal({ open, onClose }) {
             <ResumePreview onPages={setPages} />
 
             <form onSubmit={submit} noValidate>
+              {/* Spam trap: hidden from people and screen readers, so only bots fill it in. */}
+              <input
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                className="absolute -left-[9999px] w-px h-px opacity-0"
+              />
               <div className="grid sm:grid-cols-2 gap-3 mb-3">
                 <label className="sr-only" htmlFor="resume-name">Your name</label>
                 <input id="resume-name" type="text" required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} />
@@ -247,7 +272,7 @@ export default function ResumeModal({ open, onClose }) {
                 {state === 'sending' ? 'Sending…' : 'Send Resume to My Email'}
               </motion.button>
               <p className="text-[11px] sm:text-[10px] text-subtle mt-4 text-center">
-                Your email is only used to send this resume and won't be stored or shared.{' '}
+                Your email is only used to send this resume. It isn't stored or shared; a scrambled record is kept for two days to stop misuse.{' '}
                 <a href="privacy.html" className="underline hover:text-muted">Privacy policy</a>
               </p>
             </form>

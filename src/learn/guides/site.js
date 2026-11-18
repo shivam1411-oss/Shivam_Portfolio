@@ -188,11 +188,11 @@ export const siteGuide = {
     terms: ['component', 'chunk'],
     mistakes: [
       ['Putting the real number in the visible text', 'Show the masked value, keep the full number only in the link.'],
-      ['Treating every key in the code as secret', 'EmailJS public keys are designed for browsers; API keys like Claude\'s are not.'],
+      ['Putting an email service\'s API key in the website', 'Anyone could read it and send email as you. The resume is sent by a server function that keeps the Brevo key secret.'],
     ],
     faq: [
       ['Can bots still find the number?', 'A determined scraper reading links could, but masking stops casual copying and on-screen exposure.'],
-      ['How is the resume emailed?', 'EmailJS sends it from the browser using a template you set up in its dashboard.'],
+      ['How is the resume emailed?', 'The form calls a Supabase function, which attaches the PDF and sends it through Brevo from shivam-soni.com.'],
     ],
     recap: ['value is what people see; href is where the tap goes.', 'Heavy features (PDF) load only when opened.', 'Public keys can live in the site; secret keys cannot.'],
   },

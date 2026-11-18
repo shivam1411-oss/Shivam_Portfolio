@@ -547,6 +547,15 @@ export const changelog = [
     commits: ['76780df'],
     lessons: ['contact', 'data'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-18',
+    category: 'feature',
+    title: 'Resume emails sent from shivam-soni.com',
+    plain: 'The Get Resume form now sends the resume through Brevo from a shivam-soni.com address, by a small server function on Supabase, instead of EmailJS. Replies reach the inbox through Cloudflare, and the form is protected against being used to flood inboxes.',
+    commits: ['fce9d9d'],
+    lessons: ['contact'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
