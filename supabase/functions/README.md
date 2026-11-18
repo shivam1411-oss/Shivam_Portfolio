@@ -62,11 +62,20 @@ change that uses it goes live:
 2. **Sender:** Brevo → Senders, Domains & Dedicated IPs → **Senders** → add `resume@shivam-soni.com`
    (the domain is already authenticated, so no confirmation email is needed).
 3. **API key:** Brevo → SMTP & API → **API Keys** → generate one, then Supabase → Edge Functions → **Secrets** →
-   add `BREVO_API_KEY`. Optional: `RESUME_FROM` and `RESUME_REPLY_TO` to change the two addresses.
-4. **Deploy:** Edge Functions → Deploy a new function → Via Editor, named exactly `send-resume`, with
+   add `BREVO_API_KEY`. Use an API key (`xkeysib-…`), not an SMTP key (`xsmtpsib-…`). Optional: `RESUME_FROM` and
+   `RESUME_REPLY_TO` to change the two addresses.
+4. **IP blocking off:** Brevo → Security → **Authorised IPs** (`https://app.brevo.com/security/authorised_ips`) →
+   deactivate blocking of unknown IP addresses. Supabase sends from changing IPv6 addresses, so adding one address
+   does not help: the next email comes from another and Brevo rejects it with
+   `401 "We have detected you are using an unrecognised IP address"`.
+5. **Deploy:** Edge Functions → Deploy a new function → Via Editor, named exactly `send-resume`, with
    `send-resume/index.ts`; then turn **off** "Verify JWT". Or: `supabase functions deploy send-resume --no-verify-jwt`.
-5. **Check without sending anything:** a request with the hidden `company` field filled is accepted but sends no email:
+6. **Check without sending anything:** a request with the hidden `company` field filled is accepted but sends no email:
    ```bash
    curl -s -X POST https://jiwvwgrtxgmrinikmgyb.supabase.co/functions/v1/send-resume -H 'Content-Type: application/json' -d '{"name":"Test","email":"test@example.com","company":"check"}'
    ```
    It should print `{"ok":true}`.
+7. **Send one for real:** request the resume from the live site with your own address. If the form says "The email
+   could not be sent", open Edge Functions → `send-resume` → **Logs** and find the line starting
+   `Brevo rejected the email`: it gives Brevo's status code and reason (401 key or IP, 400 sender, 403 account or
+   key permission).
