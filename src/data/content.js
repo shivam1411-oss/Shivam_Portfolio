@@ -168,9 +168,3 @@ export const experience = [
   },
 ];
 
-// EmailJS public identifiers (safe to ship client-side).
-export const emailjsConfig = {
-  publicKey: 'RukU2P1HSI2LZ3cKh',
-  serviceId: 'service_eo2x6tn',
-  templateId: 'template_jt1abda',
-};

@@ -321,7 +321,7 @@
      "goals": [
       "How pop-ups (modals) open and close",
       "Masked phone numbers",
-      "Sending the resume with EmailJS, and the PDF preview"
+      "Sending the resume through a server function, and the PDF preview"
      ],
      "free": true,
      "exercises": []

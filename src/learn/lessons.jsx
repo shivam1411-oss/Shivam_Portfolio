@@ -67,7 +67,7 @@ createRoot(document.getElementById('root')).render(
           title="What happens when you run npm run build"
           steps={[
             { label: 'You write code', body: 'Components in src/components, text in src/data, styles in src/index.css, images and the PDF in public/assets.' },
-            { label: 'npm install', body: 'npm reads package.json and downloads the libraries the site uses (React, Motion, lucide icons, pdf.js, EmailJS) into node_modules/.', code: 'npm install' },
+            { label: 'npm install', body: 'npm reads package.json and downloads the libraries the site uses (React, Motion, lucide icons, pdf.js) into node_modules/.', code: 'npm install' },
             { label: 'vite build', body: 'Vite converts JSX into plain JavaScript, generates only the Tailwind CSS you actually use, shrinks everything and gives files unique names so browsers never use a stale copy.', code: 'npm run build   # = vite build' },
             { label: 'dist/', body: 'The output: index.html, privacy.html, learn.html, and an assets/ folder of bundled JS and CSS. Nothing in dist/ is edited by hand; it is rebuilt every time.' },
             { label: 'Published', body: 'GitHub Actions runs the same build on every push to main and puts dist/ on GitHub Pages. You will see this in the "Shipping it" lessons.' },
@@ -269,7 +269,7 @@ export const experience = [
         <H>Where each thing lives</H>
         <Code file="src/data/">{`
 content.js   // profile, contacts (masked phones), nav links, hero pillars,
-             // skills, education, experience, EmailJS ids
+             // skills, education, experience
 impact.js    // "Impact by the numbers" result cards and delivery steps
 playbook.js  // the five Analytical Lab methods: formula, sliders, maths, SQL`}</Code>
       </>
@@ -1118,7 +1118,7 @@ const significant = Math.abs(r.z) >= 1.96;   // 95% confidence`}</Code>
     title: 'Contact, resume and email',
     minutes: 7,
     commits: ['63eaa96', 'd1fd86a', 'd18b71e'],
-    goals: ['How pop-ups (modals) open and close', 'Masked phone numbers', 'Sending the resume with EmailJS, and the PDF preview'],
+    goals: ['How pop-ups (modals) open and close', 'Masked phone numbers', 'Sending the resume through a server function, and the PDF preview'],
     body: () => (
       <>
         <P>
@@ -1137,11 +1137,11 @@ const significant = Math.abs(r.z) >= 1.96;   // 95% confidence`}</Code>
 const pdfjs = await import('pdfjs-dist');
 const pdf = await pdfjs.getDocument(profile.resume).promise;
 
-// Email: EmailJS sends the message straight from the browser
-await emailjs.send(serviceId, templateId, { ...fields }, { publicKey });`}</Code>
-        <Callout title="Are the EmailJS ids a secret?">
-          No. EmailJS public keys are designed to be in browser code; the service controls which templates and domains can use them. Compare this with the Claude API key in
-          the next lesson, which must never be in the site.
+// Email: a Supabase function sends it through Brevo, from shivam-soni.com
+await fetch(SEND_RESUME_URL, { method: 'POST', body: JSON.stringify({ name, email }) });`}</Code>
+        <Callout title="Why a server function, not the browser?">
+          Sending email needs Brevo's API key, which must never be in the website, just like the Claude API key in the next lesson. The function keeps the key
+          on the server, attaches the PDF, and limits how often one address or visitor can ask, so nobody can use the form to flood an inbox.
         </Callout>
       </>
     ),

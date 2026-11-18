@@ -78,7 +78,7 @@ const TREE = {
         { name: 'Contact', file: 'src/components/Contact.jsx', does: 'Every way to get in touch, as cards on the page, with a Get Resume button.' },
         { name: 'Footer', file: 'src/components/Footer.jsx', does: 'Bottom of the page with links, copyright and back-to-top.' },
         { name: 'ContactModal', file: 'src/components/ContactModal.jsx', does: 'The "Let\'s Connect" pop-up with masked phone numbers.' },
-        { name: 'ResumeModal', file: 'src/components/ResumeModal.jsx', does: 'Previews the resume PDF and emails it via EmailJS.' },
+        { name: 'ResumeModal', file: 'src/components/ResumeModal.jsx', does: 'Previews the resume PDF and emails it through a Supabase function that sends it with Brevo.' },
         { name: 'ChatWidget', file: 'src/components/ChatWidget.jsx', does: '"Ask my AI": the chat bubble. Only appears when the Worker address is configured.' },
       ],
     },
