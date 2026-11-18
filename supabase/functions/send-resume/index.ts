@@ -57,6 +57,48 @@ function toBase64(bytes: Uint8Array) {
   return btoa(s);
 }
 
+// The email itself: a short summary a recruiter can scan without opening the PDF.
+// Keep these facts in step with resume/resume.html.
+const SITE = 'https://shivam-soni.com/';
+const LINKEDIN = 'https://www.linkedin.com/in/shivamsoni-strategy';
+export const EMAIL_SUBJECT = 'Resume: Shivam Soni, Business & Collection Strategy (7+ years, consumer credit)';
+const HIGHLIGHTS: [string, string][] = [
+  ['Current role', 'Manager, Business and Collection Strategy at OneCard (FPL Technologies), Pune'],
+  ['Experience', '7+ years in financial services and consumer credit at OneCard, HDFC Bank and Bandhan Bank'],
+  ['Focus', 'Portfolio and collection strategy, champion-challenger testing, CRM product rollout, Agile delivery'],
+  ['Results', 'Collection efficiency up from 50% to 65%, forward roll rates down 15%, DSO down 12 days'],
+  ['Tools', 'SQL, Power BI, Python, Advanced Excel'],
+  ['Education', 'MBA in Finance'],
+];
+const SIGNATURE = ['Shivam Soni', 'Manager, Business and Collection Strategy', 'Pune, India'];
+
+export function emailText(name: string) {
+  return [
+    `Hi ${name},`,
+    'Thank you for your interest. My resume is attached as a PDF (Shivam-Soni-Resume.pdf).',
+    `In brief:\n${HIGHLIGHTS.map(([k, v]) => `- ${k}: ${v}`).join('\n')}`,
+    'If the role looks like a fit, I would be glad to set up a call. Reply to this email with the job description or a few times that suit you, and I will get back to you promptly.',
+    `Portfolio: ${SITE}\nLinkedIn: ${LINKEDIN}`,
+    `Best regards,\n${SIGNATURE.join('\n')}`,
+  ].join('\n\n');
+}
+
+export function emailHtml(name: string) {
+  const p = 'margin:0 0 14px';
+  const rows = HIGHLIGHTS.map(
+    ([k, v]) => `<tr><td style="padding:4px 12px 4px 0;vertical-align:top;white-space:nowrap;color:#555"><b>${escapeHtml(k)}</b></td><td style="padding:4px 0">${escapeHtml(v)}</td></tr>`,
+  ).join('');
+  return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#1a1a1a;max-width:600px">
+<p style="${p}">Hi ${escapeHtml(name)},</p>
+<p style="${p}">Thank you for your interest. My resume is attached as a PDF (Shivam-Soni-Resume.pdf).</p>
+<p style="margin:0 0 6px"><b>In brief</b></p>
+<table role="presentation" style="border-collapse:collapse;margin:0 0 14px;font-size:14px">${rows}</table>
+<p style="${p}">If the role looks like a fit, I would be glad to set up a call. Reply to this email with the job description or a few times that suit you, and I will get back to you promptly.</p>
+<p style="${p}"><a href="${SITE}" style="color:#0f766e">Portfolio</a> &nbsp;·&nbsp; <a href="${LINKEDIN}" style="color:#0f766e">LinkedIn</a></p>
+<p style="margin:0">Best regards,<br>${SIGNATURE.map(escapeHtml).join('<br>')}</p>
+</div>`;
+}
+
 export async function handler(req: Request, rawEnv: Env, f: typeof fetch = fetch): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
   if (req.method !== 'POST') return json(req, 405, { error: 'Use POST.' });
@@ -100,7 +142,6 @@ export async function handler(req: Request, rawEnv: Env, f: typeof fetch = fetch
 
   const from = clean(env.RESUME_FROM) || 'resume@shivam-soni.com';
   const replyTo = clean(env.RESUME_REPLY_TO) || 'hello@shivam-soni.com';
-  const safeName = escapeHtml(name);
   const sent = await f('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers: { 'api-key': env.BREVO_API_KEY, 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -108,9 +149,9 @@ export async function handler(req: Request, rawEnv: Env, f: typeof fetch = fetch
       sender: { name: 'Shivam Soni', email: from },
       to: [{ email, name }],
       replyTo: { email: replyTo, name: 'Shivam Soni' },
-      subject: "Shivam Soni's resume",
-      htmlContent: `<p>Hi ${safeName},</p><p>Thank you for your interest. My resume is attached as a PDF.</p><p>You can reply to this email to reach me directly, or see more at <a href="https://shivam-soni.com/">shivam-soni.com</a> and on <a href="https://www.linkedin.com/in/shivamsoni-strategy">LinkedIn</a>.</p><p>Best regards,<br>Shivam Soni<br>Business &amp; Collection Strategy</p>`,
-      textContent: `Hi ${name},\n\nThank you for your interest. My resume is attached as a PDF.\n\nReply to this email to reach me directly, or see more at https://shivam-soni.com/ and https://www.linkedin.com/in/shivamsoni-strategy\n\nBest regards,\nShivam Soni\nBusiness & Collection Strategy`,
+      subject: EMAIL_SUBJECT,
+      htmlContent: emailHtml(name),
+      textContent: emailText(name),
       attachment: [{ name: 'Shivam-Soni-Resume.pdf', content: attachment }],
       tags: ['resume'],
     }),
