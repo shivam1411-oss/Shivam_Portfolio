@@ -556,6 +556,15 @@ export const changelog = [
     commits: ['fce9d9d'],
     lessons: ['contact'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-18',
+    category: 'privacy',
+    title: 'AI training bots asked to stay out',
+    plain: 'The site now tells AI crawlers that its content may not be used to train AI models, through robots.txt, ai.txt, a text-and-data-mining reservation and tags on every page, while search engines and AI assistants can still read it. Cloudflare turns away known AI crawlers before they reach a page.',
+    commits: ['1720865'],
+    lessons: ['deploy'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;

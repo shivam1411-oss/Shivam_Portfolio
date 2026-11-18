@@ -1,0 +1,6 @@
+# ai.txt for shivam-soni.com (https://site.spawning.ai/spawning-ai-txt)
+# No text, images, code or other media on this site may be used to train AI models.
+# Search engines and AI search/assistants that read pages to answer questions are covered by robots.txt.
+
+User-Agent: *
+Disallow: /
