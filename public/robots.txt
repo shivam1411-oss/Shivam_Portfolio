@@ -1,0 +1,39 @@
+# robots.txt for shivam-soni.com
+#
+# Search engines and AI search/assistants (which read a page to answer a question and link back) are welcome.
+# Collecting this site's content to train AI models is not. See "Prohibited Use" in the Privacy Policy:
+# https://shivam-soni.com/privacy.html
+#
+# Content signals (https://contentsignals.org): search=yes, ai-input=yes, ai-train=no.
+
+User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+Allow: /
+
+# ---- AI training crawlers: not allowed anywhere on the site ----
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: Meta-ExternalAgent
+User-agent: FacebookBot
+User-agent: Amazonbot
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: Diffbot
+User-agent: AI2Bot
+User-agent: Ai2Bot-Dolma
+User-agent: PanguBot
+User-agent: Timpibot
+User-agent: Webzio-Extended
+User-agent: omgili
+User-agent: omgilibot
+User-agent: ImagesiftBot
+User-agent: img2dataset
+User-agent: Kangaroo Bot
+User-agent: ICC-Crawler
+User-agent: VelenPublicWebCrawler
+Disallow: /

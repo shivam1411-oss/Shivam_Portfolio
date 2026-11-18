@@ -1304,6 +1304,29 @@ jobs:
         <Callout title="Why vite.config.js sets base: './'">
           Relative paths make the built files work wherever they are hosted: the custom domain today, or the old <F>/Shivam_Portfolio/</F> sub-folder address.
         </Callout>
+        <H>Keeping AI training bots out</H>
+        <P>
+          Search engines and AI assistants that answer a question about you are welcome; bots that copy the site to train AI models are not. Anything in{' '}
+          <F>public/</F> is copied to the site as it is, so the rules live there, and every page repeats them in its <F>{'<head>'}</F>.
+        </P>
+        <Code file="public/robots.txt">{`
+User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+Allow: /
+
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: CCBot
+# …and the other AI training crawlers
+Disallow: /`}</Code>
+        <Code file="index.html">{`
+<meta name="robots" content="noai, noimageai" />
+<meta name="tdm-reservation" content="1" />`}</Code>
+        <Callout title="A request, and a wall">
+          <F>robots.txt</F>, <F>ai.txt</F>, <F>.well-known/tdmrep.json</F> and the tags are requests: reputable crawlers obey them, others may not. The wall is Cloudflare, which
+          sits in front of the site and turns away known AI crawlers before they reach a page. <F>Google-Extended</F> only stops Gemini training; Google Search still works.
+        </Callout>
       </>
     ),
     quiz: [
