@@ -565,6 +565,14 @@ export const changelog = [
     commits: ['1720865'],
     lessons: ['deploy'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'design',
+    title: 'New profile photo',
+    plain: 'A new professional portrait replaces the initials placeholder: a head-to-chest crop in the opening section and a head-and-shoulders crop in the small round avatars. The link-preview card shown on LinkedIn and WhatsApp uses it too.',
+    commits: ['526d6f6'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;

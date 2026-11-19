@@ -4,9 +4,11 @@ export const profile = {
   role: 'Manager, Business & Collection Strategy',
   location: 'Pune, India',
   relocation: 'Open to relocation: Gurgaon or Indore',
-  // No photo for now: the Avatar component shows the initials instead. To add one, put the file in
-  // public/assets/ and set this to its path, e.g. 'assets/profile-photo.jpg'.
-  photo: '',
+  // Profile photo, two crops of the same picture in public/assets/: `photo` (head to chest, 720px) for the
+  // large hero and `photoFace` (head and shoulders, 256px) for the small round avatars. Set `photo` to ''
+  // and the Avatar component shows the initials instead.
+  photo: 'assets/profile-photo.jpg',
+  photoFace: 'assets/profile-photo-face.jpg',
   // Built from resume/resume.html by `npm run resume`; change the month here when you rebuild it.
   resume: 'assets/Shivam-Soni-Resume.pdf',
   resumeUpdated: 'November 2026',

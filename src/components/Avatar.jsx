@@ -7,12 +7,16 @@ const initials = profile.name
   .toUpperCase();
 
 /**
- * The profile picture, wherever it appears. While `profile.photo` is empty (no photo chosen yet), a plain
- * placeholder with the initials is shown instead. It is an SVG so it scales to any size it is given.
- * To use a photo again: put the file in public/assets/ and set `photo` in src/data/content.js.
+ * The profile picture, wherever it appears. `crop="face"` (the default, for the small round avatars) uses the
+ * tight head-and-shoulders crop; `crop="full"` (the hero) uses the larger head-to-chest one. While
+ * `profile.photo` is empty, a plain placeholder with the initials is shown instead. It is an SVG so it scales
+ * to any size it is given. The photo paths are set in src/data/content.js.
  */
-export default function Avatar({ className = 'w-full h-full', alt = '', imgClassName = 'object-cover' }) {
-  if (profile.photo) return <img src={profile.photo} alt={alt} className={`${className} ${imgClassName}`} />;
+export default function Avatar({ className = 'w-full h-full', alt = '', imgClassName = 'object-cover', crop = 'face' }) {
+  if (profile.photo) {
+    const src = crop === 'face' && profile.photoFace ? profile.photoFace : profile.photo;
+    return <img src={src} alt={alt} decoding="async" className={`${className} ${imgClassName}`} />;
+  }
   return (
     <svg viewBox="0 0 100 100" role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true} className={`${className} bg-surface-2 text-subtle`}>
       <text x="50" y="52" textAnchor="middle" dominantBaseline="middle" fontSize="34" fontWeight="800" letterSpacing="1" fill="currentColor">
