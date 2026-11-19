@@ -583,6 +583,15 @@ export const changelog = [
     commits: ['3d61661', '9be2a36', 'e00ce0d', 'c2caf0d', '6a4ca84'],
     lessons: ['stag'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'learning',
+    title: 'A Cloudflare & Web Security course, and Learn the Code catches up',
+    plain: 'A new course in the Learning Lab explains how this site is delivered and protected, using its real setup: DNS and the Cloudflare proxy, caching and headers, robots.txt and blocking AI crawlers without losing search, secret keys, and the abuse-proof resume form. The first module is free. Learn the Code gains a lesson on the stag hidden in the code, and its lessons on contact, data, deploying and loading speed now cover the resume preview, the profile photo, Cloudflare and self-hosted fonts.',
+    commits: ['a976dad', 'b30d8bd'],
+    lessons: ['stag', 'contact', 'data', 'deploy', 'splitting'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
