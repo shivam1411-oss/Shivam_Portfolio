@@ -150,7 +150,7 @@ export const pythonSteps = {
       title: 'What happens on name = input("Your name: ")',
       stages: [
         ['The question is shown', 'The text inside the brackets appears as a prompt.'],
-        ['Python takes one line of typing', 'In this Lab it reads the next line from the Input box under the code: one line for each input().'],
+        ['Python takes one line of typing', 'In CodeJack it reads the next line from the Input box under the code: one line for each input().'],
         ['The typing comes back as text', 'Even if you typed 12000, Python receives the string "12000".'],
         ['The text is stored', 'The = stores it under the name on the left.'],
         ['Convert before doing maths', 'Wrap it in int() or float() to turn the text into a number.'],

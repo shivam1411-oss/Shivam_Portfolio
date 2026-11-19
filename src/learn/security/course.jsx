@@ -339,7 +339,7 @@ Bot Preference Sync    Off  (keeps the per-crawler choices from being overwritte
           do is limited on the service's side. A <Term id="secretkey">secret key</Term> proves you are the owner and can do anything.
         </P>
         <Code file="src/learn/supabase.config.js">{`
-// Public Supabase settings for the Learning Lab. The publishable key is meant to be in the website:
+// Public Supabase settings for CodeJack. The publishable key is meant to be in the website:
 export const SUPABASE_URL = 'https://jiwvwgrtxgmrinikmgyb.supabase.co';
 export const SUPABASE_KEY = 'sb_publishable_…';`}</Code>
         <P>

@@ -23,7 +23,7 @@
 
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <!-- Dark launch screen with the "SS" icon, matching the site -->
+        <!-- Dark launch screen showing the icon's foreground layer: the stag, matching the site -->
         <item name="android:background">@color/ic_launcher_background</item>
         <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>

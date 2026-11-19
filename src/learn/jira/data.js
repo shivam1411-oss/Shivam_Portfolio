@@ -44,7 +44,7 @@ export const workItems = [
   w('COLL-16', 'Bug', 'Export to Excel drops the last row', 'To Do', 'Low', null, null, 1, '2026-10-29', '2026-10-29', ['reporting']),
   w('COLL-17', 'Task', 'Archive closed 2024 accounts', 'To Do', 'Lowest', null, null, 2, '2026-07-20', '2026-07-20', ['data']),
   w('COLL-18', 'Story', 'Field visit route planner for 90+ accounts', 'To Do', 'Medium', null, null, 8, '2026-10-05', '2026-10-05', ['field']),
-  w('PORT-1', 'Epic', 'Learning Lab', 'In Progress', 'High', 'Shivam', null, null, '2026-10-25', '2026-11-07', ['learning']),
+  w('PORT-1', 'Epic', 'CodeJack', 'In Progress', 'High', 'Shivam', null, null, '2026-10-25', '2026-11-07', ['learning']),
   w('PORT-2', 'Story', 'Python course with runnable exercises', 'Done', 'High', 'Shivam', 'Sprint 14', 8, '2026-10-26', '2026-11-06', ['learning', 'python'], { parent: 'PORT-1' }),
   w('PORT-3', 'Story', 'Data courses: pandas, SQL and charts', 'Done', 'High', 'Shivam', 'Sprint 15', 8, '2026-11-01', '2026-11-06', ['learning', 'python'], { parent: 'PORT-1' }),
   w('PORT-4', 'Story', 'Jira, React and Kubernetes courses', 'In Progress', 'Medium', 'Shivam', 'Sprint 15', 13, '2026-11-07', '2026-11-07', ['learning'], { parent: 'PORT-1' }),

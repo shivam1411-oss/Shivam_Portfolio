@@ -1,4 +1,4 @@
-// Supabase Edge Function: create a Razorpay order for a Learning Lab course.
+// Supabase Edge Function: create a Razorpay order for a CodeJack course.
 //
 // POST /functions/v1/create-order   body: { "product": "python" | … | "all" }
 // Header: Authorization: Bearer <the signed-in learner's access token>

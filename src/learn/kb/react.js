@@ -15,7 +15,7 @@ export const reactKb = {
       ],
       code: code`
         function Greeting() {
-          return <p>Welcome to the Learning Lab!</p>;
+          return <p>Welcome to CodeJack!</p>;
         }
 
         function App() {
@@ -537,7 +537,7 @@ export const reactKb = {
       title: 'Routing and project structure',
       summary: 'Real apps have many pages. A router maps URLs to components, and a clear folder structure keeps a growing codebase manageable.',
       body: [
-        '**React Router** (or a framework like Next.js) maps paths like `/products/42` to components and reads parameters with hooks such as `useParams`. Links change the URL without reloading the page. This Learning Lab uses a tiny hash router (`#/c/react`).',
+        '**React Router** (or a framework like Next.js) maps paths like `/products/42` to components and reads parameters with hooks such as `useParams`. Links change the URL without reloading the page. CodeJack uses a tiny hash router (`#/c/react`).',
         'Organise by feature (`features/cart/`, `features/search/`) rather than by file type once the app grows. Keep components small, put API calls in one place, and colocate tests with code.',
       ],
       code: code`
@@ -645,7 +645,7 @@ export const reactKb = {
       summary: 'React can keep urgent updates (typing) fast while slower updates (filtering a big list) happen in the background.',
       body: [
         'Wrap a non-urgent update in `startTransition` from `useTransition()`: React renders it at lower priority and can interrupt it if you keep typing; `isPending` shows a hint. `useDeferredValue(value)` gives a lagging copy of a value to render heavy UI from.',
-        '**Suspense** shows a fallback while part of the tree waits for code or data, and keeps the rest interactive. Combined with lazy loading (`React.lazy`) it splits big apps into chunks, as this Learning Lab does for the editor and Python runtime.',
+        '**Suspense** shows a fallback while part of the tree waits for code or data, and keeps the rest interactive. Combined with lazy loading (`React.lazy`) it splits big apps into chunks, as CodeJack does for the editor and Python runtime.',
       ],
       code: code`
         const CITIES = Array.from({ length: 8000 }, (_, i) => "City " + i + " " + ["Pune", "Agra", "Leh", "Ooty", "Puri"][i % 5]);

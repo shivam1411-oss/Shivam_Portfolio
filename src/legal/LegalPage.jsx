@@ -50,7 +50,7 @@ function LegalPage({ title, accent, sections }) {
           <A href="terms.html">Terms of Use</A>
           <A href="refund.html">Refund &amp; Cancellation</A>
           <A href="privacy.html">Privacy Policy</A>
-          <A href="learn.html">Learning Lab</A>
+          <A href="learn.html">CodeJack</A>
         </nav>
         <div className="mt-10 pt-8 border-t border-line text-center">
           <p className="text-[10px] text-subtle font-bold uppercase tracking-[0.2em]">© 2026 {LEGAL.owner}. All rights reserved.</p>

@@ -135,7 +135,7 @@ export const glossary = {
   versioncode: { term: 'versionCode', def: 'A whole number inside an Android app that must go up with every update. Android refuses to install an APK whose versionCode is not higher than the installed one.' },
   signing: { term: 'App signing', def: 'Every Android app is stamped with a private key. A phone only accepts an update signed with the same key as the app it already has.' },
   opengraph: { term: 'Open Graph', def: 'Tags in a page\'s <head> (og:title, og:image…) that WhatsApp, LinkedIn and X read to show a preview card when a link is shared.' },
-  supabase: { term: 'Supabase', def: 'A hosted service that gives the Learning Lab a Postgres database, sign-in, file storage and small server functions, without running a server yourself.' },
+  supabase: { term: 'Supabase', def: 'A hosted service that gives CodeJack a Postgres database, sign-in, file storage and small server functions, without running a server yourself.' },
   rls: { term: 'Row-level security', def: 'Database rules (policies) checked on every read and write, such as "you may only see rows with your own user id". They keep data private even though the website\'s key is public.' },
   token: { term: 'Access token', def: 'A short-lived signed pass the browser gets after you sign in. It is sent with requests so the database and server functions know who you are.' },
   razorpay: { term: 'Razorpay', def: 'An Indian payment company. Its checkout window takes card, UPI and bank payments, and its API lets a server create orders, check payments and give refunds.' },

@@ -25,10 +25,10 @@ Content lives in `src/data/content.js`; theme colors are CSS variables at the to
 
 Every change to the website since the first page is listed in `src/data/changelog.js`, in plain words with its
 commits. The portfolio shows it as the **Updates** section (`#updates`, newest first, filterable by period and type)
-and the Learning Lab shows the same list at `learn.html#/timeline`. When you ship a change, add an entry at the
+and CodeJack shows the same list at `learn.html#/timeline`. When you ship a change, add an entry at the
 bottom of the list: `{ phase, date, category, title, plain, commits, lessons? }`.
 
-## Learning Lab
+## CodeJack
 
 `learn.html` opens on a landing page that takes the portfolio apart into its layers (an interactive 3D exploded view,
 each layer linked to the lesson that explains it), then hosts interactive courses, each split into modules and lessons with a quiz:
@@ -73,7 +73,7 @@ cluster, JQL runs in the sandbox), key points, a real-world use from outside col
 Readers can search, filter by level and mark topics as understood (saved in the browser). A topic is
 `{ id, level, title, summary, body, code, lang, run?, points, realWorld, check, lesson? }`.
 
-**Loading speed:** the Lab loads a small catalogue (`src/learn/catalog.generated.json`, written by
+**Loading speed:** CodeJack loads a small catalogue (`src/learn/catalog.generated.json`, written by
 `scripts/gen-learn-catalog.mjs` before every dev start and build) and downloads each course's lessons and each
 knowledge base only when opened. Python and the code editor start loading when a code box nears the screen.
 

@@ -386,7 +386,7 @@ export const siteKb = {
       summary: 'Search engines and social apps read your page\'s metadata. Good titles, descriptions, structure and speed help people find and share it.',
       body: [
         'Each page needs a unique `<title>` and `<meta name="description">`. **Open Graph** and Twitter tags control the preview card when a link is shared on WhatsApp, LinkedIn or X. **Structured data** (JSON-LD) describes things like a person, product or recipe.',
-        'Also: a `sitemap.xml`, a `robots.txt`, canonical URLs to avoid duplicates, descriptive link text, and fast, mobile-friendly pages. Pages you want hidden (like this Learning Lab) use `<meta name="robots" content="noindex">`.',
+        'Also: a `sitemap.xml`, a `robots.txt`, canonical URLs to avoid duplicates, descriptive link text, and fast, mobile-friendly pages. Pages you want hidden (like CodeJack) use `<meta name="robots" content="noindex">`.',
       ],
       code: code`
         <title>Ananya Rao · Product Designer in Bengaluru</title>
@@ -445,7 +445,7 @@ export const siteKb = {
       title: 'Browser storage, Web Workers and offline apps',
       summary: 'Browsers can store data, run code off the main thread, and even work offline: the building blocks of app-like websites.',
       body: [
-        '**localStorage** keeps small key-value strings per site (this Lab saves your progress there); **IndexedDB** stores larger structured data; cookies are sent to the server with every request. **Web Workers** run heavy code (like the Python interpreter here) without freezing the page.',
+        '**localStorage** keeps small key-value strings per site (CodeJack saves your progress there); **IndexedDB** stores larger structured data; cookies are sent to the server with every request. **Web Workers** run heavy code (like the Python interpreter here) without freezing the page.',
         '**Service workers** sit between the page and the network to cache files, enabling offline use and installable **Progressive Web Apps (PWAs)**. **WebAssembly** runs compiled languages like C, Rust or Python (via Pyodide) at near-native speed.',
       ],
       code: code`
@@ -505,7 +505,7 @@ export const siteKb = {
       title: 'Rendering strategies: CSR, SSR, SSG and islands',
       summary: 'Where HTML is produced changes speed, SEO and cost. Pick per page: static, server-rendered, client-rendered or a mix.',
       body: [
-        '**CSR** (client-side rendering): the browser downloads JavaScript that builds the page, which suits app-like tools (this Lab). **SSG** (static site generation): HTML built at deploy time, fastest for content that rarely changes. **SSR** (server-side rendering): HTML built per request for fresh, personalised pages, then **hydrated** to become interactive.',
+        '**CSR** (client-side rendering): the browser downloads JavaScript that builds the page, which suits app-like tools (CodeJack). **SSG** (static site generation): HTML built at deploy time, fastest for content that rarely changes. **SSR** (server-side rendering): HTML built per request for fresh, personalised pages, then **hydrated** to become interactive.',
         '**Islands architecture** (Astro) ships static HTML with small interactive islands; **React Server Components** (Next.js) stream server-rendered parts and send less JavaScript. **Edge rendering** runs SSR close to users. Choose by how often content changes and how interactive it is.',
       ],
       code: code`
@@ -572,7 +572,7 @@ export const siteKb = {
       `,
       lang: 'js',
       points: ['Types, lint, unit, E2E, visual tests.', 'Pyramid: many fast tests, few slow ones.', 'Automate quality gates in CI.'],
-      realWorld: 'This Learning Lab\'s lessons are verified with Playwright tests that run every example and exercise in a real browser.',
+      realWorld: 'CodeJack\'s lessons are verified with Playwright tests that run every example and exercise in a real browser.',
       check: { q: 'Which test type drives a real browser through a full user journey?', options: ['Unit', 'Lint', 'End-to-end', 'Type check'], answer: 2, why: 'E2E tests behave like a real user.' },
       lesson: 'python-tests',
     },

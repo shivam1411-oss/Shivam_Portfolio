@@ -16,7 +16,7 @@ export const modules = [
   { id: 'speed', title: 'Speed & devices', blurb: 'Making it fast on phones and laying it out for every screen.' },
   { id: 'features', title: 'Features', blurb: 'The Analytical Lab maths, contact pop-up, resume and AI chat.' },
   { id: 'shipping', title: 'Shipping it', blurb: 'Git, automatic deploys to GitHub Pages, and the Android app.' },
-  { id: 'python-lab', title: 'Learning Lab & Python', blurb: 'How the course pages work, and how Python was made to run, get tested and deploy in the browser.' },
+  { id: 'python-lab', title: 'CodeJack & Python', blurb: 'How the course pages work, and how Python was made to run, get tested and deploy in the browser.' },
   { id: 'accounts', title: 'Accounts & payments', blurb: 'Sign-in and synced progress, free and paid lessons, Razorpay payments, and a checkout that never gets stuck.' },
 ];
 
@@ -473,7 +473,7 @@ const toggleTheme = (event) => {
       <>
         <P>
           The code matrix and the cursor trail are drawn on <Term id="canvas">canvases</Term> <B>behind</B> the page. That looks great, but wherever a bright line of code
-          passed under a sentence, the letters and the code blurred together. The fix had to work for every paragraph on the site and in this Lab, in both themes, without
+          passed under a sentence, the letters and the code blurred together. The fix had to work for every paragraph on the site and in CodeJack, in both themes, without
           touching hundreds of components.
         </P>
         <H>One rule, inherited everywhere</H>
@@ -509,7 +509,7 @@ footer {
         <Callout tone="warn" title="The light-theme gloss bug (66be771)">
           The dark Analytical Lab panel has the class <F>bg-[#0d1014]</F>, but also <F>border-white/5</F>. That "/" made the first rule think it was a faint tint, so the
           halo stayed on. In the light theme the halo is <B>white</B>, so every white word on the dark panel got a white glow and looked glossy. The extra rule for{' '}
-          <F>bg-[#…]</F> panels fixed it, and also covered the dark code editors and terminals in this Lab. Try "Halo, old rule" on a dark panel in the playground above.
+          <F>bg-[#…]</F> panels fixed it, and also covered the dark code editors and terminals in CodeJack. Try "Halo, old rule" on a dark panel in the playground above.
         </Callout>
         <P>
           The cursor trail also moved: it now sits just above the matrix (<F>-z-[4]</F>) instead of over everything, and only goes on top on the welcome screen, where
@@ -762,8 +762,8 @@ const [entered, setEntered] = useState(introSeen);
     body: () => (
       <>
         <P>
-          On the welcome screen a gleam slides across "SHIVAM SONI" as you tilt your phone, or move the mouse on a computer. It is the same idea as the glossy glass plaques on
-          the app icon, made with plain CSS and a few lines of JavaScript.
+          On the welcome screen a gleam slides across "SHIVAM SONI" as you tilt your phone, or move the mouse on a computer. It is the same idea as the glossy glass plaques the
+          first app icon had, made with plain CSS and a few lines of JavaScript.
         </P>
         <H>Step 1: paint the text with a gradient</H>
         <P>
@@ -809,8 +809,8 @@ const loop = () => {
           <Term id="reducedmotion">reduced motion</Term> get no moving shine at all.
         </Callout>
         <P>
-          The app icon uses the same look: <F>scripts/app-icon.swift</F> draws "SHIVAM SONI" on three stacked glass plaques with a glossy sheen over the code-matrix tiles, and
-          writes every size Android needs.
+          The first app icon used the same look: "SHIVAM SONI" on three stacked glass plaques with a glossy sheen over the code-matrix tiles. It has since been replaced
+          by the stag (see the Android lesson), but the gleam stayed on the welcome screen.
         </P>
       </>
     ),
@@ -1080,7 +1080,7 @@ useEffect(() => {
         <P>
           Splitting can go too far. Left alone, every icon became its own 0.3 KB file and the home page needed 17 script and style files. Each request can stall on a slow
           connection, so <F>vite.config.js</F> now groups the libraries every page uses into one <F>vendor</F> file and the site's shared pieces into one <F>shared</F> file:
-          the home page went from 17 files to 6, the Learning Lab from 21 to 9.
+          the home page went from 17 files to 6, CodeJack from 21 to 9.
         </P>
         <Code file="vite.config.js">{`
 manualChunks(id) {
@@ -1545,8 +1545,9 @@ defaultConfig {
           A quick check: the app's <F>paid-manifest.json</F> should match the live one.
         </Callout>
         <P>
-          The app icon (code-matrix cubes with "SHIVAM SONI" on stacked glass plaques) is drawn by a Swift script, <F>scripts/app-icon.swift</F>, which writes every icon size
-          Android needs. The lesson "The shine that follows your tilt" explains the matching gleam on the welcome screen.
+          The app icon is drawn by a Swift script, <F>scripts/app-icon.swift</F>, which writes every icon size Android needs. It shows the low-poly stag from the site,
+          ported shape for shape from <F>deerMask.js</F>, in teal to indigo over the code-matrix cubes, with bolder antlers so they survive at 48 pixels. The adaptive
+          icon's foreground layer is the stag alone, and Android's launch screen shows exactly that layer on the dark background, so the app opens on the stag too.
         </P>
       </>
     ),
@@ -1571,18 +1572,18 @@ defaultConfig {
       },
     ],
   },
-  // ---------------------------------------------------------------- Learning Lab & Python
+  // ---------------------------------------------------------------- CodeJack & Python
   {
     id: 'learning-lab',
     module: 'python-lab',
-    title: 'How the Learning Lab is organised',
+    title: 'How CodeJack is organised',
     minutes: 9,
     commits: ['e5f1b85', '1db9d8c'],
     goals: ['How one page holds several courses', 'How the address after # picks what to show', 'How progress is saved per course, and how old progress was kept'],
     body: () => (
       <>
         <P>
-          The learning page started as one course (this one). To add Python, it became a <B>Learning Lab</B>: a landing page, a page listing courses, and inside every course its modules,
+          The learning page started as one course (this one). To add Python, it became a <B>CodeJack</B>: a landing page, a page listing courses, and inside every course its modules,
           lessons, exercises and quizzes. The trick is that the page code never mentions a specific course. It reads them all from one list.
         </P>
         <Code file="src/learn/courses.js" note="To add a third course, write its lessons and add one more entry to this list. The home page, menus and progress bars pick it up automatically.">{`
@@ -1599,7 +1600,7 @@ export const courses = [
 export const lessonHash = (course, lesson) => \`#/c/\${course.id}/\${lesson.id}\`;`}</Code>
         <H>Addresses after the #</H>
         <P>
-          The whole Lab is one HTML file. The part of the address after <F>#</F> (the "hash") decides what to show, and changing it does not reload the page. A small
+          All of CodeJack is one HTML file. The part of the address after <F>#</F> (the "hash") decides what to show, and changing it does not reload the page. A small
           function, <F>parseHash</F>, turns the hash into a <Term id="state">state</Term> object that the app draws.
         </P>
         <RouteExplorer />
@@ -1615,7 +1616,7 @@ const parseHash = () => {
 };`}</Code>
         <H>Keeping your old progress</H>
         <P>
-          Progress lives in <Term id="localstorage">localStorage</Term> under the key <F>learn-progress</F>. Before the Lab, a finished lesson was saved as just{' '}
+          Progress lives in <Term id="localstorage">localStorage</Term> under the key <F>learn-progress</F>. Before CodeJack, a finished lesson was saved as just{' '}
           <F>big-picture</F>. With two courses, ids could clash, so keys now include the course: <F>site/big-picture</F>, <F>python/loops</F>. When the page loads it quietly
           renames old keys, so nothing you finished was lost.
         </P>
@@ -1631,7 +1632,7 @@ const withCourse = (obj = {}) => Object.fromEntries(
     ),
     quiz: [
       {
-        q: 'What do you need to change to add a new course to the Lab?',
+        q: 'What do you need to change to add a new course to CodeJack?',
         options: ['Rewrite LearnApp.jsx', 'Write its lessons and add one entry to src/learn/courses.js', 'Create a new HTML page', 'Change the deploy workflow'],
         answer: 1,
         why: 'The pages are generic: they draw whatever courses the list contains.',
@@ -1884,7 +1885,7 @@ worker.postMessage({ type: 'init', indexURL: new URL('pyodide/', document.baseUR
             { label: 'Merge', body: 'Pull request #26 was merged into main, which starts the "Deploy to GitHub Pages" workflow.' },
             { label: 'npm ci', body: 'GitHub installs the exact versions in package-lock.json, including pyodide 0.29.5 and the CodeMirror editor.' },
             { label: 'prebuild', body: 'npm runs scripts/copy-pyodide.mjs first, copying Python into public/pyodide/.', code: 'Copied Pyodide 0.29.5 → public/pyodide/' },
-            { label: 'vite build', body: 'Vite builds the site. The Learning Lab, the Python worker and the code editor become separate files, and public/pyodide/ is copied into dist/pyodide/.' },
+            { label: 'vite build', body: 'Vite builds the site. CodeJack, the Python worker and the code editor become separate files, and public/pyodide/ is copied into dist/pyodide/.' },
             { label: 'Live', body: 'dist/ is uploaded to GitHub Pages. Run #18 finished with success in about 40 seconds.' },
           ]}
         />
@@ -1930,7 +1931,7 @@ Matplotlib + its parts        9.1 MB   only when code imports matplotlib`}</Code
     title: 'Accounts and synced progress',
     minutes: 10,
     commits: ['1c66864', '40d5d32', 'c22669d'],
-    goals: ['What Supabase does for the Lab', 'How row-level security keeps each learner\'s data private', 'How progress follows you between devices'],
+    goals: ['What Supabase does for CodeJack', 'How row-level security keeps each learner\'s data private', 'How progress follows you between devices'],
     body: () => (
       <>
         <P>
@@ -1964,7 +1965,7 @@ create policy "own progress" on progress for all to authenticated
         </Callout>
         <H>Signing in without slowing anyone down</H>
         <Steps
-          title="What happens when the Lab opens"
+          title="What happens when CodeJack opens"
           steps={[
             { label: 'No account yet', body: 'If this browser has never signed in, the Supabase library is not downloaded at all. Free lessons open as fast as before.' },
             { label: 'Signed in before', body: 'A saved session is found, so the library loads in the background and checks it.', code: "import('./client')   // only now" },
@@ -2035,7 +2036,7 @@ export const isLessonFree = (course, lesson) =>
             { label: 'Split while building', body: 'A small Vite plugin (scripts/vite-lesson-parts.mjs) serves each course file twice: ?part=free keeps only the free lessons, ?part=paid only the paid ones. Vite then builds the paid part into its own files.', code: "import course from './course.jsx?part=paid'" },
             { label: 'Move them out', body: 'After the build, scripts/split-paid.mjs follows the build manifest from every page, finds the files that only paid lessons need, moves them to dist-paid/ and writes a small paid-manifest.json listing them.' },
             { label: 'Private storage', body: 'During deploy, scripts/upload-paid.mjs uploads dist-paid/ to a private Supabase storage bucket, paid-lessons, then the public site is published without them.' },
-            { label: 'Download for owners', body: 'When an owner opens a paid lesson, the Lab downloads the file with their access token, and runs it in the page like any other part of the site.' },
+            { label: 'Download for owners', body: 'When an owner opens a paid lesson, CodeJack downloads the file with their access token, and runs it in the page like any other part of the site.' },
           ]}
         />
         <H>The storage bucket checks ownership</H>

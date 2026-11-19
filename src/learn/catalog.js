@@ -1,8 +1,8 @@
-// The Learning Lab's catalogue: course and lesson titles, modules and exercise ids, small enough to load
+// CodeJack's catalogue: course and lesson titles, modules and exercise ids, small enough to load
 // up front. It comes from catalog.generated.json, which scripts/gen-learn-catalog.mjs writes from the
 // full course content before every dev start and build.
 // Full lessons (text, widgets, exercises, quizzes, guides) are loaded per course with loadCourse(),
-// so opening the Lab does not download every course.
+// so opening CodeJack does not download every course.
 import data from './catalog.generated.json';
 import { loadPaidLessons, ownsCourse } from './access';
 

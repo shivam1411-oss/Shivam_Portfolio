@@ -1,6 +1,6 @@
 // Replays the "Do it yourself, step by step" walkthroughs and checks that steps marked as errors fail
 // and all the others behave as described.
-// Python, pandas, SQL and Matplotlib steps run in the same Python the Lab uses in the browser (Pyodide),
+// Python, pandas, SQL and Matplotlib steps run in the same Python CodeJack uses in the browser (Pyodide),
 // with the same sample data files. React steps are compiled and rendered, JQL steps are searched and
 // kubectl steps are run against the cluster simulator (see the second half of this file).
 //   node scripts/check-steps.mjs                  check everything
@@ -37,7 +37,7 @@ import io, os, sys
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as _plt
-_plt.show = lambda *args, **kwargs: None  # charts are counted after the run, as in the Lab
+_plt.show = lambda *args, **kwargs: None  # charts are counted after the run, as in CodeJack
 os.chdir("/work")
 
 def _run(code, stdin):

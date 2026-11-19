@@ -52,7 +52,7 @@ const sections = [
           </li>
           <li>
             <strong>Information is collected only when you choose to give it:</strong> your name and email to get the resume, your name, email
-            and password to create a Learning Lab account, or the messages you type to the AI assistant.
+            and password to create a CodeJack account, or the messages you type to the AI assistant.
           </li>
           <li>
             <strong>Your code stays on your device:</strong> Python, pandas, SQL and Matplotlib run inside your browser or the app. Nothing you
@@ -76,8 +76,8 @@ const sections = [
     body: (
       <p>
         This privacy policy applies to Shivam Soni's portfolio website at <strong>shivam-soni.com</strong> (this site), including its{' '}
-        <strong>Learning Lab</strong> ("Crack the Code"), and the <strong>Shivam Soni Android app</strong> (together, "the website and app"). It explains what information is collected, how it's used, and who it's shared with. This is a personal portfolio that also offers optional paid
-        courses in the Learning Lab. The website and app collect the minimum information needed to provide the features described below. It
+        <strong>CodeJack</strong> ("Crack the Code"), and the <strong>Shivam Soni Android app</strong> (together, "the website and app"). It explains what information is collected, how it's used, and who it's shared with. This is a personal portfolio that also offers optional paid
+        courses in CodeJack. The website and app collect the minimum information needed to provide the features described below. It
         also sets out who owns their content and the restrictions on copying or reusing it.
       </p>
     ),
@@ -88,7 +88,7 @@ const sections = [
       <>
         <p>
           The website and app collect information only when you choose to use the <strong>"Get Resume"</strong> feature, the{' '}
-          <strong>AI assistant</strong> chat, or a <strong>Learning Lab account</strong> (each described in its own section below). For "Get
+          <strong>AI assistant</strong> chat, or a <strong>CodeJack account</strong> (each described in its own section below). For "Get
           Resume":
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
@@ -109,11 +109,11 @@ const sections = [
         </p>
         <p className="mt-3">
           <strong>Stored on your device:</strong> your light/dark theme choice, a note that you have already seen the welcome screen
-          during the current visit, and, if you use the Learning Lab, your lesson progress, quiz answers, solved exercises, the ticks you make
+          during the current visit, and, if you use CodeJack, your lesson progress, quiz answers, solved exercises, the ticks you make
           on a lesson's checklist and step-by-step walkthrough, the code you write in the code boxes and practice boxes and, if you sign in, a
           sign-in token that keeps you logged in. The first time you run Python, your browser also keeps a copy of the Python engine and its
           libraries so later lessons start quickly. All of this stays in your browser or in the app on your device and can be removed by
-          clearing your browser data, clearing the app's storage, or uninstalling the app. If you have a Learning Lab account, your progress
+          clearing your browser data, clearing the app's storage, or uninstalling the app. If you have a CodeJack account, your progress
           is also saved to it, as described below; your checklist ticks and the code you type are never uploaded.
         </p>
       </>
@@ -154,13 +154,13 @@ const sections = [
       <>
         <p>
           The Shivam Soni Android app shows the same portfolio as this website, packaged inside the app. It handles your information in exactly
-          the same way as the website, and only collects anything if you use the "Get Resume" feature, the AI assistant, or a Learning Lab
+          the same way as the website, and only collects anything if you use the "Get Resume" feature, the AI assistant, or a CodeJack
           account.
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
-            <strong>Permissions:</strong> the app requests internet access only, used to email the resume you request, sign in to the Learning
-            Lab, download courses you have unlocked and open links. It does
+            <strong>Permissions:</strong> the app requests internet access only, used to email the resume you request, sign in to CodeJack,
+            download courses you have unlocked and open links. It does
             not access your contacts, camera, microphone, photos, files, location or phone identifiers.
           </li>
           <li>
@@ -186,13 +186,13 @@ const sections = [
     ),
   },
   {
-    title: 'Learning Lab ("Crack the Code")',
+    title: 'CodeJack ("Crack the Code")',
     body: (
       <>
         <p>
-          The Learning Lab offers interactive courses on how this site was built, Python, data analysis with pandas, SQL and Matplotlib, React,
+          CodeJack offers interactive courses on how this site was built, Python, data analysis with pandas, SQL and Matplotlib, React,
           Jira, Kubernetes, and Cloudflare &amp; web security. "Learn the Code" and the first module of every course are free and need no account and no personal information.
-          The rest of each course is available to buy, which requires a free account (see "Learning Lab Accounts &amp; Payments" below).
+          The rest of each course is available to buy, which requires a free account (see "CodeJack Accounts &amp; Payments" below).
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
@@ -220,16 +220,16 @@ const sections = [
     ),
   },
   {
-    title: 'Learning Lab Accounts & Payments',
+    title: 'CodeJack Accounts & Payments',
     body: (
       <>
         <p>
-          Creating a Learning Lab account is optional. You need one only to save your progress across devices or to buy a course. When you
+          Creating a CodeJack account is optional. You need one only to save your progress across devices or to buy a course. When you
           create and use an account, the following is collected:
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>
-            <strong>Name and email address</strong>, which you enter when you sign up, to identify your account, show your name in the Lab and
+            <strong>Name and email address</strong>, which you enter when you sign up, to identify your account, show your name in CodeJack and
             send you account emails.
           </li>
           <li>
@@ -346,7 +346,7 @@ const sections = [
     title: 'How We Use Your Information',
     body: (
       <p>
-        The name and email you give through "Get Resume" are used for exactly one purpose: sending you the requested resume by email. Learning Lab
+        The name and email you give through "Get Resume" are used for exactly one purpose: sending you the requested resume by email. CodeJack
         account information is used only to run your account: signing you in, saving your progress, unlocking courses you have bought, sending
         account emails, keeping purchase records required by law, and protecting accounts from misuse. None of this information is used for
         marketing, added to a mailing list, sold, or used to contact you for any other reason.
@@ -368,7 +368,7 @@ const sections = [
         </p>
         <p className="mt-3">
           Messages you type into the AI assistant are handled by Cloudflare and Anthropic, as described in the AI Assistant section above.
-          Learning Lab accounts, emails and payments are handled by Supabase, Brevo and Razorpay, as described in the Learning Lab Accounts &amp;
+          CodeJack accounts, emails and payments are handled by Supabase, Brevo and Razorpay, as described in CodeJack Accounts &amp;
           Payments section above.
         </p>
         <p className="mt-3">
@@ -409,7 +409,7 @@ const sections = [
           after two days.
         </p>
         <p className="mt-3">
-          <strong>Learning Lab accounts:</strong> your account information and progress are kept for as long as your account exists. When you ask
+          <strong>CodeJack accounts:</strong> your account information and progress are kept for as long as your account exists. When you ask
           for your account to be deleted, it and its progress are deleted within 30 days. Purchase records are kept only for as long as Indian
           tax and accounting laws require, and are then deleted.
         </p>
@@ -420,7 +420,7 @@ const sections = [
     title: "Children's Privacy",
     body: (
       <p>
-        The website and app are not directed at children. Learning Lab accounts and purchases are intended for people aged 18 or over; anyone
+        The website and app are not directed at children. CodeJack accounts and purchases are intended for people aged 18 or over; anyone
         under 18 may use an account only if a parent or guardian creates it and agrees to this policy on their behalf. We do not knowingly
         collect personal information from children without that consent, and will delete it if we learn that we have.
       </p>
@@ -435,8 +435,8 @@ const sections = [
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>see a summary of the personal information held about you and who it has been shared with;</li>
-          <li>correct or update it (you can change your name and password yourself on the Learning Lab account page);</li>
-          <li>delete your Learning Lab account and its data, apart from purchase records the law requires us to keep;</li>
+          <li>correct or update it (you can change your name and password yourself on CodeJack account page);</li>
+          <li>delete your CodeJack account and its data, apart from purchase records the law requires us to keep;</li>
           <li>withdraw your consent at any time, which ends your account (it does not undo processing already done);</li>
           <li>nominate someone to exercise these rights for you in case of death or incapacity.</li>
         </ul>
@@ -462,7 +462,7 @@ const sections = [
         <p className="mt-3">This includes, without limitation:</p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>All text, including the professional summary, role descriptions, achievements, quotes and the content of the Analytical Lab.</li>
-          <li>All Learning Lab courses, lessons, explanations, quizzes, coding exercises, diagrams and interactive examples.</li>
+          <li>All CodeJack courses, lessons, explanations, quizzes, coding exercises, diagrams and interactive examples.</li>
           <li>All data, figures, metrics, charts and performance statistics presented on the site.</li>
           <li>The resume and any document made available for preview or by email.</li>
           <li>Photographs, images, graphics, icons and the visual design, layout, colour scheme and overall look and feel.</li>
@@ -498,7 +498,7 @@ const sections = [
         </ul>
         <p className="mt-3">
           <strong>Permitted use:</strong> you may view the website, use the app and read the resume you requested, solely for the purpose of evaluating
-          Shivam Soni for professional opportunities. You may also use the Learning Lab for your own personal, non-commercial learning,
+          Shivam Soni for professional opportunities. You may also use CodeJack for your own personal, non-commercial learning,
           including writing and running practice code in its exercises; this does not permit republishing or redistributing its lessons or
           materials. You may share a link to the website. Any other use requires written permission, which can
           be requested using the contact details below.
@@ -532,7 +532,8 @@ const sections = [
           <strong>What changed in this version ({EFFECTIVE_DATE}):</strong>
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
-          <li>Added the new "Cloudflare &amp; Web Security" course to the list of Learning Lab courses. Nothing about what is collected changed.</li>
+          <li>The Learning Lab is now called CodeJack. Only the name changed: accounts, progress and purchases are the same.</li>
+          <li>Added the new "Cloudflare &amp; Web Security" course to the list of CodeJack courses. Nothing about what is collected changed.</li>
         </ul>
         <p className="mt-3">
           <strong>Changes on November 18, 2026:</strong>
@@ -570,7 +571,7 @@ const sections = [
           <a href="refund.html" className="underline hover:text-fg">
             Refund &amp; Cancellation Policy
           </a>{' '}
-          cover buying and using the Learning Lab courses.
+          cover buying and using CodeJack courses.
         </p>
       </>
     ),

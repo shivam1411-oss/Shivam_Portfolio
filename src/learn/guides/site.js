@@ -250,7 +250,7 @@ export const siteGuide = {
     recap: ['webDir: dist puts the built site into the app.', 'npm run apk bumps the version, builds, syncs and packages it.', 'Same signing key + higher versionCode = a smooth update.'],
   },
   'learning-lab': {
-    idea: 'The Learning Lab reads every course from one list, and the address after # decides which course or lesson to show.',
+    idea: 'CodeJack reads every course from one list, and the address after # decides which course or lesson to show.',
     terms: ['localstorage', 'state'],
     mistakes: [
       ['Copying page code for each new course', 'Add the course to src/learn/courses.js; the pages are shared.'],
@@ -328,7 +328,7 @@ export const siteGuide = {
     recap: ['background-clip: text paints the gradient inside the letters.', '--shine moves the gradient; deviceorientation or the mouse sets it.', 'The loop eases towards the target and stops when it arrives.'],
   },
   accounts: {
-    idea: 'Supabase gives the Lab sign-in and a database; row-level security makes the database itself check who may read or change each row.',
+    idea: 'Supabase gives CodeJack sign-in and a database; row-level security makes the database itself check who may read or change each row.',
     terms: ['supabase', 'rls', 'token', 'localstorage'],
     mistakes: [
       ['Thinking a public key is a leak', 'The public key only works through the policies; secrets stay on the server.'],

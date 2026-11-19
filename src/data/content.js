@@ -116,7 +116,7 @@ export const skillGroups = [
     title: 'Tools',
     blurb: 'The systems the work runs on, and the tools used to plan and ship it.',
     items: ['CRM Platforms (One Accord)', 'Jira (boards, sprints, JQL)', 'React'],
-    proof: 'Led the move from Excel tracking to a CRM-driven model. This site and its Learning Lab are built in React.',
+    proof: 'Led the move from Excel tracking to a CRM-driven model. This site and its CodeJack are built in React.',
   },
 ];
 

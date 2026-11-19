@@ -429,14 +429,14 @@ export const siteSteps = withIntro(PLAY, {
     ],
   },
 
-  // ---------------------------------------------------------------- Learning Lab & Python
+  // ---------------------------------------------------------------- CodeJack & Python
   'learning-lab': {
     terms: ['localstorage', 'state', 'component'],
     process: {
       title: 'How an address becomes a page',
       stages: [
         ['You click a link', 'Only the part of the address after # changes; the page does not reload.'],
-        ['The Lab notices the change', 'It listens for the hashchange event.'],
+        ['CodeJack notices the change', 'It listens for the hashchange event.'],
         ['parseHash reads the address', 'It splits #/c/python/loops into its parts: a course and a lesson.'],
         ['The result is stored as state', 'Something like { view: "lesson", course: "python", lesson: "loops" }.'],
         ['The matching page is drawn', 'The same code draws every course, from one list.'],
@@ -523,7 +523,7 @@ export const siteSteps = withIntro(PLAY, {
       ],
     },
     steps: [
-      { do: 'Scroll up to the diagram "What happens when the Lab opens". Press "1. No account yet".', see: 'For a first-time visitor the sign-in library is not even downloaded, so free lessons stay fast.' },
+      { do: 'Scroll up to the diagram "What happens when CodeJack opens". Press "1. No account yet".', see: 'For a first-time visitor the sign-in library is not even downloaded, so free lessons stay fast.' },
       { do: 'Press "Next step" through "Signed in before", "Email links" and "Back to learning".', see: 'What happens for a returning learner, how email links come back to this page, and where you land after signing in.' },
       { do: 'Press "Sign in" at the top right of this page (or your name, if you are signed in).', see: 'The account page: sign in or create an account, or your details if you already have one.' },
       { do: 'Use your browser\'s Back button to return to this lesson.', see: 'You are back here, exactly where you left off.' },
@@ -538,7 +538,7 @@ export const siteSteps = withIntro(PLAY, {
         ['The build splits each course', 'Free lessons into public files, paid lessons into their own files.'],
         ['Paid files are moved out', 'They never go into the folder that becomes the public website.'],
         ['They are uploaded to private storage', 'A storage bucket that refuses anonymous downloads.'],
-        ['An owner opens a paid lesson', 'The Lab asks storage for the file, sending the learner\'s access token.'],
+        ['An owner opens a paid lesson', 'CodeJack asks storage for the file, sending the learner\'s access token.'],
         ['Storage checks ownership', 'Only if a paid purchase exists for that course is the file handed over.'],
       ],
     },
