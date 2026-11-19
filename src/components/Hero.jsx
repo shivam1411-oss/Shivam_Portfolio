@@ -96,7 +96,8 @@ function TiltPhoto() {
         {/* Spinning gradient ring */}
         <div className="ring-spin absolute -inset-[3px] rounded-[3.2rem] opacity-70" />
         <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-[3rem] overflow-hidden bg-surface-2 border-[6px] border-surface shadow-2xl">
-          <Avatar alt="Shivam Soni" crop="full" imgClassName="object-cover scale-105" />
+          {/* Zoomed towards the face (the origin sits at head height) so it fills more of the frame */}
+          <Avatar alt="Shivam Soni" crop="full" imgClassName="object-cover scale-[1.2] origin-[50%_30%]" />
         </div>
 
         {/* Floating stat cards (desktop; smaller screens show them in a row below the photo) */}
