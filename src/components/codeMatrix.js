@@ -23,12 +23,12 @@ const GLITCH = '01{}[]()<>=+*/;:#$%&|!?'.split('');
 // base/max: glyph opacity when unlit / at the brightest point of a stream. glow: allow a halo on stream heads.
 // shape/tint: for a picture drawn in the grid (createMatrix's `shape` option), the unlit glyph opacity and the
 // strength of the picture's colour washed over the cube face, where the picture fully covers a cube.
-// vivid: use the picture's bright palette (for dark backgrounds) instead of its soft one.
+// darkPalette: use the picture's dark-theme colours (`rgbDark`) instead of its light-theme ones.
 export const matrixThemes = {
-  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, shape: 1, tint: 0.62, vivid: true, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
+  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, shape: 1, tint: 0.62, darkPalette: true, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
   light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, max: 1, shape: 1, tint: 0.6, head: '#0c3b36', glow: true, ripple: '15,138,126', rippleAlpha: 0.25 },
   // Behind page content: dim enough that body text stays easy to read over it.
-  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.07, max: 0.3, shape: 0.9, tint: 0.55, vivid: true, head: 'rgba(63,209,191,0.45)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
+  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.07, max: 0.3, shape: 0.9, tint: 0.55, darkPalette: true, head: 'rgba(63,209,191,0.45)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
   lightSubtle: { tile: '#f0f3f2', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.1, max: 0.32, shape: 0.7, tint: 0.5, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
 };
 
@@ -44,7 +44,7 @@ export const randomGlyph = () => GLITCH[(Math.random() * GLITCH.length) | 0];
 
 /**
  * `shape(cols, rows, cell)`, optional, returns a picture sampled per cell (row-major): `weight`, 0 to 1, how much
- * of the cube it covers, and `rgb`, its colour there as "r,g,b" (or null), optionally `rgbVivid` for themes marked `vivid`. Covered cubes take that colour, so
+ * of the cube it covers, and `rgb`, its colour there as "r,g,b" (or null), optionally `rgbDark` for themes marked `darkPalette`. Covered cubes take that colour, so
  * the grid shows the picture (the welcome screen's deer head). Themes without `shape`/`tint` ignore it.
  */
 export function createMatrix(cell, { shape: shapeFn } = {}) {
@@ -85,7 +85,7 @@ export function createMatrix(cell, { shape: shapeFn } = {}) {
     ctx.fillRect(x + s - 1, y, 1, s);
   };
 
-  const colours = (theme) => (theme.vivid && shape.rgbVivid ? shape.rgbVivid : shape.rgb);
+  const colours = (theme) => (theme.darkPalette && shape.rgbDark ? shape.rgbDark : shape.rgb);
   // How strongly the picture shows on cube i under this theme (0 when the theme or the matrix has none).
   function weightAt(theme, i) {
     return shape && theme.tint && shape.rgb[i] ? shape.weight[i] : 0;

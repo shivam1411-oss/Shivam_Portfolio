@@ -1,49 +1,50 @@
-// A geometric, low-poly stag head for the welcome-screen code matrix: flat facets in three tones (sage on
-// the left, tan down the middle, terracotta on the right) with thin gaps between them, and wide, thin
-// antlers. It is painted on a small off-screen canvas and sampled per grid cell, so every cube gets a
+// A geometric, low-poly stag head hidden in the code matrix: flat facets in the site's theme colours (teal
+// on the left, the teal-indigo blend down the middle, indigo on the right, like the name's gradient) with
+// thin gaps between them, and wide, thin antlers. It is painted on a small off-screen canvas and sampled per grid cell, so every cube gets a
 // coverage (0 to 1) and the colour of the facet under it. The matrix tints its cubes with that.
 
-// Facet colours: soft, like the reference, for light backgrounds, and vivid ones that stand out on dark.
+// Facet colours from the theme (src/index.css): --accent, the midpoint of --accent and --accent-2, and
+// --accent-2, in the light theme's shades and the dark theme's brighter ones.
 const PALETTES = {
-  soft: { sage: [143, 163, 146], tan: [214, 184, 150], terra: [190, 108, 88] },
-  vivid: { sage: [52, 230, 140], tan: [255, 196, 64], terra: [255, 94, 70] },
+  light: { left: [15, 138, 126], mid: [53, 118, 170], right: [91, 97, 214] }, // #0f8a7e → #5b61d6
+  dark: { left: [63, 209, 191], mid: [104, 180, 219], right: [145, 150, 246] }, // #3fd1bf → #9196f6
 };
-const SAGE = 'sage';
-const TAN = 'tan';
-const TERRA = 'terra';
+const LEFT = 'left';
+const MID = 'mid';
+const RIGHT = 'right';
 
 // Drawing space (left half; the right half is mirrored about CX). y grows downwards.
 const CX = 232;
 const BOX = { x0: 40, y0: 286, x1: 424, y1: 626 };
 const GAP = 3.2; // width of the gaps cut between facets
 
-// Head facets on the viewer's left: [points, colour]. Mirrored for the right with sage → terracotta.
+// Head facets on the viewer's left: [points, colour]. Mirrored for the right with left → right colour.
 const HEAD = [
-  [[[137, 479], [186, 491], [180, 520], [158, 516]], SAGE], // ear
-  [[[186, 491], [208, 489], [198, 520], [182, 522]], TAN], // temple
-  [[[208, 489], [232, 492], [232, 527], [198, 520]], TAN], // forehead
-  [[[182, 522], [198, 520], [200, 530], [192, 552], [184, 530]], SAGE], // brow
-  [[[198, 520], [232, 527], [222, 530], [214, 553], [200, 530]], TAN], // eye socket
-  [[[184, 530], [192, 552], [214, 553], [210, 590], [205, 600], [194, 572]], SAGE], // cheek
-  [[[232, 527], [232, 594], [220, 592], [214, 553], [222, 530]], TAN], // nose bridge
-  [[[205, 600], [210, 590], [220, 592], [224, 606], [214, 614]], SAGE], // muzzle side
-  [[[220, 592], [232, 594], [232, 606], [224, 606]], TAN], // upper lip
-  [[[214, 614], [224, 606], [232, 606], [232, 624], [222, 622]], TERRA], // nose
+  [[[137, 479], [186, 491], [180, 520], [158, 516]], LEFT], // ear
+  [[[186, 491], [208, 489], [198, 520], [182, 522]], MID], // temple
+  [[[208, 489], [232, 492], [232, 527], [198, 520]], MID], // forehead
+  [[[182, 522], [198, 520], [200, 530], [192, 552], [184, 530]], LEFT], // brow
+  [[[198, 520], [232, 527], [222, 530], [214, 553], [200, 530]], MID], // eye socket
+  [[[184, 530], [192, 552], [214, 553], [210, 590], [205, 600], [194, 572]], LEFT], // cheek
+  [[[232, 527], [232, 594], [220, 592], [214, 553], [222, 530]], MID], // nose bridge
+  [[[205, 600], [210, 590], [220, 592], [224, 606], [214, 614]], LEFT], // muzzle side
+  [[[220, 592], [232, 594], [232, 606], [224, 606]], MID], // upper lip
+  [[[214, 614], [224, 606], [232, 606], [232, 624], [222, 622]], RIGHT], // nose
 ];
 const EYE = [[186, 538], [200, 528], [212, 538], [200, 548]]; // cut out of the eye socket
 
 // Antler on the viewer's left as tapered strokes: [points, start width, end width, colour].
 const ANTLER = [
-  [[[203, 489], [150, 456], [104, 424], [70, 382], [48, 330]], 12, 4, SAGE], // main beam
-  [[[180, 474], [158, 430], [128, 376]], 7, 2, TAN], // inner tine
-  [[[197, 486], [190, 452], [188, 424]], 6.5, 2, TAN], // brow tine
-  [[[132, 444], [104, 432], [74, 414]], 6.5, 2, SAGE], // lower outer tine
-  [[[96, 414], [96, 360], [106, 296]], 6.5, 2, SAGE], // tall tine
-  [[[72, 386], [68, 350], [74, 312]], 6, 2, SAGE], // top tine
+  [[[203, 489], [150, 456], [104, 424], [70, 382], [48, 330]], 12, 4, LEFT], // main beam
+  [[[180, 474], [158, 430], [128, 376]], 7, 2, MID], // inner tine
+  [[[197, 486], [190, 452], [188, 424]], 6.5, 2, MID], // brow tine
+  [[[132, 444], [104, 432], [74, 414]], 6.5, 2, LEFT], // lower outer tine
+  [[[96, 414], [96, 360], [106, 296]], 6.5, 2, LEFT], // tall tine
+  [[[72, 386], [68, 350], [74, 312]], 6, 2, LEFT], // top tine
 ];
 
 const mirrorX = (pts) => pts.map(([x, y]) => [2 * CX - x, y]);
-const rightColour = (c) => (c === SAGE ? TERRA : c);
+const rightColour = (c) => (c === LEFT ? RIGHT : c);
 const rgb = ([r, g, b]) => `rgb(${r},${g},${b})`;
 
 
@@ -153,8 +154,8 @@ function sample(data, cols, rows) {
 
 /**
  * The deer sampled on a `cols`×`rows` grid of `cell`-px cubes, centred on the screen and as large as fits:
- * `weight` (0 to 1, how much of each cell it covers), and the cell's facet colour as "r,g,b" in the soft
- * palette (`rgb`) and the vivid one (`rgbVivid`).
+ * `weight` (0 to 1, how much of each cell it covers), and the cell's facet colour as "r,g,b" in the light theme's
+ * palette (`rgb`) and the dark theme's (`rgbDark`).
  */
 export function deerMask(cols, rows, cell) {
   const n = cols * rows;
@@ -164,13 +165,13 @@ export function deerMask(cols, rows, cell) {
   const bh = BOX.y1 - BOX.y0;
   // On tall, narrow screens the antler tips may run a little past the sides, to keep the head large.
   const scale = Math.min((h * 0.9) / bh, (w * 1.12) / bw);
-  if (!(scale > 0)) return { weight: new Float32Array(n), rgb: new Array(n).fill(null), rgbVivid: new Array(n).fill(null) };
+  if (!(scale > 0)) return { weight: new Float32Array(n), rgb: new Array(n).fill(null), rgbDark: new Array(n).fill(null) };
 
   const k = SUPERSAMPLE / cell;
   const ox = w / 2 - (BOX.x0 + bw / 2) * scale;
   const oy = h / 2 - (BOX.y0 + bh / 2) * scale;
   const transform = [k * scale, 0, 0, k * scale, k * ox, k * oy];
-  const soft = sample(render(cols, rows, transform, PALETTES.soft), cols, rows);
-  const vivid = sample(render(cols, rows, transform, PALETTES.vivid), cols, rows);
-  return { weight: soft.weight, rgb: soft.colour, rgbVivid: vivid.colour };
+  const light = sample(render(cols, rows, transform, PALETTES.light), cols, rows);
+  const dark = sample(render(cols, rows, transform, PALETTES.dark), cols, rows);
+  return { weight: light.weight, rgb: light.colour, rgbDark: dark.colour };
 }
