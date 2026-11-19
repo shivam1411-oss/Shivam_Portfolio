@@ -6,7 +6,7 @@ import { courseById, courses } from './catalog';
 import { timeline } from './timeline';
 import { btn, btnPrimary } from './ui';
 
-// Landing page of the Learning Lab: the portfolio drawn as an "exploded view" of its real layers.
+// Landing page of CodeJack: the portfolio drawn as an "exploded view" of its real layers.
 // Move the pointer to tilt the stack; pick a layer to see what it does and which lesson teaches it.
 
 const site = courseById.site;
@@ -257,7 +257,7 @@ export default function Landing({ progress }) {
       <div className="grid lg:grid-cols-[1fr_1.05fr] gap-6 lg:gap-10 items-center">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
           <div className="eyebrow text-accent mb-4 flex items-center gap-3">
-            <span className="h-px w-8 bg-accent/60" /> Learning Lab
+            <span className="h-px w-8 bg-accent/60" /> CodeJack
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-fg leading-[1.05]">
             Want to learn from a <span className="text-gradient">real-world project</span>?

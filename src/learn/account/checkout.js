@@ -1,4 +1,4 @@
-// Razorpay Standard Checkout for Learning Lab courses.
+// Razorpay Standard Checkout for CodeJack courses.
 // 1. Ask our create-order function (Supabase Edge Function) for an order; the server sets the price.
 // 2. Open Razorpay's payment window with that order.
 // 3. Send Razorpay's reply to verify-payment, which checks the signature and unlocks the course.
@@ -135,7 +135,7 @@ export function openWindow(order, user, { say, onPaid }) {
         order_id: order.order_id,
         amount: order.amount,
         currency: order.currency,
-        name: 'Shivam Soni · Learning Lab',
+        name: 'Shivam Soni · CodeJack',
         description: order.product === 'all' ? 'All-access: every course' : `${order.title} course`,
         prefill: { name: displayName(user), email: user?.email || '' },
         notes: { product: order.product },

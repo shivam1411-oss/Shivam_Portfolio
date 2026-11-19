@@ -1,4 +1,4 @@
--- Learning Lab accounts and paid courses: run once in Supabase → SQL Editor → New query → Run.
+-- CodeJack accounts and paid courses: run once in Supabase → SQL Editor → New query → Run.
 -- Safe to run again: everything uses "if not exists" / "or replace".
 --
 -- Who can do what (enforced by the database, not the website):

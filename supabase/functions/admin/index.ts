@@ -1,4 +1,4 @@
-// Supabase Edge Function: the Learning Lab admin page's server. Only users listed in public.admins can use it.
+// Supabase Edge Function: CodeJack admin page's server. Only users listed in public.admins can use it.
 //
 // POST /functions/v1/admin   Header: Authorization: Bearer <signed-in admin's access token>
 //   { "action": "overview" }                              → { users, purchases, progress }

@@ -56,7 +56,7 @@ function Tick({ done, onClick, label, locked }) {
 /**
  * The lesson's stages as a checklist. `items`: { id, label, note, target, done } where `target` is the id of
  * the section to scroll to and `done` is set for
- * stages the Lab checks itself (exercises, quiz); the others are ticked by the learner.
+ * stages CodeJack checks itself (exercises, quiz); the others are ticked by the learner.
  */
 export function LessonPath({ items, checks, toggle }) {
   const isDone = (it) => (it.done === undefined ? !!checks[it.id] : it.done);

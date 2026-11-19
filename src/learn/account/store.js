@@ -98,7 +98,7 @@ export async function refreshPurchases() {
 
 // ---------------------------------------------------------------- where to go after signing in
 
-// The Lab page the learner was on before opening the account page (e.g. the locked lesson they tried to unlock).
+// CodeJack page the learner was on before opening the account page (e.g. the locked lesson they tried to unlock).
 let returnTo = null;
 const isAccountHash = (h) => /^#\/account/.test(h || '');
 function rememberReturn(event) {
@@ -106,7 +106,7 @@ function rememberReturn(event) {
   const newHash = new URL(event.newURL).hash;
   if (isAccountHash(newHash) && !isAccountHash(oldHash)) returnTo = oldHash && oldHash !== '#' ? oldHash : null;
 }
-/** Leave the account page for the Lab: back where the learner came from, else the course list. */
+/** Leave the account page for CodeJack: back where the learner came from, else the course list. */
 export function goToLab(message) {
   const target = returnTo || '#/courses';
   returnTo = null;
@@ -142,7 +142,7 @@ async function handleEmailLink() {
       set({ recovering: true });
       window.location.hash = '#/account/reset';
     } else {
-      goToLab('Your email is confirmed and you are signed in. Welcome to the Learning Lab!');
+      goToLab('Your email is confirmed and you are signed in. Welcome to CodeJack!');
     }
   } else {
     // ?code=… is exchanged by the Supabase client itself (detectSessionInUrl); just tidy the address bar.
@@ -152,7 +152,7 @@ async function handleEmailLink() {
 
 let started = false;
 /**
- * Start the account system (call once when the Lab opens). The Supabase library is only downloaded if this
+ * Start the account system (call once when CodeJack opens). The Supabase library is only downloaded if this
  * browser has signed in before or an email link was opened; otherwise it loads when the account page is used.
  */
 export function initAccount() {
@@ -246,7 +246,7 @@ export async function signIn({ email, password }) {
   leaveAfterSignIn(data.user);
 }
 
-/** After signing in, go to the Lab (not the account page). If they were unlocking a course, say how to continue. */
+/** After signing in, go to CodeJack (not the account page). If they were unlocking a course, say how to continue. */
 function leaveAfterSignIn(user) {
   const product = pendingProduct;
   pendingProduct = null;

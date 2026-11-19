@@ -9,7 +9,7 @@ export default withGuide(
     title: 'Learn the Code',
     tagline: 'How this portfolio was built, change by change',
     blurb:
-      'React, Tailwind, animations, canvas effects, performance, the AI chat, deploying through Cloudflare, the Android app, and how Python was made to run in this Learning Lab, explained from zero with the real code and playgrounds.',
+      'React, Tailwind, animations, canvas effects, performance, the AI chat, deploying through Cloudflare, the Android app, and how Python was made to run in CodeJack, explained from zero with the real code and playgrounds.',
     levels: 'Beginner',
     icon: 'site',
     audience: 'Anyone curious how a modern website is built, with no coding experience needed.',
@@ -29,7 +29,7 @@ export default withGuide(
       order: [
         'Start with "From one HTML file to a React app" for the big picture.',
         'Then go module by module: Foundations, Look & feel, The effects, Speed & devices, Features, Shipping it.',
-        'The last two modules explain the Learning Lab itself: Python in the browser, then accounts and payments.',
+        'The last two modules explain CodeJack itself: Python in the browser, then accounts and payments.',
         '"What changed, in order", at the bottom of this page, is the timeline of every change the lessons describe.',
       ],
       doing: 'A numbered walkthrough using the lesson\'s own playground or the live site: one small action per step, and what you should see. Tick each step as you go.',

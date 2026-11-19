@@ -1,4 +1,4 @@
-// What is free and what is paid in the Learning Lab. Read by the build (scripts and the Vite plugin)
+// What is free and what is paid in CodeJack. Read by the build (scripts and the Vite plugin)
 // and by the app. Prices themselves live in Supabase (public.products), so they can change without a
 // rebuild; the numbers here are only shown if the price list cannot be fetched.
 

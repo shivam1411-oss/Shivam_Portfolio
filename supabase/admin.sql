@@ -12,7 +12,7 @@ create table if not exists public.admins (
 alter table public.admins enable row level security;
 -- No policies on purpose: the table is invisible to the website's public and signed-in keys.
 
--- Is the signed-in user an admin? (Used by the Lab to unlock everything and show the admin link.)
+-- Is the signed-in user an admin? (Used by CodeJack to unlock everything and show the admin link.)
 create or replace function public.is_admin() returns boolean
 language sql stable security definer set search_path = '' as $$
   select exists (select 1 from public.admins a where a.user_id = auth.uid());
@@ -32,7 +32,7 @@ revoke all on function public.owns(text) from public, anon;
 grant execute on function public.owns(text) to authenticated;
 
 -- ---------------------------------------------------------------- make yourself an admin
--- 1. Sign up in the Learning Lab with your own email and confirm it.
+-- 1. Sign up in CodeJack with your own email and confirm it.
 -- 2. Replace the address below with that email and run this statement.
 insert into public.admins (user_id)
 select id from auth.users where email = lower('your-email@example.com')

@@ -5,10 +5,10 @@ The Razorpay **key secret lives only in Supabase's secrets**: never in this repo
 
 | Function | Called by | What it does |
 |---|---|---|
-| `create-order` | the Lab, when a signed-in learner clicks Unlock | Looks up the price in `products`, creates a Razorpay order, stores a `created` purchase, returns `{ order_id, amount, currency, key_id }` |
-| `verify-payment` | the Lab, after Razorpay Checkout succeeds | Checks `HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)`, confirms the payment with Razorpay (capturing it if needed) and marks the purchase `paid` |
+| `create-order` | CodeJack, when a signed-in learner clicks Unlock | Looks up the price in `products`, creates a Razorpay order, stores a `created` purchase, returns `{ order_id, amount, currency, key_id }` |
+| `verify-payment` | CodeJack, after Razorpay Checkout succeeds | Checks `HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)`, confirms the payment with Razorpay (capturing it if needed) and marks the purchase `paid` |
 | `razorpay-webhook` | Razorpay's servers | Safety net: marks the purchase paid on `payment.captured` / `order.paid` even if the buyer closed the page |
-| `admin` | the Lab's admin page (`learn.html#/admin`) | Admins only (`public.admins`, see `supabase/admin.sql`): sales, accounts and progress; refunds through Razorpay; free course grants |
+| `admin` | CodeJack's admin page (`learn.html#/admin`) | Admins only (`public.admins`, see `supabase/admin.sql`): sales, accounts and progress; refunds through Razorpay; free course grants |
 
 ## 1. Secrets
 Supabase Dashboard → **Edge Functions → Secrets** → add:
@@ -44,7 +44,7 @@ URL `https://jiwvwgrtxgmrinikmgyb.supabase.co/functions/v1/razorpay-webhook`, se
 events **payment.captured** and **order.paid**.
 
 ## 4. Test (test mode, no real money)
-Build the Lab with the paywall on, sign in, open a locked lesson and click **Unlock**. In the Razorpay window use
+Build CodeJack with the paywall on, sign in, open a locked lesson and click **Unlock**. In the Razorpay window use
 a test card such as `4111 1111 1111 1111` (any future expiry, any CVV) or UPI `success@razorpay`, and complete the
 mock bank page. The course unlocks and the purchase appears as `paid` in Supabase → Table Editor → `purchases`.
 Test cards: https://razorpay.com/docs/payments/payments/test-card-details/

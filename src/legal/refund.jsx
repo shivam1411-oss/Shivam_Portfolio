@@ -97,7 +97,7 @@ const sections = [
     title: 'How to Ask for a Refund',
     body: (
       <>
-        <p>Email us from the address on your Learning Lab account with the course name and the Razorpay payment reference:</p>
+        <p>Email us from the address on your CodeJack account with the course name and the Razorpay payment reference:</p>
         <ContactDetails />
       </>
     ),

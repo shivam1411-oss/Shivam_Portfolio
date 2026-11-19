@@ -3,7 +3,7 @@ import { Cpu, Loader2, MonitorX } from 'lucide-react';
 import { run } from '../python/runtime';
 import { Playground, btn } from '../ui';
 
-// Widgets for the "Learning Lab & Python" module.
+// Widgets for the "CodeJack & Python" module.
 
 const ROUTES = [
   { hash: '#/', view: 'landing', shows: 'The landing page: the portfolio taken apart into its layers.' },

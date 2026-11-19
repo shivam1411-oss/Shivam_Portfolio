@@ -1,4 +1,4 @@
-// The Learning Lab's "What changed" page uses the same changelog as the portfolio's "Site updates" section.
+// CodeJack's "What changed" page uses the same changelog as the portfolio's "Site updates" section.
 import { changelog } from '../data/changelog';
 
 export { commitUrl } from '../data/changelog';

@@ -1,4 +1,4 @@
-// Writes src/learn/catalog.generated.json: the Learning Lab's course list, modules and lesson titles,
+// Writes src/learn/catalog.generated.json: CodeJack's course list, modules and lesson titles,
 // and knowledge-base topic ids, without any lesson content. The app loads this small file up front and
 // fetches each course's full lessons only when they are opened (see src/learn/catalog.js).
 // Runs before `npm run dev` and `npm run build`; it bundles the course files with esbuild so Node can read them.
@@ -63,4 +63,4 @@ try {
 }
 if (old !== text) writeFileSync(out, text);
 const lessons = catalog.courses.reduce((s, c) => s + c.lessons.length, 0);
-console.log(`Learning Lab catalogue: ${catalog.courses.length} courses, ${lessons} lessons${old === text ? ' (unchanged)' : ' (updated)'}`);
+console.log(`CodeJack catalogue: ${catalog.courses.length} courses, ${lessons} lessons${old === text ? ' (unchanged)' : ' (updated)'}`);

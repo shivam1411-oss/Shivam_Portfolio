@@ -1,5 +1,5 @@
 // Every change to the website since the first page, oldest first, in plain words.
-// Shown on the portfolio ("Site updates") and in the Learning Lab ("What changed").
+// Shown on the portfolio ("Site updates") and in CodeJack ("What changed").
 // Add an entry for each change you ship: newest at the bottom. `commits` are git short hashes (linked to
 // GitHub); `lessons` are Learn the Code lesson ids that explain the change.
 
@@ -8,13 +8,13 @@ export const REPO_URL = 'https://github.com/shivam1411-oss/Shivam_Portfolio';
 export const phases = [
   { id: 'html', title: 'The first page', period: 'July 2026', blurb: 'A single hand-written HTML profile page with a photo, résumé and privacy policy.' },
   { id: 'react', title: 'The React rebuild', period: 'October 2026', blurb: 'Rebuilt as a React app with animations, effects, an AI chat and an Android app.' },
-  { id: 'lab', title: 'The Learning Lab', period: 'November 2026', blurb: 'Interactive courses, a knowledge base and in-browser Python, built on top of the portfolio.' },
+  { id: 'lab', title: 'CodeJack', period: 'November 2026', blurb: 'Interactive courses, a knowledge base and in-browser Python, built on top of the portfolio.' },
 ];
 
 export const categories = {
   design: 'Design',
   feature: 'Feature',
-  learning: 'Learning Lab',
+  learning: 'CodeJack',
   performance: 'Speed',
   app: 'Android app',
   privacy: 'Privacy',
@@ -218,13 +218,13 @@ export const changelog = [
     commits: ['1a25d7f'],
   },
 
-  // ------------------------------------------------------------ November 2026: the Learning Lab
+  // ------------------------------------------------------------ November 2026: CodeJack
   {
     phase: 'lab',
     date: '2026-11-06',
     category: 'learning',
-    title: 'The Learning Lab and a 22-lesson Python course',
-    plain: 'The learning page became a Learning Lab with several courses. A Python course from beginner to advanced was added, with code you run and exercises checked by tests, all in the browser.',
+    title: 'CodeJack and a 22-lesson Python course',
+    plain: 'The learning page became CodeJack, with several courses. A Python course from beginner to advanced was added, with code you run and exercises checked by tests, all in the browser.',
     commits: ['1db9d8c', '1c7a38c'],
     lessons: ['learning-lab', 'python-browser', 'python-tests', 'python-deploy'],
   },
@@ -241,7 +241,7 @@ export const changelog = [
     phase: 'lab',
     date: '2026-11-06',
     category: 'design',
-    title: 'An interactive landing page for the Lab',
+    title: 'An interactive landing page for CodeJack',
     plain: 'A 3D exploded view that takes the portfolio apart into its layers, each linked to the lesson that explains it.',
     commits: ['a86e33d'],
   },
@@ -259,14 +259,14 @@ export const changelog = [
     date: '2026-11-06',
     category: 'feature',
     title: '"Crack the Code" link on the portfolio',
-    plain: 'A highlighted link to the Learning Lab in the top menu, the mobile menu and the footer.',
+    plain: 'A highlighted link to CodeJack in the top menu, the mobile menu and the footer.',
     commits: ['8f35aff'],
   },
   {
     phase: 'lab',
     date: '2026-11-06',
     category: 'privacy',
-    title: 'Privacy policy for the Learning Lab',
+    title: 'Privacy policy for CodeJack',
     plain: 'Covers progress and code kept on your device, Python running locally, the shivam-soni.com domain, GitHub Pages hosting and Google Fonts.',
     commits: ['5392483'],
   },
@@ -340,7 +340,7 @@ export const changelog = [
     phase: 'lab',
     date: '2026-11-07',
     category: 'performance',
-    title: 'The Learning Lab loads much faster',
+    title: 'CodeJack loads much faster',
     plain: 'Each course now downloads only when opened: the first download dropped from 688 KB to 140 KB, and Python lessons no longer fetch 12 MB on open.',
     commits: ['bcbdeb5'],
   },
@@ -357,7 +357,7 @@ export const changelog = [
     date: '2026-11-07',
     category: 'feature',
     title: 'This timeline',
-    plain: 'A "Site updates" section on the portfolio listing every change since the first page, shared with the Learning Lab. Phone menu links now scroll to their section, and the home page no longer drifts sideways on phones.',
+    plain: 'A "Site updates" section on the portfolio listing every change since the first page, shared with CodeJack. Phone menu links now scroll to their section, and the home page no longer drifts sideways on phones.',
     commits: ['cc33565', 'a5b1724'],
   },
   {
@@ -373,7 +373,7 @@ export const changelog = [
     phase: 'lab',
     date: '2026-11-13',
     category: 'learning',
-    title: 'Accounts and paid courses in the Learning Lab',
+    title: 'Accounts and paid courses in CodeJack',
     plain: 'Learners can sign up, sign in and keep their progress across devices. "Learn the Code" and the first module of every course stay free; the rest of each course and its knowledge base unlock with a one-time payment through Razorpay, and paid lessons are delivered only to accounts that own them.',
     commits: ['1c66864', '960d631', '40d5d32', '9382ad2', 'a0fc707', '8f04521', 'bb1e78e', '747199f', '5258fec'],
     lessons: ['accounts', 'paywall', 'payments'],
@@ -399,8 +399,8 @@ export const changelog = [
     phase: 'lab',
     date: '2026-11-13',
     category: 'learning',
-    title: 'The Learning Lab is live',
-    plain: 'The Learning Lab opened to everyone with paid courses switched on: anyone can sign up, learn the free lessons, and buy a course to unlock the rest. The Terms of Use, Refund Policy and Privacy Policy took effect the same day.',
+    title: 'CodeJack is live',
+    plain: 'CodeJack opened to everyone with paid courses switched on: anyone can sign up, learn the free lessons, and buy a course to unlock the rest. The Terms of Use, Refund Policy and Privacy Policy took effect the same day.',
     commits: ['59d4f99'],
     lessons: ['paywall', 'payments'],
   },
@@ -409,7 +409,7 @@ export const changelog = [
     date: '2026-11-13',
     category: 'app',
     title: 'Android app 1.6 with accounts and paid courses',
-    plain: 'The Android app now includes accounts and paid courses, built automatically on GitHub. After signing in, learners go straight back to the Learning Lab instead of the account page.',
+    plain: 'The Android app now includes accounts and paid courses, built automatically on GitHub. After signing in, learners go straight back to CodeJack instead of the account page.',
     commits: ['c22669d', 'c3bba1c'],
     lessons: ['android', 'accounts'],
   },
@@ -436,7 +436,7 @@ export const changelog = [
     date: '2026-11-14',
     category: 'design',
     title: 'Text stays readable over the background effects',
-    plain: 'A soft halo in the page colour now surrounds the text on the portfolio and in the Learning Lab, so the moving code behind it never makes words hard to read, in either theme. The cursor trail moved behind the content.',
+    plain: 'A soft halo in the page colour now surrounds the text on the portfolio and in CodeJack, so the moving code behind it never makes words hard to read, in either theme. The cursor trail moved behind the content.',
     commits: ['c852408', '0e03fc2'],
     lessons: ['readable'],
   },
@@ -453,7 +453,7 @@ export const changelog = [
     phase: 'lab',
     date: '2026-11-14',
     category: 'learning',
-    title: 'Checkout never leaves the Learning Lab stuck',
+    title: 'Checkout never leaves CodeJack stuck',
     plain: 'If the payment window cannot open, the page now recovers by itself and says you have not been charged, instead of freezing. Every payment step has a time limit.',
     commits: ['d3335df'],
     lessons: ['checkout-guard'],
@@ -516,7 +516,7 @@ export const changelog = [
     date: '2026-11-15',
     category: 'design',
     title: 'A more professional portfolio',
-    plain: 'The home page is reorganised in the order a recruiter reads: a clearer opening, a new About section, results, career timeline, Skills & Education, the Analytical Lab and a Contact section. The opening shows the three headline results as large numbers, skills are grouped with one line of evidence each, and the site changelog moved to the Learning Lab timeline. The profile picture is a plain initials placeholder until a new photo is chosen.',
+    plain: 'The home page is reorganised in the order a recruiter reads: a clearer opening, a new About section, results, career timeline, Skills & Education, the Analytical Lab and a Contact section. The opening shows the three headline results as large numbers, skills are grouped with one line of evidence each, and the site changelog moved to CodeJack timeline. The profile picture is a plain initials placeholder until a new photo is chosen.',
     commits: ['18eab6c'],
     lessons: ['components', 'data'],
   },
@@ -525,7 +525,7 @@ export const changelog = [
     date: '2026-11-15',
     category: 'performance',
     title: 'Pages load with far fewer requests',
-    plain: 'Each page used to fetch 17 to 21 small files plus fonts from Google. Shared code is now grouped into two files and the fonts are served from the site itself, so the home page needs 6 files and the Learning Lab 9. Fewer requests means fewer chances for one of them to stall on a slow connection.',
+    plain: 'Each page used to fetch 17 to 21 small files plus fonts from Google. Shared code is now grouped into two files and the fonts are served from the site itself, so the home page needs 6 files and CodeJack 9. Fewer requests means fewer chances for one of them to stall on a slow connection.',
     commits: ['110a033'],
     lessons: ['splitting', 'performance'],
   },
@@ -588,7 +588,7 @@ export const changelog = [
     date: '2026-11-19',
     category: 'learning',
     title: 'A Cloudflare & Web Security course, and Learn the Code catches up',
-    plain: 'A new course in the Learning Lab explains how this site is delivered and protected, using its real setup: DNS and the Cloudflare proxy, caching and headers, robots.txt and blocking AI crawlers without losing search, secret keys, and the abuse-proof resume form. The first module is free. Learn the Code gains a lesson on the stag hidden in the code, and its lessons on contact, data, deploying and loading speed now cover the resume preview, the profile photo, Cloudflare and self-hosted fonts.',
+    plain: 'A new course in CodeJack explains how this site is delivered and protected, using its real setup: DNS and the Cloudflare proxy, caching and headers, robots.txt and blocking AI crawlers without losing search, secret keys, and the abuse-proof resume form. The first module is free. Learn the Code gains a lesson on the stag hidden in the code, and its lessons on contact, data, deploying and loading speed now cover the resume preview, the profile photo, Cloudflare and self-hosted fonts.',
     commits: ['a976dad', 'b30d8bd'],
     lessons: ['stag', 'contact', 'data', 'deploy', 'splitting'],
   },

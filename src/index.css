@@ -325,7 +325,7 @@ footer {
   }
 }
 
-/* Learning Lab: plain default styles inside the live React preview, where learners' own components
+/* CodeJack: plain default styles inside the live React preview, where learners' own components
    render (the site's CSS reset would otherwise leave headings, lists and buttons unstyled). */
 .react-preview { font-family: var(--font-sans); font-size: 14px; line-height: 1.5; }
 .react-preview h1 { font-size: 1.6em; font-weight: 800; margin: 0 0 0.4em; }

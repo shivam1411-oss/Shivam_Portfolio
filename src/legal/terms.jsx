@@ -7,7 +7,7 @@ const sections = [
     body: (
       <>
         <p>
-          These terms apply to the <strong>Learning Lab</strong> ("Crack the Code") at <strong>{LEGAL.site}/learn.html</strong> and in the Shivam Soni Android
+          These terms apply to the <strong>CodeJack</strong> ("Crack the Code") at <strong>{LEGAL.site}/learn.html</strong> and in the Shivam Soni Android
           app, run by <strong>{LEGAL.owner}</strong> ("we", "us"). By creating an account or buying a course you agree to these terms, the{' '}
           <A href="refund.html">Refund &amp; Cancellation Policy</A> and the <A href="privacy.html">Privacy Policy</A>. If you do not agree, please do not
           create an account or make a purchase. Free lessons can be used without an account.
@@ -76,7 +76,7 @@ const sections = [
       <>
         <p>
           Buying a course gives you a personal, non-exclusive, non-transferable licence to access and use it for your own learning, for as long as the
-          Learning Lab is offered. It does not transfer ownership of any content.
+          CodeJack is offered. It does not transfer ownership of any content.
         </p>
         <p className="mt-3">You may not:</p>
         <ul className="list-disc list-inside">
@@ -120,7 +120,7 @@ const sections = [
     body: (
       <p>
         We may suspend or close an account that breaks these terms, for example by sharing access or copying paid content, after telling you why where
-        reasonably possible. You can stop using the Learning Lab and ask us to delete your account at any time.
+        reasonably possible. You can stop using CodeJack and ask us to delete your account at any time.
       </p>
     ),
   },
@@ -129,7 +129,7 @@ const sections = [
     body: (
       <p>
         To the extent the law allows, we are not liable for indirect or consequential losses, and our total liability for any claim relating to the
-        Learning Lab is limited to the amount you paid us in the 12 months before the claim. Nothing in these terms limits rights you have under Indian
+        CodeJack is limited to the amount you paid us in the 12 months before the claim. Nothing in these terms limits rights you have under Indian
         consumer protection law that cannot be excluded.
       </p>
     ),
@@ -147,8 +147,8 @@ const sections = [
     title: 'Changes to These Terms',
     body: (
       <p>
-        We may update these terms when the Learning Lab changes. The effective date at the top always shows the latest version, and important changes
-        will be shown in the Learning Lab. Purchases already made keep the terms that applied when you bought them, unless the law requires otherwise.
+        We may update these terms when CodeJack changes. The effective date at the top always shows the latest version, and important changes
+        will be shown in CodeJack. Purchases already made keep the terms that applied when you bought them, unless the law requires otherwise.
       </p>
     ),
   },

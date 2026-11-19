@@ -402,7 +402,7 @@ export default function AccountPage({ sub }) {
   return (
     <div className="max-w-md mx-auto px-4 sm:px-6 py-12 md:py-16">
       <div className="eyebrow text-accent flex items-center gap-2">
-        {account.status === 'signed-in' ? <UserRound size={14} /> : <ShieldCheck size={14} />} Learning Lab account
+        {account.status === 'signed-in' ? <UserRound size={14} /> : <ShieldCheck size={14} />} CodeJack account
       </div>
       <h1 className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-fg">{sub === 'reset' ? 'Set a new password' : heading}</h1>
       {signedOut && mode !== 'forgot' && sub !== 'reset' && (

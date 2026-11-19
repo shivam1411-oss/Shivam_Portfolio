@@ -4,7 +4,7 @@ export const learningPath = [
   { course: 'pandas', why: 'Turn spreadsheets into repeatable analysis.' },
   { course: 'sql', why: 'Get data out of databases.' },
   { course: 'viz', why: 'Present the results clearly.' },
-  { course: 'site', why: 'Anytime: see how a real website and this Lab are built.' },
+  { course: 'site', why: 'Anytime: see how a real website and CodeJack are built.' },
 ];
 export const techPath = [
   { course: 'react', why: 'Build the interfaces people use.' },

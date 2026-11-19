@@ -317,7 +317,7 @@ function Header({ route, progress }) {
             <GraduationCap size={18} />
           </span>
           <span className="hidden lg:block leading-tight">
-            <span className="block font-extrabold text-fg text-sm">Learning Lab</span>
+            <span className="block font-extrabold text-fg text-sm">CodeJack</span>
             <span className="block text-[11px] text-subtle font-semibold">Interactive courses</span>
           </span>
         </a>
@@ -420,7 +420,7 @@ function Hub({ progress }) {
         <div className="glow-accent absolute -top-24 -left-24 w-[min(36rem,100vw)] h-[min(36rem,100vw)] opacity-70 -z-10" />
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
           <Eyebrow>
-            Learning Lab · {courses.length} courses · {allLessons.length} lessons
+            CodeJack · {courses.length} courses · {allLessons.length} lessons
           </Eyebrow>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-fg max-w-3xl leading-[1.05]">
             Learn by <span className="text-gradient">doing</span>
