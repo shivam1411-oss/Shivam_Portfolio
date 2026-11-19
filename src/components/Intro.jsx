@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { profile } from '../data/content';
 import Avatar from './Avatar';
 import { createMatrix, currentMatrixTheme, randomGlyph } from './codeMatrix';
+import { deerMask } from './deerMask';
 import ThemeToggle from './ThemeToggle';
 import { ease } from './motion';
 
@@ -15,12 +16,13 @@ function MatrixBackground() {
 
   useEffect(() => {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    const cell = isTouch ? 20 : 16;
+    // Narrow phones get smaller cubes, so the deer head drawn in the grid has enough of them to read.
+    const cell = isTouch ? (window.innerWidth < 640 ? 13 : 20) : 16;
     const maxDpr = isTouch ? 1 : 1.5;
     const glow = isTouch ? 0 : 8;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const matrix = createMatrix(cell);
+    const matrix = createMatrix(cell, { shape: deerMask });
     let dpr = 1;
     let w = 0;
     let h = 0;
@@ -219,13 +221,14 @@ export default function Intro({ onEnter, onDone }) {
     >
       <MatrixBackground />
 
-      {/* Soft spotlight behind the text so it stays readable over the code */}
+      {/* Soft spotlight behind the text so it stays readable over the code, light enough that the deer head
+          drawn in the cubes still shows through */}
       <div
         aria-hidden
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 70% 55% at 50% 50%, color-mix(in oklab, var(--bg) 94%, transparent) 0%, color-mix(in oklab, var(--bg) 70%, transparent) 45%, transparent 80%)',
+            'radial-gradient(ellipse 60% 45% at 50% 52%, color-mix(in oklab, var(--bg) 38%, transparent) 0%, color-mix(in oklab, var(--bg) 22%, transparent) 50%, transparent 85%)',
         }}
       />
 

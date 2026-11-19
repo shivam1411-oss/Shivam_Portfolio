@@ -21,9 +21,11 @@ const roll = (b) => b.next / b.prev; return accounts.filter(a => a.dpd > 90).map
 const GLITCH = '01{}[]()<>=+*/;:#$%&|!?'.split('');
 
 // base/max: glyph opacity when unlit / at the brightest point of a stream. glow: allow a halo on stream heads.
+// shape/tint: for a picture drawn in the grid (createMatrix's `shape` option), the unlit glyph opacity and the
+// strength of the picture's colour washed over the cube face, where the picture fully covers a cube.
 export const matrixThemes = {
-  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
-  light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, max: 1, head: '#0c3b36', glow: true, ripple: '15,138,126', rippleAlpha: 0.25 },
+  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, shape: 0.95, tint: 0.55, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
+  light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, max: 1, shape: 1, tint: 0.6, head: '#0c3b36', glow: true, ripple: '15,138,126', rippleAlpha: 0.25 },
   // Behind page content: dim enough that body text stays easy to read over it.
   darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.07, max: 0.3, head: 'rgba(63,209,191,0.45)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
   lightSubtle: { tile: '#f0f3f2', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.1, max: 0.32, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
@@ -39,13 +41,19 @@ export const currentMatrixTheme = (subtle = false) => {
 export const rand = (min, max) => min + Math.random() * (max - min);
 export const randomGlyph = () => GLITCH[(Math.random() * GLITCH.length) | 0];
 
-export function createMatrix(cell) {
+/**
+ * `shape(cols, rows, cell)`, optional, returns a picture sampled per cell (row-major): `weight`, 0 to 1, how much
+ * of the cube it covers, and `rgb`, its colour there as "r,g,b" (or null). Covered cubes take that colour, so
+ * the grid shows the picture (the welcome screen's deer head). Themes without `shape`/`tint` ignore it.
+ */
+export function createMatrix(cell, { shape: shapeFn } = {}) {
   let w = 0;
   let h = 0;
   let cols = 0;
   let rows = 0;
   let cells = []; // glyph per cell, row-major
   let heads = []; // per column: { y, speed }
+  let shape = null; // { weight, rgb } per cell, or null
   let cache = null; // pre-rendered unlit grid for drawFull
   let cacheTheme = null;
   let cacheDpr = 1;
@@ -60,9 +68,14 @@ export function createMatrix(cell) {
   };
 
   // Cube: flat face with a light top-left edge and a shaded bottom-right edge.
-  const drawTile = (ctx, theme, x, y) => {
+  const drawTile = (ctx, theme, x, y, i = -1) => {
     ctx.fillStyle = theme.tile;
     ctx.fillRect(x, y, s, s);
+    const weight = i >= 0 ? weightAt(theme, i) : 0;
+    if (weight > 0) {
+      ctx.fillStyle = `rgba(${shape.rgb[i]},${weight * theme.tint})`;
+      ctx.fillRect(x, y, s, s);
+    }
     ctx.fillStyle = theme.hi;
     ctx.fillRect(x, y, s, 1);
     ctx.fillRect(x, y, 1, s);
@@ -71,19 +84,29 @@ export function createMatrix(cell) {
     ctx.fillRect(x + s - 1, y, 1, s);
   };
 
+  // How strongly the picture shows on cube i under this theme (0 when the theme or the matrix has none).
+  function weightAt(theme, i) {
+    return shape && theme.tint && shape.rgb[i] ? shape.weight[i] : 0;
+  }
+  // Unlit glyph colour and opacity: the theme's, or the picture's colour, brighter, inside the picture.
+  const glyphColour = (theme, i) => (weightAt(theme, i) > 0.3 ? shape.rgb[i] : theme.glyph);
+  const baseAlpha = (theme, i) => theme.base + weightAt(theme, i) * ((theme.shape ?? theme.base) - theme.base);
+
   const drawGlyph = (ctx, theme, col, row, glow) => {
     const x = col * cell;
     const y = row * cell;
+    const i = row * cols + col;
     const d = heads[col].y - row;
     const lit = d >= 0 && d < TRAIL ? 1 - d / TRAIL : 0;
-    let ch = cells[row * cols + col];
+    let ch = cells[i];
     if (lit > 0.6 && Math.random() < 0.06) ch = randomGlyph(); // brief glitch near the head
     if (d >= 0 && d < 1) {
       ctx.fillStyle = theme.head;
       ctx.shadowColor = `rgb(${theme.glyph})`;
       ctx.shadowBlur = theme.glow ? glow : 0;
     } else {
-      ctx.fillStyle = `rgba(${theme.glyph},${theme.base + lit * (theme.max - theme.base)})`;
+      const base = baseAlpha(theme, i);
+      ctx.fillStyle = `rgba(${glyphColour(theme, i)},${base + lit * (Math.max(theme.max, base) - base)})`;
       ctx.shadowBlur = 0;
     }
     ctx.fillText(ch, x + s / 2, y + s / 2 + 0.5);
@@ -101,6 +124,7 @@ export function createMatrix(cell) {
         const start = (Math.random() * CODE.length) | 0;
         for (let row = 0; row < rows; row++) cells[row * cols + col] = CODE[(start + row) % CODE.length];
       }
+      shape = shapeFn ? shapeFn(cols, rows, cell) : null;
       heads = Array.from({ length: cols }, () => ({ y: rand(-rows, rows), speed: rand(0.18, 0.5) }));
       cache = null;
     },
@@ -125,7 +149,7 @@ export function createMatrix(cell) {
       prep(ctx);
       for (let col = c0; col <= c1; col++) {
         for (let row = r0; row <= r1; row++) {
-          drawTile(ctx, theme, col * cell, row * cell);
+          drawTile(ctx, theme, col * cell, row * cell, row * cols + col);
           drawGlyph(ctx, theme, col, row, glow);
         }
       }
@@ -143,9 +167,10 @@ export function createMatrix(cell) {
         prep(cctx);
         for (let col = 0; col < cols; col++) {
           for (let row = 0; row < rows; row++) {
-            drawTile(cctx, theme, col * cell, row * cell);
-            cctx.fillStyle = `rgba(${theme.glyph},${theme.base})`;
-            cctx.fillText(cells[row * cols + col], col * cell + s / 2, row * cell + s / 2 + 0.5);
+            const i = row * cols + col;
+            drawTile(cctx, theme, col * cell, row * cell, i);
+            cctx.fillStyle = `rgba(${glyphColour(theme, i)},${baseAlpha(theme, i)})`;
+            cctx.fillText(cells[i], col * cell + s / 2, row * cell + s / 2 + 0.5);
           }
         }
         cacheTheme = theme;
@@ -159,7 +184,7 @@ export function createMatrix(cell) {
         const r0 = Math.max(0, Math.ceil(head - TRAIL));
         const r1 = Math.min(rows - 1, Math.floor(head));
         for (let row = r0; row <= r1; row++) {
-          drawTile(ctx, theme, col * cell, row * cell);
+          drawTile(ctx, theme, col * cell, row * cell, row * cols + col);
           drawGlyph(ctx, theme, col, row, glow);
         }
       }
