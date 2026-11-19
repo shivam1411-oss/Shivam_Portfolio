@@ -17,16 +17,17 @@ const SETTINGS = {
  * The low-poly stag head is drawn in the hidden matrix, so the trail uncovers parts of it.
  *
  * Props: `full` uses the bright welcome-screen palette instead of the dim one for behind page content;
- * `cell` overrides the cube size (to line up with another matrix underneath); `className` places the canvas
- * (by default fixed behind the whole page).
+ * `cell` overrides the cube size (to line up with another matrix underneath); `dropSize` scales the water
+ * drops (1 = the usual size); `className` places the canvas (by default fixed behind the whole page).
  */
-export default function CursorReveal({ full = false, cell, className = 'fixed inset-0 -z-[5]' }) {
+export default function CursorReveal({ full = false, cell, dropSize = 1, className = 'fixed inset-0 -z-[5]' }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
     const settings = isTouch ? SETTINGS.touch : SETTINGS.mouse;
-    const { maskScale: MASK_SCALE, spacing: SPACING, maxDrops: MAX_DROPS, maxDpr, glow, dropScale } = settings;
+    const { maskScale: MASK_SCALE, spacing: SPACING, maxDrops: MAX_DROPS, maxDpr, glow } = settings;
+    const dropScale = settings.dropScale * dropSize;
     const CELL = cell ?? settings.cell;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -237,7 +238,7 @@ export default function CursorReveal({ full = false, cell, className = 'fixed in
       window.removeEventListener('blur', onLeave);
       document.removeEventListener('mouseout', onOut);
     };
-  }, [full, cell]);
+  }, [full, cell, dropSize]);
 
   return <canvas ref={canvasRef} aria-hidden className={`${className} pointer-events-none w-full h-full`} />;
 }

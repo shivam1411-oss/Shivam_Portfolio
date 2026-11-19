@@ -222,8 +222,9 @@ export default function Intro({ onEnter, onDone }) {
       className="fixed inset-0 z-[80] bg-bg cursor-pointer select-none overflow-hidden"
     >
       <MatrixBackground />
-      {/* The cursor's trail uncovers the stag head hidden in the matrix, as on the rest of the site */}
-      <CursorReveal full cell={introCell()} className="absolute inset-0" />
+      {/* The cursor's trail uncovers the stag head hidden in the matrix, as on the rest of the site. Smaller
+          drops than on the site, so a moving cursor gives glimpses of the stag rather than uncovering it all. */}
+      <CursorReveal full cell={introCell()} dropSize={0.45} className="absolute inset-0" />
 
       {/* Soft spotlight behind the text so it stays readable over the code, light enough that the stag the
           cursor uncovers still shows through */}
