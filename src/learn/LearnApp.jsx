@@ -17,7 +17,6 @@ import {
   Database,
   FlaskConical,
   GitCommitHorizontal,
-  GraduationCap,
   History,
   Layers,
   LibraryBig,
@@ -312,10 +311,9 @@ function Header({ route, progress }) {
   return (
     <header className="sticky top-0 z-30 glass border-b border-line">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center gap-2 sm:gap-3">
-        <a href="#/" className="flex items-center gap-2.5 shrink-0">
-          <span className="w-9 h-9 rounded-xl bg-fg text-bg flex items-center justify-center">
-            <GraduationCap size={18} />
-          </span>
+        <a href="#/" aria-label="CodeJack home" className="flex items-center gap-2.5 shrink-0">
+          {/* The CodeJack logo (public/codejack-icon.svg): a Jack card crowned with antlers, over code-matrix cubes */}
+          <img src="codejack-icon.svg" alt="" width="36" height="36" className="w-9 h-9 rounded-xl" />
           <span className="hidden lg:block leading-tight">
             <span className="block font-extrabold text-fg text-sm">CodeJack</span>
             <span className="block text-[11px] text-subtle font-semibold">Interactive courses</span>

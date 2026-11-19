@@ -256,8 +256,9 @@ export default function Landing({ progress }) {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 md:pt-16 pb-10">
       <div className="grid lg:grid-cols-[1fr_1.05fr] gap-6 lg:gap-10 items-center">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-          <div className="eyebrow text-accent mb-4 flex items-center gap-3">
-            <span className="h-px w-8 bg-accent/60" /> CodeJack
+          <div className="mb-5 flex items-center gap-3">
+            <img src="codejack-icon.svg" alt="" width="52" height="52" className="w-13 h-13 rounded-2xl shadow-soft" />
+            <span className="eyebrow text-accent">CodeJack</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-fg leading-[1.05]">
             Want to learn from a <span className="text-gradient">real-world project</span>?
