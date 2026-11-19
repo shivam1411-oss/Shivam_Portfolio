@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { createMatrix, currentMatrixTheme, rand } from './codeMatrix';
+import { deerMask } from './deerMask';
 
 // Tuning per input type. Phones get bigger cubes, fewer droplets and no glow to stay smooth.
 const SETTINGS = {
@@ -13,13 +14,20 @@ const SETTINGS = {
  * Matrix-style streams. The cursor (or a finger on touch screens) leaves a trail of
  * wobbling, spreading "water" droplets that reveal it; they drift with the motion,
  * ripple outward and dry up, so the matrix is covered again once the cursor leaves.
+ * The low-poly stag head is drawn in the hidden matrix, so the trail uncovers parts of it.
+ *
+ * Props: `full` uses the bright welcome-screen palette instead of the dim one for behind page content;
+ * `cell` overrides the cube size (to line up with another matrix underneath); `className` places the canvas
+ * (by default fixed behind the whole page).
  */
-export default function CursorReveal() {
+export default function CursorReveal({ full = false, cell, className = 'fixed inset-0 -z-[5]' }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    const { maskScale: MASK_SCALE, spacing: SPACING, maxDrops: MAX_DROPS, cell: CELL, maxDpr, glow, dropScale } = isTouch ? SETTINGS.touch : SETTINGS.mouse;
+    const settings = isTouch ? SETTINGS.touch : SETTINGS.mouse;
+    const { maskScale: MASK_SCALE, spacing: SPACING, maxDrops: MAX_DROPS, maxDpr, glow, dropScale } = settings;
+    const CELL = cell ?? settings.cell;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const canvas = canvasRef.current;
@@ -31,7 +39,7 @@ export default function CursorReveal() {
 
     let w = 0;
     let h = 0;
-    const matrix = createMatrix(CELL);
+    const matrix = createMatrix(CELL, { shape: deerMask });
     let drops = [];
     let frame = 0;
     let time = 0;
@@ -139,7 +147,7 @@ export default function CursorReveal() {
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, w, h);
       if (drops.length) {
-        const theme = currentMatrixTheme(true);
+        const theme = currentMatrixTheme(!full);
         // Draw only the cubes inside the revealed area; the rest is masked away anyway.
         matrix.drawRegion(actx, theme, box, glow);
         ctx.drawImage(mask, 0, 0, w, h);
@@ -229,7 +237,7 @@ export default function CursorReveal() {
       window.removeEventListener('blur', onLeave);
       document.removeEventListener('mouseout', onOut);
     };
-  }, []);
+  }, [full, cell]);
 
-  return <canvas ref={canvasRef} aria-hidden className="fixed inset-0 -z-[5] pointer-events-none w-full h-full" />;
+  return <canvas ref={canvasRef} aria-hidden className={`${className} pointer-events-none w-full h-full`} />;
 }

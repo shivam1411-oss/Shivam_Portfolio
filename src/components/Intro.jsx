@@ -4,10 +4,14 @@ import { ArrowRight } from 'lucide-react';
 import { profile } from '../data/content';
 import Avatar from './Avatar';
 import { createMatrix, currentMatrixTheme, randomGlyph } from './codeMatrix';
+import CursorReveal from './CursorReveal';
 import ThemeToggle from './ThemeToggle';
 import { ease } from './motion';
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Cube size of the welcome-screen matrix; the cursor reveal on top uses the same so the grids line up.
+const introCell = () => (window.matchMedia('(pointer: coarse)').matches ? 20 : 16);
 
 /** Full-screen code matrix running behind the welcome screen. */
 function MatrixBackground() {
@@ -15,7 +19,7 @@ function MatrixBackground() {
 
   useEffect(() => {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    const cell = isTouch ? 20 : 16;
+    const cell = introCell();
     const maxDpr = isTouch ? 1 : 1.5;
     const glow = isTouch ? 0 : 8;
     const canvas = canvasRef.current;
@@ -218,14 +222,17 @@ export default function Intro({ onEnter, onDone }) {
       className="fixed inset-0 z-[80] bg-bg cursor-pointer select-none overflow-hidden"
     >
       <MatrixBackground />
+      {/* The cursor's trail uncovers the stag head hidden in the matrix, as on the rest of the site */}
+      <CursorReveal full cell={introCell()} className="absolute inset-0" />
 
-      {/* Soft spotlight behind the text so it stays readable over the code */}
+      {/* Soft spotlight behind the text so it stays readable over the code, light enough that the stag the
+          cursor uncovers still shows through */}
       <div
         aria-hidden
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 70% 55% at 50% 50%, color-mix(in oklab, var(--bg) 94%, transparent) 0%, color-mix(in oklab, var(--bg) 70%, transparent) 45%, transparent 80%)',
+            'radial-gradient(ellipse 60% 45% at 50% 52%, color-mix(in oklab, var(--bg) 38%, transparent) 0%, color-mix(in oklab, var(--bg) 22%, transparent) 50%, transparent 85%)',
         }}
       />
 

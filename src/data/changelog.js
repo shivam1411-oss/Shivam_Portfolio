@@ -573,6 +573,14 @@ export const changelog = [
     plain: 'A new professional portrait replaces the initials placeholder: a head-to-chest crop in the opening section and a head-and-shoulders crop in the small round avatars. The link-preview card shown on LinkedIn and WhatsApp uses it too.',
     commits: ['526d6f6'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'design',
+    title: 'A stag head the cursor uncovers',
+    plain: 'A geometric stag head (flat facets in sage, tan and terracotta, with wide antlers) is hidden in the code-cube matrix on the welcome screen and across the site: the cursor\'s trail of water uncovers it, and it covers over again as the trail dries. In the dark theme it uses bright green, amber and coral.',
+    commits: ['3d61661', '9be2a36', 'e00ce0d'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
