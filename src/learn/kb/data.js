@@ -10,6 +10,7 @@ const direct = {
   react: () => import('./react').then((m) => m.reactKb),
   jira: () => import('./jira').then((m) => m.jiraKb),
   k8s: () => import('./k8s').then((m) => m.k8sKb),
+  security: () => import('./security').then((m) => m.securityKb),
 };
 
 export const kbLoaders = {

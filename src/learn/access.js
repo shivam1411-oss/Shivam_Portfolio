@@ -62,6 +62,7 @@ const directLessons = {
   react: () => import('./content/react.paid.js'),
   jira: () => import('./content/jira.paid.js'),
   k8s: () => import('./content/k8s.paid.js'),
+  security: () => import('./content/security.paid.js'),
 };
 
 const PAID_BASE = import.meta.env.VITE_PAID_BASE || `${SUPABASE_URL}/storage/v1/object/authenticated/paid-lessons/`;

@@ -7,7 +7,7 @@ import ThemeToggle from './components/ThemeToggle';
 import { Reveal, ease } from './components/motion';
 import './index.css';
 
-const EFFECTIVE_DATE = 'November 18, 2026';
+const EFFECTIVE_DATE = 'November 19, 2026';
 
 // Section headings become link targets (#your-rights) for the contents list.
 const slug = (title) =>
@@ -191,7 +191,7 @@ const sections = [
       <>
         <p>
           The Learning Lab offers interactive courses on how this site was built, Python, data analysis with pandas, SQL and Matplotlib, React,
-          Jira and Kubernetes. "Learn the Code" and the first module of every course are free and need no account and no personal information.
+          Jira, Kubernetes, and Cloudflare &amp; web security. "Learn the Code" and the first module of every course are free and need no account and no personal information.
           The rest of each course is available to buy, which requires a free account (see "Learning Lab Accounts &amp; Payments" below).
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
@@ -530,6 +530,12 @@ const sections = [
         </p>
         <p className="mt-3">
           <strong>What changed in this version ({EFFECTIVE_DATE}):</strong>
+        </p>
+        <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>Added the new "Cloudflare &amp; Web Security" course to the list of Learning Lab courses. Nothing about what is collected changed.</li>
+        </ul>
+        <p className="mt-3">
+          <strong>Changes on November 18, 2026:</strong>
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
           <li>"Get Resume" emails are now sent from shivam-soni.com through Brevo, by a server function on Supabase, instead of EmailJS.</li>
