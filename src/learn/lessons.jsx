@@ -3,7 +3,7 @@ import { ComponentTree, DataToUI, MotionPlayground, PropsPlayground, StateCalcul
 import { BlurVsGradient, BreakpointPreview, ChunkTimeline, DecodeDemo, DeviceInspector, MaskDemo, MatrixMini, StorageInspector } from './widgets/effects';
 import { ChatFlow, MaskPhone, ZTestStepper } from './widgets/features';
 import { RouteExplorer, ThreadDemo } from './widgets/lab';
-import { HaloDemo, ShineDemo } from './widgets/recent';
+import { HaloDemo, ShineDemo, StagGrid } from './widgets/recent';
 import PyRunner from './python/PyRunner';
 
 // Every lesson explains one part of how the portfolio was built, with the real code, a playground and a quiz.
@@ -12,7 +12,7 @@ import PyRunner from './python/PyRunner';
 export const modules = [
   { id: 'foundations', title: 'Foundations', blurb: 'How the site is put together: React, components, state and data files.' },
   { id: 'look', title: 'Look & feel', blurb: 'Styling with Tailwind, light and dark themes, and animations.' },
-  { id: 'effects', title: 'The effects', blurb: 'The code matrix, cursor trail, welcome screen and water reveal.' },
+  { id: 'effects', title: 'The effects', blurb: 'The code matrix, cursor trail, welcome screen, water reveal and the stag hidden in the code.' },
   { id: 'speed', title: 'Speed & devices', blurb: 'Making it fast on phones and laying it out for every screen.' },
   { id: 'features', title: 'Features', blurb: 'The Analytical Lab maths, contact pop-up, resume and AI chat.' },
   { id: 'shipping', title: 'Shipping it', blurb: 'Git, automatic deploys to GitHub Pages, and the Android app.' },
@@ -237,8 +237,8 @@ useEffect(() => {
     module: 'foundations',
     title: 'Content lives in data files',
     minutes: 6,
-    commits: ['d1fd86a', '5fc8139', '93a2614', '63eaa96'],
-    goals: ['Why text and numbers are kept apart from layout', 'What is in content.js, impact.js and playbook.js', 'How a component loops over data'],
+    commits: ['d1fd86a', '5fc8139', '93a2614', '63eaa96', '526d6f6', '0ebfe3c'],
+    goals: ['Why text and numbers are kept apart from layout', 'What is in content.js, impact.js and playbook.js', 'How a component loops over data, and how the photo is set'],
     body: () => (
       <>
         <P>
@@ -268,13 +268,35 @@ export const experience = [
         <DataToUI />
         <H>Where each thing lives</H>
         <Code file="src/data/">{`
-content.js   // profile, contacts (masked phones), nav links, hero pillars,
-             // skills, education, experience
+content.js   // profile (incl. photo paths), contacts (masked phones), nav links,
+             // hero pillars, skills, education, experience
 impact.js    // "Impact by the numbers" result cards and delivery steps
 playbook.js  // the five Analytical Lab methods: formula, sliders, maths, SQL`}</Code>
+        <H>The profile photo is data too</H>
+        <P>
+          The photo appears in five places: the hero, the navbar, the footer, the welcome screen and the chat. None of them names the file. They all use one{' '}
+          <F>Avatar</F> component, which reads the paths from <F>content.js</F>, so swapping the photo is a two-line change.
+        </P>
+        <Code file="src/data/content.js and src/components/Avatar.jsx">{`
+photo: 'assets/profile-photo.jpg',          // head to chest, 720px: the large hero
+photoFace: 'assets/profile-photo-face.jpg', // head and shoulders, 256px: small round avatars
+
+<Avatar crop="full" />   // the hero; every other avatar uses the default crop="face"
+// photo: '' → Avatar shows the initials instead`}</Code>
+        <Callout title="Two crops, one photo">
+          A small round avatar 40px across would show a tiny face if it used the full-length photo, so it gets its own tight crop. Both were cut from the same portrait, and
+          its office background was replaced with a soft grey studio backdrop on the Mac itself (Apple's Vision framework finds the person), so the photo never left the
+          computer. The link-preview card was rebuilt from the same image.
+        </Callout>
       </>
     ),
     quiz: [
+      {
+        q: 'You want to try a different profile photo. What do you change?',
+        options: ['Every component that shows it', 'The photo and photoFace paths in content.js (and the image files)', 'Avatar.jsx only', 'index.html'],
+        answer: 1,
+        why: 'Every avatar reads the paths from content.js through the one Avatar component.',
+      },
       {
         q: 'You got a new job. What is the simplest correct change?',
         options: ['Edit Experience.jsx layout', 'Add a new object at the top of the experience list in src/data/content.js', 'Edit index.html', 'Edit dist/'],
@@ -876,6 +898,81 @@ const k = 1
       },
     ],
   },
+  {
+    id: 'stag',
+    module: 'effects',
+    title: 'The stag hidden in the code',
+    minutes: 10,
+    commits: ['3d61661', '9be2a36', 'e00ce0d', 'c2caf0d', '6a4ca84'],
+    goals: ['How a picture is drawn with cubes that only know a number and a colour', 'Sampling a drawing onto a grid', 'Why the stag shows only under the cursor'],
+    body: () => (
+      <>
+        <P>
+          Move your cursor over the welcome screen or any page of the site and the water reveal uncovers more than code: a geometric stag head, in the theme's teal and indigo.
+          The stag is not an image file. It is drawn by the same cubes as the code matrix, each one simply tinted by how much of the stag sits on it.
+        </P>
+        <H>Step 1: draw the stag once, off screen</H>
+        <P>
+          <F>src/components/deerMask.js</F> describes the stag as flat facets (ears, forehead, cheeks, nose, muzzle) and tapered antler strokes, the left half mirrored to make the
+          right. It paints them on a small canvas that is never shown, with thin gaps cut between the facets, like the low-poly style it was modelled on.
+        </P>
+        <Code file="src/components/deerMask.js (outline)">{`
+const PALETTES = {
+  light: { left: [15, 138, 126], mid: [53, 118, 170], right: [91, 97, 214] }, // --accent → --accent-2
+  dark:  { left: [63, 209, 191], mid: [104, 180, 219], right: [145, 150, 246] },
+};
+paintDeer(ctx, palette);   // facets, antlers, then gaps and eyes cut out`}</Code>
+        <H>Step 2: ask one question per cube</H>
+        <P>
+          The canvas is four pixels per cube in each direction. For every cube, <F>deerMask</F> averages its 16 pixels into two answers: how much of the cube the stag covers
+          (0 to 1), and the average colour there. That is sampling: turning a smooth drawing into a grid of numbers.
+        </P>
+        <StagGrid />
+        <H>Step 3: the matrix tints by those numbers</H>
+        <Code file="src/components/codeMatrix.js">{`
+export function createMatrix(cell, { shape: shapeFn } = {}) {
+  // on resize: shape = shapeFn(cols, rows, cell)  →  { weight, rgb, rgbDark }
+  ...
+  // a covered cube gets the stag's colour washed over its face, and a brighter glyph
+  ctx.fillStyle = \`rgba(\${colours(theme)[i]},\${weight * theme.tint})\`;`}</Code>
+        <P>
+          Nothing else about the matrix changed: the code streams still fall through the stag. Themes decide how strongly it shows (<F>tint</F>) and which palette to use, so the
+          stag is deep teal and indigo in the light theme and bright in the dark theme.
+        </P>
+        <H>Step 4: only where the water is</H>
+        <Code file="src/components/CursorReveal.jsx and Intro.jsx">{`
+const matrix = createMatrix(CELL, { shape: deerMask });   // the hidden matrix contains the stag
+
+// welcome screen: same reveal, bright palette, cubes lined up with the visible matrix, smaller drops
+<CursorReveal full cell={introCell()} dropSize={0.45} className="absolute inset-0" />`}</Code>
+        <Callout title="How the design settled">
+          The first version drew the stag permanently behind the name, then behind the hero and footer too. It competed with the text and changed how the reveal felt, so it
+          moved into the hidden matrix only: you discover it by moving the cursor. On the welcome screen the drops were then shrunk to 45%, so a sweep gives glimpses rather than
+          uncovering the whole stag at once.
+        </Callout>
+      </>
+    ),
+    quiz: [
+      {
+        q: 'Why does deerMask average 16 pixels per cube?',
+        options: ['To blur the colours', 'To turn the smooth drawing into one coverage value and one colour per cube', 'To make it load faster', 'Canvas requires it'],
+        answer: 1,
+        why: 'Each cube can only be tinted one way, so the drawing is sampled into a value per cube.',
+      },
+      {
+        q: 'Where do the stag\'s colours come from?',
+        options: ['A photo', 'The theme accents --accent and --accent-2, in each theme\'s shades', 'Random each visit', 'The visitor\'s screen'],
+        answer: 1,
+        why: 'The palettes copy the theme colours, so the stag matches the gradient on the name.',
+      },
+      {
+        q: 'Why can you only see the stag under the cursor?',
+        options: ['It is too faint elsewhere', 'It is drawn in the hidden matrix that the water reveal shows only inside the droplets', 'It loads late', 'It only exists on the welcome screen'],
+        answer: 1,
+        why: 'The same mask that reveals the code reveals the stag.',
+      },
+    ],
+  },
 
   // ---------------------------------------------------------------- Speed & devices
   {
@@ -954,8 +1051,8 @@ const isTouch = window.matchMedia('(pointer: coarse)').matches;`}</Code>
     module: 'speed',
     title: 'Loading less up front',
     minutes: 6,
-    commits: ['b5219e7'],
-    goals: ['What a bundle and a chunk are', 'How React.lazy splits the site', 'Why it prefetches during the welcome screen'],
+    commits: ['b5219e7', '110a033'],
+    goals: ['What a bundle and a chunk are', 'How React.lazy splits the site', 'Why it prefetches, and why fewer, larger shared files load faster'],
     body: () => (
       <>
         <P>
@@ -979,6 +1076,21 @@ useEffect(() => {
         <Callout title="Same idea elsewhere">
           The PDF library in <F>ResumeModal.jsx</F> is also loaded with <F>await import('pdfjs-dist')</F>, only when someone opens the resume.
         </Callout>
+        <H>Too many small files is slow too (110a033)</H>
+        <P>
+          Splitting can go too far. Left alone, every icon became its own 0.3 KB file and the home page needed 17 script and style files. Each request can stall on a slow
+          connection, so <F>vite.config.js</F> now groups the libraries every page uses into one <F>vendor</F> file and the site's shared pieces into one <F>shared</F> file:
+          the home page went from 17 files to 6, the Learning Lab from 21 to 9.
+        </P>
+        <Code file="vite.config.js">{`
+manualChunks(id) {
+  if (/node_modules\\/(react|react-dom|scheduler|motion|…|lucide-react)\\//.test(id)) return 'vendor';
+  if (/\\/src\\/(theme\\/|components\\/(motion|codeMatrix|CodeTrail|CursorReveal|ThemeToggle)\\.)/.test(id)) return 'shared';
+}`}</Code>
+        <P>
+          The fonts moved too: instead of asking Google Fonts, the two typefaces are four small <F>.woff2</F> files bundled with the site and declared in{' '}
+          <F>src/index.css</F>. One fewer server to wait for, and no visitor details sent to a third party.
+        </P>
       </>
     ),
     quiz: [
@@ -1117,8 +1229,8 @@ const significant = Math.abs(r.z) >= 1.96;   // 95% confidence`}</Code>
     module: 'features',
     title: 'Contact, resume and email',
     minutes: 7,
-    commits: ['63eaa96', 'd1fd86a', 'd18b71e'],
-    goals: ['How pop-ups (modals) open and close', 'Masked phone numbers', 'Sending the resume through a server function, and the PDF preview'],
+    commits: ['63eaa96', 'd1fd86a', 'd18b71e', '76780df', 'd02e73d', 'a694835', 'fce9d9d'],
+    goals: ['How pop-ups (modals) open and close', 'Masked phone numbers', 'The resume: built from a source file, previewed safely, sent by a server function'],
     body: () => (
       <>
         <P>
@@ -1141,8 +1253,26 @@ const pdf = await pdfjs.getDocument(profile.resume).promise;
 await fetch(SEND_RESUME_URL, { method: 'POST', body: JSON.stringify({ name, email }) });`}</Code>
         <Callout title="Why a server function, not the browser?">
           Sending email needs Brevo's API key, which must never be in the website, just like the Claude API key in the next lesson. The function keeps the key
-          on the server, attaches the PDF, and limits how often one address or visitor can ask, so nobody can use the form to flood an inbox.
+          on the server, attaches the PDF, and limits how often one address or visitor can ask, so nobody can use the form to flood an inbox. The{' '}
+          <B>Cloudflare &amp; Web Security</B> course walks through every check it makes.
         </Callout>
+        <H>The resume is built, not edited</H>
+        <P>
+          The PDF is not edited by hand. Its source is a web page, <F>resume/resume.html</F>, styled with the site's own font. One command prints it to PDF with a headless
+          Chrome, so the text stays real and selectable and the links stay clickable.
+        </P>
+        <Code file="terminal">{`
+npm run resume     # resume/resume.html → public/assets/Shivam-Soni-Resume.pdf`}</Code>
+        <H>A preview that cannot be harvested</H>
+        <P>
+          The pop-up draws the first page on a canvas before anything is sent. Before showing it, the code finds the phone number and email address in the PDF's text and
+          paints masked versions over them, then tiles the site's address faintly across the page. A screenshot of the preview gives away no contact details and still says
+          where it came from; the full PDF only goes to the address someone typed in.
+        </P>
+        <Code file="src/components/ResumeModal.jsx">{`
+const maskPhone = (s) => \`+\${digits.slice(0, 2)} ••••• ••\${digits.slice(-3)}\`;
+const maskEmail = (s) => \`\${user[0]}•••@\${domain}\`;
+drawWatermark(ctx, width, height);   // "shivam-soni.com", rotated -30°, 10% opacity`}</Code>
       </>
     ),
     quiz: [
@@ -1240,8 +1370,8 @@ const API_URL = import.meta.env.VITE_CHAT_API_URL;  // filled in at build time
     module: 'shipping',
     title: 'Git, GitHub Actions and Pages',
     minutes: 11,
-    commits: ['d1fd86a', 'e123564', 'd0d27a0', 'a77c041', '5258fec'],
-    goals: ['Commits and branches in plain words', 'What the deploy workflow does, step by step', 'How a change reaches shivam-soni.com, and how shared links get a preview card'],
+    commits: ['d1fd86a', 'e123564', 'd0d27a0', 'a77c041', '5258fec', '6b22877', '1720865', 'e21396a'],
+    goals: ['Commits and branches in plain words', 'What the deploy workflow does, step by step', 'How a change reaches shivam-soni.com through Cloudflare, and how shared links get a preview card'],
     body: () => (
       <>
         <P>
@@ -1327,6 +1457,16 @@ Disallow: /`}</Code>
           <F>robots.txt</F>, <F>ai.txt</F>, <F>.well-known/tdmrep.json</F> and the tags are requests: reputable crawlers obey them, others may not. The wall is Cloudflare, which
           sits in front of the site and turns away known AI crawlers before they reach a page. <F>Google-Extended</F> only stops Gemini training; Google Search still works.
         </Callout>
+        <Callout tone="warn" title="The dotted folder that did not publish (e21396a)">
+          The upload step skips files and folders whose names start with a dot, so <F>/.well-known/tdmrep.json</F> was a 404 on the live site until the workflow added{' '}
+          <F>include-hidden-files: true</F> to <F>upload-pages-artifact</F>. Always open a new public file on the live site after deploying.
+        </Callout>
+        <H>Cloudflare in front</H>
+        <P>
+          GitHub Pages still hosts the site, but the domain's nameservers are Cloudflare's, so every visit reaches Cloudflare first. It serves the HTTPS certificate, redirects{' '}
+          <F>http://</F> and <F>www.</F>, keeps copies of the JavaScript and CSS near visitors, blocks AI training crawlers, and routes email for <F>hello@shivam-soni.com</F>.
+          The <B>Cloudflare &amp; Web Security</B> course explains each of these on the live setup.
+        </P>
       </>
     ),
     quiz: [

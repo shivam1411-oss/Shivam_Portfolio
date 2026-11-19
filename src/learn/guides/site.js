@@ -131,6 +131,19 @@ export const siteGuide = {
     ],
     recap: ['Mask + hidden layer + compositing = reveal.', 'source-in keeps the new drawing inside the mask.', 'Small masks and drawing only the visible area keep it fast.'],
   },
+  stag: {
+    idea: 'The stag is a drawing sampled onto the matrix grid: each cube gets a coverage value and a colour, and only the water reveal shows it.',
+    terms: ['canvas', 'cssvar'],
+    mistakes: [
+      ['Drawing the picture straight onto the visible matrix', 'That made it always visible and fought with the text. It lives in the hidden matrix the reveal uncovers.'],
+      ['Hard-coding colours that ignore the theme', 'The palettes copy --accent and --accent-2, so the stag matches the site in both themes.'],
+    ],
+    faq: [
+      ['Is the stag an image file?', 'No. It is a list of polygons and antler strokes painted on a small off-screen canvas, then sampled per cube.'],
+      ['Why is it smaller drops on the welcome screen?', 'Big drops uncovered the whole stag at once in small windows; at 45% size a sweep gives glimpses.'],
+    ],
+    recap: ['Paint once off screen, sample per cube: coverage + colour.', 'createMatrix({ shape }) tints covered cubes.', 'The reveal decides where it is seen.'],
+  },
   performance: {
     idea: 'Smooth pages stay within a 16 ms budget per frame; the fix for phones was replacing expensive effects with cheap look-alikes.',
     terms: ['gpu', 'mediaquery', 'dpr'],

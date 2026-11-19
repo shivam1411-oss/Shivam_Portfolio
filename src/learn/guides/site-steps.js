@@ -248,6 +248,26 @@ export const siteSteps = withIntro(PLAY, {
       { do: 'Change View back to Result.', see: 'The matrix again shows only inside the droplets. Result = matrix seen through the mask.' },
     ],
   },
+  stag: {
+    terms: ['canvas', 'cssvar', 'dpr'],
+    process: {
+      title: 'How the stag gets into the code matrix',
+      stages: [
+        ['The stag is described as shapes', 'Facets for the head and tapered strokes for the antlers, in deerMask.js.'],
+        ['It is painted once, off screen', 'On a small canvas nobody sees, in the theme\'s teal and indigo.'],
+        ['Each cube asks how much it is covered', 'Its pixels are averaged into a coverage value and a colour.'],
+        ['The hidden matrix tints covered cubes', 'In the stag\'s colour, with brighter code on top.'],
+        ['The water reveal shows it', 'Only where the cursor\'s droplets are, so it is discovered, not shown.'],
+      ],
+    },
+    steps: [
+      { do: 'Scroll up to the playground "See the stag the way the matrix does". Set View to "Coverage only".', see: 'A grey stag: white where a cube is fully covered, darker where only partly, black outside.' },
+      { do: 'Drag Cube size to 28px.', see: 'A coarse, blocky stag: fewer cubes means less detail, and the thin antler tips fade.' },
+      { do: 'Drag Cube size down to 8px.', see: 'A much finer stag with clear gaps between the facets.' },
+      { do: 'Switch View to "Light theme", then "Dark theme".', see: 'The same cubes coloured teal on the left, blending to indigo on the right: deeper on light, brighter on dark.' },
+      { do: 'Open the portfolio (shivam-soni.com) and move your mouse slowly across the middle of the welcome screen.', see: 'Patches of teal and indigo cubes appear under the trail: parts of the stag, which fade as the water dries.' },
+    ],
+  },
 
   // ---------------------------------------------------------------- Speed & devices
   performance: {

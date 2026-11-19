@@ -1,5 +1,7 @@
-// Playgrounds for the lessons added in November 2026: readable text over the effects, and the tilting shine.
-import { useState } from 'react';
+// Playgrounds for the lessons added in November 2026: readable text over the effects, the tilting shine, and
+// the stag hidden in the code matrix.
+import { useEffect, useRef, useState } from 'react';
+import { deerMask } from '../../components/deerMask';
 import { Choice, Playground, Slider } from '../ui';
 
 const CODE_BG =
@@ -80,6 +82,65 @@ export function ShineDemo() {
         </button>
       </div>
       <pre className="mt-3 p-3 rounded-lg bg-[#0d1014] text-[#d6f5f0] font-mono text-[12px] overflow-x-auto">{`--shine = 50 + (${tilt} - ${base}) × 2 = ${shine.toFixed(0)}%`}</pre>
+    </Playground>
+  );
+}
+
+/** The stag as the matrix sees it: one value per cube, drawn as coverage or in each theme's colours. */
+export function StagGrid() {
+  const ref = useRef(null);
+  const [view, setView] = useState('dark');
+  const [cell, setCell] = useState(14);
+  useEffect(() => {
+    const canvas = ref.current;
+    const w = canvas.clientWidth;
+    const h = Math.round(w * 0.62);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.height = `${h}px`;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const cols = Math.ceil(w / cell);
+    const rows = Math.ceil(h / cell);
+    const m = deerMask(cols, rows, cell);
+    const dark = view !== 'light';
+    ctx.fillStyle = dark ? '#0a0b0e' : '#f7f7f5';
+    ctx.fillRect(0, 0, w, h);
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const i = r * cols + c;
+        const wgt = m.weight[i];
+        if (view === 'coverage') {
+          const v = Math.round(wgt * 255);
+          ctx.fillStyle = `rgb(${v},${v},${v})`;
+        } else if (wgt > 0 && m.rgb[i]) {
+          ctx.fillStyle = `rgba(${view === 'dark' ? m.rgbDark[i] : m.rgb[i]},${wgt})`;
+        } else {
+          ctx.fillStyle = dark ? '#11161a' : '#e9efed';
+        }
+        ctx.fillRect(c * cell, r * cell, cell - 1, cell - 1);
+      }
+    }
+  }, [view, cell]);
+  return (
+    <Playground title="See the stag the way the matrix does" hint="The matrix never draws the stag itself. It asks one question per cube: how much of this cube does the stag cover, and in what colour?">
+      <div className="flex flex-wrap items-end gap-4 mb-4">
+        <Choice
+          label="View"
+          value={view}
+          onChange={setView}
+          options={[
+            { value: 'coverage', label: 'Coverage only' },
+            { value: 'light', label: 'Light theme' },
+            { value: 'dark', label: 'Dark theme' },
+          ]}
+        />
+        <div className="w-48">
+          <Slider label="Cube size" value={cell} min={8} max={28} onChange={setCell} format={(v) => `${v}px`} />
+        </div>
+      </div>
+      <canvas ref={ref} className="w-full rounded-xl border border-line block" aria-label="The stag head drawn as a grid of cubes" />
     </Playground>
   );
 }
