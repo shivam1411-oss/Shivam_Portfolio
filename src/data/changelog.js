@@ -601,6 +601,14 @@ export const changelog = [
     commits: ['1dbf45c', 'c866409'],
     lessons: ['android', 'learning-lab'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'design',
+    title: 'A CodeJack logo: the Jack with antlers',
+    plain: 'CodeJack has its own logo: a Jack playing card crowned with stag antlers, in the site\'s teal and indigo, over the code-matrix cubes. It appears in the CodeJack header, on its landing page and as the browser-tab icon.',
+    commits: ['229336b'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
