@@ -617,6 +617,14 @@ export const changelog = [
     plain: 'Signed-in learners can now raise a support request from Help in CodeJack, about a payment, their account, a lesson or a bug. Each request gets a number and a reply thread, with emails both ways, and the site owner answers from a new Support inbox on the admin page. The privacy policy, terms and refund policy point to it.',
     commits: ['5930688'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'design',
+    title: 'The CodeJack logo: a stag on a coded Ace of Spades, in emails too',
+    plain: 'CodeJack\'s logo is now Shivam\'s own design: a low-poly stag rising from an Ace of Spades filled with QR-style code blocks, in the site\'s teal and indigo. It appears in the CodeJack header, landing page and browser tab, at the top of every CodeJack email (sign-up, password reset and support), and in the payment window.',
+    commits: ['5d7fdc1'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;

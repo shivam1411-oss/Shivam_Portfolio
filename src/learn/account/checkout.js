@@ -136,6 +136,7 @@ export function openWindow(order, user, { say, onPaid }) {
         amount: order.amount,
         currency: order.currency,
         name: 'Shivam Soni · CodeJack',
+        image: 'https://shivam-soni.com/codejack-icon.png', // the CodeJack logo in Razorpay's window (must be a full https address)
         description: order.product === 'all' ? 'All-access: every course' : `${order.title} course`,
         prefill: { name: displayName(user), email: user?.email || '' },
         notes: { product: order.product },

@@ -50,7 +50,7 @@ function replyEmail(title: string, intro: string, message: string) {
   return `<!doctype html><html lang="en"><body style="margin:0;padding:24px 12px;background:#f6f6f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#18181b;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fff;border:1px solid #e7e5e4;border-radius:20px;">
-<tr><td style="padding:28px 28px 6px;"><div style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#0f766e;">CodeJack Support</div>
+<tr><td style="padding:28px 28px 6px;"><img src="https://shivam-soni.com/codejack-icon.png" width="52" height="52" alt="CodeJack" style="display:block;width:52px;height:52px;border:0;border-radius:12px;margin:0 0 14px;" /><div style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#0f766e;">CodeJack Support</div>
 <h1 style="margin:12px 0 0;font-size:21px;line-height:1.3;font-weight:800;">${escapeHtml(title)}</h1></td></tr>
 <tr><td style="padding:10px 28px 0;font-size:15px;line-height:1.6;color:#52525b;">${intro}</td></tr>
 <tr><td style="padding:16px 28px;"><div style="padding:14px 16px;background:#f6f6f4;border-radius:12px;font-size:14px;line-height:1.6;color:#27272a;">${escapeHtml(message).replace(/\n/g, '<br />')}</div></td></tr>
