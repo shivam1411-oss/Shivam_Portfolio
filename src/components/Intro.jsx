@@ -4,11 +4,14 @@ import { ArrowRight } from 'lucide-react';
 import { profile } from '../data/content';
 import Avatar from './Avatar';
 import { createMatrix, currentMatrixTheme, randomGlyph } from './codeMatrix';
-import { deerMask } from './deerMask';
+import CursorReveal from './CursorReveal';
 import ThemeToggle from './ThemeToggle';
 import { ease } from './motion';
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Cube size of the welcome-screen matrix; the cursor reveal on top uses the same so the grids line up.
+const introCell = () => (window.matchMedia('(pointer: coarse)').matches ? 20 : 16);
 
 /** Full-screen code matrix running behind the welcome screen. */
 function MatrixBackground() {
@@ -16,13 +19,12 @@ function MatrixBackground() {
 
   useEffect(() => {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    // Narrow phones get smaller cubes, so the deer head drawn in the grid has enough of them to read.
-    const cell = isTouch ? (window.innerWidth < 640 ? 13 : 20) : 16;
+    const cell = introCell();
     const maxDpr = isTouch ? 1 : 1.5;
     const glow = isTouch ? 0 : 8;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const matrix = createMatrix(cell, { shape: deerMask });
+    const matrix = createMatrix(cell);
     let dpr = 1;
     let w = 0;
     let h = 0;
@@ -220,9 +222,11 @@ export default function Intro({ onEnter, onDone }) {
       className="fixed inset-0 z-[80] bg-bg cursor-pointer select-none overflow-hidden"
     >
       <MatrixBackground />
+      {/* The cursor's trail uncovers the stag head hidden in the matrix, as on the rest of the site */}
+      <CursorReveal full cell={introCell()} className="absolute inset-0" />
 
-      {/* Soft spotlight behind the text so it stays readable over the code, light enough that the deer head
-          drawn in the cubes still shows through */}
+      {/* Soft spotlight behind the text so it stays readable over the code, light enough that the stag the
+          cursor uncovers still shows through */}
       <div
         aria-hidden
         className="absolute inset-0"
