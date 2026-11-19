@@ -1,11 +1,13 @@
 // #/admin: the site owner's dashboard. Sales, buyers, how far each buyer has got (for the 7-day / 25% refund
-// rule), refunds through Razorpay, and free course grants. The server (admin Edge Function) only answers admins.
+// rule), refunds through Razorpay, free course grants, and the support inbox (AdminSupport). The server (admin Edge
+// Function) only answers admins.
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { BadgeCheck, ExternalLink, Gift, Loader2, RefreshCw, ShieldAlert, Undo2, Users, Wallet } from 'lucide-react';
 import { btn, btnPrimary } from '../ui';
 import { courses, courseById } from '../catalog';
 import { formatRupees } from '../access';
 import { adminCall, getAccount, subscribeAccount } from './store';
+import AdminSupport from './AdminSupport';
 
 const DAY = 24 * 60 * 60 * 1000;
 const REFUND_DAYS = 7;
@@ -174,6 +176,8 @@ export default function AdminPage() {
             <Stat icon={Users} label="Accounts" value={data.users.length} />
             <Stat icon={Undo2} label="Refunded" value={rows.filter((r) => r.status === 'refunded').length} />
           </div>
+
+          <AdminSupport />
 
           <section className="mt-8">
             <div className="flex flex-wrap items-center justify-between gap-3">

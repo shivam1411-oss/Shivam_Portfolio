@@ -19,6 +19,7 @@ import {
   GitCommitHorizontal,
   History,
   Layers,
+  LifeBuoy,
   LibraryBig,
   ListTree,
   Lock,
@@ -44,6 +45,7 @@ import { clearToast, displayName, getAccount, initAccount, loadRemoteProgress, s
 
 const AccountPage = lazy(() => import('./account/AccountPage'));
 const AdminPage = lazy(() => import('./account/AdminPage'));
+const SupportPage = lazy(() => import('./account/SupportPage'));
 const useAccount = () => useSyncExternalStore(subscribeAccount, getAccount);
 
 // When what the learner owns changes (sign in, sign out, purchase), reload courses so locks update.
@@ -81,6 +83,7 @@ const parseHash = () => {
   if (view === 'timeline' || view === 'glossary' || view === 'playground') return { view };
   if (view === 'account') return { view: 'account', sub: a || null };
   if (view === 'admin') return { view: 'admin' };
+  if (view === 'support') return { view: 'support', sub: a || null };
   if (view === 'kb') return { view: 'kb', course: courseById[a] || null, topic: courseById[a] ? b : null };
   if (view === 'courses') return { view: 'hub' };
   return { view: 'landing' };
@@ -307,6 +310,7 @@ function Header({ route, progress }) {
     { hash: '#/kb', label: 'Knowledge', Icon: BookMarked, active: route.view === 'kb' },
     { hash: '#/playground', label: 'Playground', Icon: SquareTerminal, active: route.view === 'playground' },
     { hash: '#/glossary', label: 'Glossary', Icon: ListTree, active: route.view === 'glossary' },
+    { hash: '#/support', label: 'Help', Icon: LifeBuoy, active: route.view === 'support' },
   ];
   return (
     <header className="sticky top-0 z-30 glass border-b border-line">
@@ -1270,6 +1274,11 @@ export default function LearnApp() {
               <AdminPage />
             </Suspense>
           )}
+          {route.view === 'support' && (
+            <Suspense fallback={<div className="max-w-3xl mx-auto px-4 py-16 text-muted">Loading…</div>}>
+              <SupportPage key={route.sub || 'all'} sub={route.sub} />
+            </Suspense>
+          )}
           {route.view === 'account' && (
             <Suspense fallback={<div className="max-w-md mx-auto px-4 py-16 text-muted">Loading…</div>}>
               <AccountPage sub={route.sub} />
@@ -1285,6 +1294,9 @@ export default function LearnApp() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center justify-between gap-3 text-xs text-subtle">
             <span>Progress is saved in this browser, and to your account when you sign in.</span>
             <span className="flex flex-wrap gap-x-4 gap-y-1">
+              <a href="#/support" className="hover:text-fg">
+                Help
+              </a>
               <a href="./terms.html" className="hover:text-fg">
                 Terms
               </a>

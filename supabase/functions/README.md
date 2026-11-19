@@ -8,7 +8,8 @@ The Razorpay **key secret lives only in Supabase's secrets**: never in this repo
 | `create-order` | CodeJack, when a signed-in learner clicks Unlock | Looks up the price in `products`, creates a Razorpay order, stores a `created` purchase, returns `{ order_id, amount, currency, key_id }` |
 | `verify-payment` | CodeJack, after Razorpay Checkout succeeds | Checks `HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)`, confirms the payment with Razorpay (capturing it if needed) and marks the purchase `paid` |
 | `razorpay-webhook` | Razorpay's servers | Safety net: marks the purchase paid on `payment.captured` / `order.paid` even if the buyer closed the page |
-| `admin` | CodeJack's admin page (`learn.html#/admin`) | Admins only (`public.admins`, see `supabase/admin.sql`): sales, accounts and progress; refunds through Razorpay; free course grants |
+| `admin` | CodeJack's admin page (`learn.html#/admin`) | Admins only (`public.admins`, see `supabase/admin.sql`): sales, accounts and progress; refunds through Razorpay; free course grants; the support inbox (list, reply, change status) |
+| `support` | CodeJack's Help page (`learn.html#/support`) | Signed-in learners only: raise a support request, list their own requests, add a follow-up. Emails you and the learner through Brevo |
 
 ## 1. Secrets
 Supabase Dashboard → **Edge Functions → Secrets** → add:
@@ -79,3 +80,30 @@ change that uses it goes live:
    could not be sent", open Edge Functions → `send-resume` → **Logs** and find the line starting
    `Brevo rejected the email`: it gives Brevo's status code and reason (401 key or IP, 400 sender, 403 account or
    key permission).
+
+## Support requests (`support`, and the `admin` function's inbox)
+
+Signed-in learners raise requests from **Help** in CodeJack (`learn.html#/support`); you read and answer them in the
+**Support** section of the admin page. Each request is a ticket numbered `CJ-0001`, with a thread of replies.
+
+1. **Tables:** Supabase → SQL Editor → run `supabase/support.sql` (two tables, row-level security on, no policies:
+   only the functions can read or write them).
+2. **Sender:** in Brevo → Senders, domains & IPs → **Senders** → add `support@shivam-soni.com` (name "CodeJack
+   Support"). The domain is already authenticated, so it is verified straight away. To use another address, set the
+   secret `SUPPORT_FROM`.
+3. **Where notifications go (optional):** new requests and learner follow-ups are emailed to `hello@shivam-soni.com`,
+   with the learner as Reply-To. Set the secret `SUPPORT_INBOX` to change it. `BREVO_API_KEY` is already set.
+4. **Deploy:** Edge Functions → Deploy a new function → Via Editor, name it `support`, paste
+   `support/index.ts`, Deploy, then turn **off** "Verify JWT". Open the existing `admin` function and replace its
+   code with the new `admin/index.ts` (it adds the inbox actions), then Deploy.
+5. **Check:** sign in to CodeJack, open Help, raise a test request. You should get a notification email, the
+   learner a confirmation, and it appears under Support on the admin page. Reply from there: the learner gets an
+   email and sees the reply under "Your requests". If an email does not arrive, open the function's **Logs** and look
+   for `Brevo rejected`.
+
+To check the function logic without deploying: `node scripts/check-support.mts` (uses an in-memory stand-in
+for Supabase and Brevo).
+
+Limits: 5 new requests per learner a day, 10 open at once, 20 follow-up messages a day. Emails are best effort: if
+Brevo fails, the request is still saved and shows in the admin page.
+

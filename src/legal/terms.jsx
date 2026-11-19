@@ -64,8 +64,8 @@ const sections = [
           payment is confirmed, usually within seconds, and you can open them in any browser or the app where you sign in.
         </p>
         <p className="mt-3">
-          If a course has not unlocked within one hour of a successful payment, sign out and back in, then contact us with your payment reference and we
-          will fix it.
+          If a course has not unlocked within one hour of a successful payment, sign out and back in, then raise a request under Help in CodeJack (or
+          contact us below) with your payment reference and we will fix it.
         </p>
       </>
     ),
@@ -157,8 +157,8 @@ const sections = [
     body: (
       <>
         <p>
-          For questions, problems with a purchase, or complaints, contact us below. We acknowledge complaints within 48 hours and aim to resolve them within
-          30 days.
+          For questions, problems with a purchase, or complaints, raise a request under <A href="./learn.html#/support">Help in CodeJack</A> while signed
+          in, or contact us below. We acknowledge complaints within 48 hours and aim to resolve them within 30 days.
         </p>
         <ContactDetails />
       </>

@@ -105,7 +105,11 @@ function rememberReturn(event) {
   const oldHash = new URL(event.oldURL).hash;
   const newHash = new URL(event.newURL).hash;
   if (isAccountHash(newHash) && !isAccountHash(oldHash)) returnTo = oldHash && oldHash !== '#' ? oldHash : null;
+  if (/^#\/support/.test(newHash) && !/^#\/(support|account)/.test(oldHash)) supportFrom = oldHash || '';
 }
+// The page the learner was on when they opened Help, sent with a support request so it is easier to answer.
+let supportFrom = '';
+export const supportOrigin = () => supportFrom;
 /** Leave the account page for CodeJack: back where the learner came from, else the course list. */
 export function goToLab(message) {
   const target = returnTo || '#/courses';
@@ -301,25 +305,34 @@ export async function saveRemoteProgress(payload) {
   await client.from('progress').upsert({ user_id: state.user.id, data: payload, updated_at: new Date().toISOString() });
 }
 
-/** Call the admin Edge Function (only works for admins; the server checks). */
-export async function adminCall(body) {
+/** POST to one of the Edge Functions as the signed-in user; throws with the server's message on failure. */
+async function callFunction(name, body, label) {
   await getClient();
   const { data } = await client.auth.getSession();
   if (!data.session) throw new Error('Please sign in.');
   const { SUPABASE_KEY, SUPABASE_URL } = await import('../supabase.config');
   let res;
   try {
-    res = await fetch(`${SUPABASE_URL}/functions/v1/admin`, {
+    res = await fetch(`${SUPABASE_URL}/functions/v1/${name}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${data.session.access_token}` },
       body: JSON.stringify(body),
     });
   } catch {
-    throw new Error('Could not reach the admin server.');
+    throw new Error(`Could not reach the ${label}. Check your connection and try again.`);
   }
   const out = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(out.error || `Admin server error (${res.status}).`);
+  if (!res.ok) throw new Error(out.error || `The ${label} had a problem (${res.status}).`);
   return out;
 }
+
+/** Call the admin Edge Function (only works for admins; the server checks). */
+export const adminCall = (body) => callFunction('admin', body, 'admin server');
+
+/** Call the support Edge Function: raise, list and follow up the signed-in learner's own requests. */
+export const supportCall = (body) => callFunction('support', body, 'support server');
+
+/** True inside the Android app (the page is served from https://localhost there). */
+export const isApp = () => inApp();
 
 export const displayName = (user) => user?.user_metadata?.name || user?.email?.split('@')[0] || '';
