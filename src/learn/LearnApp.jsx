@@ -316,7 +316,7 @@ function Header({ route, progress }) {
     <header className="sticky top-0 z-30 glass border-b border-line">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center gap-2 sm:gap-3">
         <a href="#/" aria-label="CodeJack home" className="flex items-center gap-2.5 shrink-0">
-          {/* The CodeJack logo (public/codejack-icon.svg): a Jack card crowned with antlers, over code-matrix cubes */}
+          {/* The CodeJack logo (public/codejack-icon.svg, made by scripts/codejack-logo.mjs): the stag and the Ace of Spades */}
           <img src="codejack-icon.svg" alt="" width="36" height="36" className="w-9 h-9 rounded-xl" />
           <span className="hidden lg:block leading-tight">
             <span className="block font-extrabold text-fg text-sm">CodeJack</span>

@@ -1,200 +1,176 @@
-// Writes public/codejack-icon.svg, the CodeJack logo: a low-poly stag head (slate greys, with tall gold-and-
-// charcoal antlers and teal-to-indigo eyes and accents) standing in front of a tilted Ace of Spades, over the
-// site's code-matrix cubes. Used as the CodeJack header badge, the landing page logo and the learn.html tab icon.
-//   node scripts/codejack-logo.mjs
-import { writeFileSync } from 'node:fs';
+// Writes the CodeJack logo: public/codejack-icon.svg (the site: header badge, landing page, learn.html tab icon)
+// and public/codejack-icon.png (emails and the Razorpay checkout, which cannot show SVG).
+// The design is Shivam's "Stag // Spade Matrix" icon: an Ace of Spades filled with QR-style code blocks and finder
+// eyes, "A ♠" corner indices, binary rain, and a low-poly stag rising out of the spade, in a squircle frame,
+// recoloured to the site's theme (teal --accent #3fd1bf and indigo --accent-2 #9196f6 on the dark background).
+//   node scripts/codejack-logo.mjs          (the PNG needs Chrome, Brave, Edge or Chromium; set CHROME_PATH if elsewhere)
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const out = join(dirname(fileURLToPath(import.meta.url)), '../public/codejack-icon.svg');
-const S = 256; // drawing size; the SVG scales to any size
-const CX = 140; // the stag is mirrored about this line (right of centre, leaving room for the card)
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const svgOut = join(root, 'public/codejack-icon.svg');
+const pngOut = join(root, 'public/codejack-icon.png');
+const PNG_SIZE = 256; // shown at 48–64px in emails and checkout, so 256 stays sharp on high-density screens
 
-const TEAL = '#3fd1bf';
-const INDIGO = '#9196f6';
-const GOLD = '#e0a43a';
-const GOLD_LIGHT = '#f6cd6a';
-const HORN = '#232a33'; // the charcoal faces of the antlers
-
-const n = (v) => Math.round(v * 10) / 10;
-const pts = (p) => p.map(([x, y]) => `${n(x)},${n(y)}`).join(' ');
-// Shapes are written for the viewer's left half as [dx, y], dx measured from the centre line (negative = left).
-const at = (p, right) => p.map(([dx, y]) => [CX + (right ? -dx : dx), y]);
-
-/** Darken a #rrggbb colour by factor k, for the shadowed right side. */
-const shade = (hex, k) => {
-  if (!hex.startsWith('#')) return hex;
-  const c = [1, 3, 5].map((i) => Math.round(parseInt(hex.slice(i, i + 2), 16) * k));
-  return `#${c.map((v) => v.toString(16).padStart(2, '0')).join('')}`;
+// The site's dark theme (src/index.css): --accent teal, --accent-2 indigo, --bg.
+const p = {
+  bgGrad1: '#0e1b1a',
+  bgGrad2: '#07080b',
+  border: '#3fd1bf',
+  spadeBase: '#0a1715',
+  matrixBlock1: '#3fd1bf',
+  matrixBlock2: '#9196f6',
+  qrEye: '#5eead4',
+  // Stag facets: indigo where the original had gold, teal where it had green.
+  stagGoldLight: '#c9ccff',
+  stagGoldMid: '#9196f6',
+  stagGoldDark: '#5b61d6',
+  stagGreenLight: '#3fd1bf',
+  stagGreenMid: '#1fa596',
+  stagTealDark: '#126b62',
+  stagDeep: '#0b2a27',
+  aceText: '#9196f6',
+  muzzle: '#e0e3ff',
 };
 
-/**
- * A tapered antler segment split lengthwise into two facets, like the gilded horn in the reference: one half
- * gold, the other charcoal. Returns [goldHalf, darkHalf] as point lists. `goldInside` puts the gold on the side
- * facing the head.
- */
-function hornFacets(p, w0, w1, goldInside, right) {
-  const A = []; // offset to one side
-  const B = []; // offset to the other
-  p.forEach(([x, y], i) => {
-    const [ax, ay] = p[Math.max(0, i - 1)];
-    const [bx, by] = p[Math.min(p.length - 1, i + 1)];
-    const len = Math.hypot(bx - ax, by - ay) || 1;
-    const nx = -(by - ay) / len;
-    const ny = (bx - ax) / len;
-    const h = (w0 + (w1 - w0) * (i / (p.length - 1))) / 2;
-    A.push([x + nx * h, y + ny * h]);
-    B.push([x - nx * h, y - ny * h]);
-  });
-  const [lx, ly] = p[p.length - 1];
-  const [px, py] = p[p.length - 2];
-  const len = Math.hypot(lx - px, ly - py) || 1;
-  const tip = [lx + ((lx - px) / len) * w1 * 3, ly + ((ly - py) / len) * w1 * 3];
-  const sideA = [...A, tip, ...[...p].reverse()];
-  const sideB = [...B, tip, ...[...p].reverse()];
-  // For a beam drawn upwards on the left, side A points away from the head (outside).
-  const inside = right ? sideA : sideB;
-  const outside = right ? sideB : sideA;
-  return goldInside ? [inside, outside] : [outside, inside];
-}
-
-// ---------------------------------------------------------------- the antlers (as in the reference)
-
-// Tall, lyre-shaped: each beam leans out, then sweeps up and curves back in at the crown, with tines pointing
-// up. [points as [dx, y], start width, end width, gold on the inside?]
-const ANTLER = [
-  [[[-13, 104], [-21, 92], [-34, 78], [-46, 62], [-53, 46], [-55, 30], [-52, 16]], 9, 2.6, true], // main beam
-  [[[-19, 95], [-16, 83], [-13, 73], [-12, 64]], 4.6, 1.4, false], // brow tine, inside
-  [[[-33, 79], [-29, 66], [-27, 55], [-27, 46]], 4.6, 1.4, false], // second tine, inside
-  [[[-45, 64], [-57, 57], [-64, 47], [-67, 38]], 4.4, 1.3, true], // outer tine
-  [[[-53, 43], [-47, 33], [-43, 24], [-42, 15]], 4, 1.2, true], // crown, inner point
-  [[[-55, 36], [-63, 29], [-67, 20], [-68, 12]], 3.8, 1.1, false], // crown, outer point
-];
-
-const BOLD = 1.55; // antler thickness, so the beams read as solid horn at small sizes
-
-// ---------------------------------------------------------------- the head (viewer's left half)
-
-const FACE = [
-  [[[-16, 112], [-60, 101], [-51, 121], [-25, 130]], '#262d37'], // ear, outer
-  [[[-22, 118], [-53, 105], [-42, 121]], '#46505d'], // ear, middle
-  [[[-24, 125], [-45, 112], [-37, 124]], '#687482'], // ear, inner
-  [[[0, 100], [-12, 102], [-18, 112], [0, 116]], '#5b6673'], // forehead, top
-  [[[-12, 102], [-20, 104], [-18, 112]], '#37404c'], // forehead, corner
-  [[[0, 116], [-18, 112], [-14, 124], [0, 126]], '#7b8693'], // forehead, middle
-  [[[-18, 112], [-24, 118], [-20, 128], [-14, 124]], '#2d3540'], // brow
-  [[[-14, 124], [-20, 128], [-22, 134], [-12, 136], [0, 130], [0, 126]], '#8e98a4'], // around the eye
-  [[[-22, 134], [-12, 136], [-14, 142], [-24, 140]], '#262d37'], // tear line
-  [[[-24, 118], [-28, 130], [-26, 148], [-24, 140], [-22, 134], [-20, 128]], '#38414d'], // outer cheek
-  [[[0, 130], [-12, 136], [-8, 156], [0, 160]], '#c6ced6'], // bridge
-  [[[-12, 136], [-14, 142], [-12, 158], [-8, 156]], '#a3adb8'], // side of the bridge
-  [[[-24, 140], [-14, 142], [-12, 158], [-18, 162], [-26, 148]], '#6a7582'], // lower cheek
-  [[[-8, 156], [-12, 158], [-11, 168], [-4, 166], [0, 160]], '#e4e9ee'], // muzzle
-  [[[-12, 158], [-18, 162], [-16, 172], [-11, 168]], '#ced5dc'], // side of the muzzle
-  [[[0, 161], [-3, 165], [-6.5, 168], [-5.5, 173], [0, 172]], '#101419'], // nose
-  [[[-11, 168], [-16, 172], [-10, 180], [0, 182], [0, 172], [-8, 174]], '#b8c1ca'], // chin
-  [[[-26, 148], [-18, 162], [-16, 172], [-10, 180], [-20, 184], [-30, 166]], '#262d37'], // jaw
-  [[[-30, 166], [-20, 184], [-10, 180], [0, 182], [0, 200], [-16, 204], [-30, 190]], '#1e252e'], // upper neck
-  [[[-10, 180], [0, 182], [0, 200], [-8, 196]], '#46505d'], // throat highlight
-  [[[-30, 190], [-16, 204], [0, 200], [0, 246], [-12, 226], [-26, 207]], '#161b22'], // lower neck
-  [[[-16, 204], [0, 200], [0, 228]], '#2a313b'], // front of the neck
-];
-// Accents in the site's colours: [points, fill]. Left side teal, right side indigo.
-const ACCENTS = [
-  [[[-26, 207], [-12, 226], [-22, 214]], 'side'], // neck flash
-  [[[-30, 190], [-34, 182], [-26, 186]], 'side'], // shoulder glint
-  [[[-18, 112], [-24, 118], [-20, 116]], 'side'], // brow glint
-];
-const EYE = [[-21, 131], [-14.5, 127.5], [-9, 131.5], [-15, 134.5]];
-
-function stag() {
-  const parts = [];
-  for (const right of [false, true]) {
-    const tone = (f) => (right ? shade(f, 0.84) : f);
-    const side = right ? INDIGO : TEAL;
-    for (const [p, w0, w1, goldInside] of ANTLER) {
-      const [gold, dark] = hornFacets(at(p, right), w0 * BOLD, w1 * BOLD, goldInside, right);
-      parts.push(`<polygon points="${pts(gold)}" fill="url(#cj-gold)" />`);
-      parts.push(`<polygon points="${pts(dark)}" fill="${tone(HORN)}" />`);
-    }
-    for (const [p, fill] of FACE) parts.push(`<polygon points="${pts(at(p, right))}" fill="${tone(fill)}" />`);
-    for (const [p] of ACCENTS) parts.push(`<polygon points="${pts(at(p, right))}" fill="${side}" />`);
-    parts.push(`<polygon points="${pts(at(EYE, right))}" fill="${side}" />`);
-    const [[ex, ey]] = at([[-15, 131.2]], right);
-    parts.push(`<circle cx="${ex}" cy="${ey}" r="1.6" fill="#0b0e12" />`);
-  }
-  return parts.join('\n      ');
-}
-
-// ---------------------------------------------------------------- the code matrix and the card
-
-function matrix() {
-  const cubes = [];
-  const marks = [];
-  const lit = { 0: [0.9, 0.65, 0.45, 0.3, 0.18], 7: [0, 0, 0, 0.18, 0.3, 0.45, 0.65, 0.9] };
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 8; c++) {
-      cubes.push(`<rect x="${c * 32 + 2}" y="${r * 32 + 2}" width="28" height="28" rx="5" />`);
-      const a = lit[c]?.[r] || ((r * 3 + c * 5) % 7 === 0 ? 0.18 : 0);
-      if (a) marks.push(`<rect x="${c * 32 + 8}" y="${r * 32 + 13}" width="${12 + ((r + c) % 3) * 2}" height="6" rx="3" opacity="${a}" />`);
+// QR-style code blocks inside the spade, from a fixed pattern so every build is identical.
+function spadeMatrixCells() {
+  let cells = '';
+  for (let r = 0; r < 28; r++) {
+    for (let c = 0; c < 28; c++) {
+      const hash = (r * 37 + c * 17 + (r ^ c) * 13) % 11;
+      if (hash >= 6) continue;
+      const color = hash % 2 === 0 ? p.matrixBlock1 : p.matrixBlock2;
+      const opacity = hash === 0 ? '0.95' : hash < 3 ? '0.75' : '0.45';
+      cells += `<rect x="${116 + c * 10}" y="${148 + r * 10}" width="8.5" height="8.5" rx="1.5" fill="${color}" fill-opacity="${opacity}"/>`;
     }
   }
-  return { cubes: cubes.join(''), marks: marks.join('') };
+  return cells;
 }
 
-const SPADE = 'M0-5C2-2 5 0 5 2.2C5 4 3 5 1.4 4L2.2 6.5H-2.2L-1.4 4C-3 5-5 4-5 2.2C-5 0-2-2 0-5Z';
-const { cubes, marks } = matrix();
+const SPADE = 'M256 126C256 126 118 234 118 310C118 362 158 392 202 392C224 392 241 381 248 369L224 436L288 436L264 369C271 381 288 392 310 392C354 392 394 362 394 310C394 234 256 126 256 126Z';
+const MINI_SPADE = 'M78 116C78 116 66 127 66 134C66 139 70 142 74 142C76 142 77.5 141 78 140C78.5 141 80 142 82 142C86 142 90 139 90 134C90 127 78 116 78 116ZM76 141L74 147L82 147L80 141Z';
+const finder = (x, y, s, inner, w) =>
+  `<g transform="translate(${x} ${y}) rotate(45)"><rect x="${-s}" y="${-s}" width="${2 * s}" height="${2 * s}" rx="3" stroke-width="${w}" fill="${p.spadeBase}"/><rect x="${-inner}" y="${-inner}" width="${2 * inner}" height="${2 * inner}" rx="1.5" fill="${p.qrEye}" stroke="none"/></g>`;
+const poly = (points, fill) => `<polygon points="${points}" fill="${fill}"/>`;
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${S} ${S}" role="img" aria-label="CodeJack">
-  <!-- CodeJack logo, generated by scripts/codejack-logo.mjs: a low-poly stag with gold antlers in front of a
-       tilted Ace of Spades, over code-matrix cubes. -->
-  <defs>
-    <linearGradient id="cj-gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="${GOLD_LIGHT}" />
-      <stop offset="1" stop-color="${GOLD}" />
-    </linearGradient>
-    <linearGradient id="cj-site" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="${TEAL}" />
-      <stop offset="1" stop-color="${INDIGO}" />
-    </linearGradient>
-    <linearGradient id="cj-card" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1c232c" />
-      <stop offset="1" stop-color="#11161c" />
-    </linearGradient>
-    <radialGradient id="cj-pool" cx="132" cy="134" r="130" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#08090c" stop-opacity="0.9" />
-      <stop offset="0.65" stop-color="#08090c" stop-opacity="0.4" />
-      <stop offset="1" stop-color="#08090c" stop-opacity="0" />
-    </radialGradient>
-    <filter id="cj-lift" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.6" />
-    </filter>
-    <clipPath id="cj-clip"><rect width="${S}" height="${S}" rx="56" /></clipPath>
-    <path id="cj-spade" d="${SPADE}" />
-  </defs>
-  <g clip-path="url(#cj-clip)">
-    <rect width="${S}" height="${S}" fill="#0a0b0e" />
-    <g fill="#12171d">${cubes}</g>
-    <g fill="${TEAL}">${marks}</g>
-    <rect width="${S}" height="${S}" fill="url(#cj-pool)" />
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CodeJack">
+<!-- CodeJack logo, generated by scripts/codejack-logo.mjs from Shivam's Stag // Spade Matrix design, in the site's colours. -->
+<defs>
+  <radialGradient id="cj-bg" cx="50%" cy="42%" r="65%"><stop offset="0%" stop-color="${p.bgGrad1}"/><stop offset="100%" stop-color="${p.bgGrad2}"/></radialGradient>
+  <linearGradient id="cj-rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3fd1bf"/><stop offset="1" stop-color="#9196f6"/></linearGradient>
+  <clipPath id="cj-frame"><rect x="16" y="16" width="480" height="480" rx="108"/></clipPath>
+  <clipPath id="cj-spade"><path d="${SPADE}"/></clipPath>
+</defs>
 
-    <!-- the Ace of Spades, tilted behind the stag with its corner showing -->
-    <g transform="rotate(-16 82 150)" filter="url(#cj-lift)">
-      <rect x="26" y="72" width="112" height="156" rx="12" fill="url(#cj-card)" stroke="url(#cj-site)" stroke-width="3.5" />
-      <rect x="34" y="80" width="96" height="140" rx="7" fill="none" stroke="${TEAL}" stroke-opacity="0.3" stroke-width="1.2" />
-      <use href="#cj-spade" transform="translate(82 152) scale(7)" fill="url(#cj-site)" fill-opacity="0.22" />
-      <g fill="url(#cj-site)" font-family="Georgia, 'Times New Roman', serif" font-weight="700">
-        <text x="38" y="104" font-size="26">A</text>
-        <use href="#cj-spade" transform="translate(47 119) scale(1.5)" />
-      </g>
-    </g>
+<rect x="16" y="16" width="480" height="480" rx="108" fill="url(#cj-bg)" stroke="url(#cj-rim)" stroke-width="5" stroke-opacity="0.8"/>
+<rect x="28" y="28" width="456" height="456" rx="96" fill="none" stroke="${p.border}" stroke-width="1.5" stroke-opacity="0.25" stroke-dasharray="8 6"/>
 
-    <!-- the stag -->
-    <g transform="translate(${CX} 142) scale(0.93) translate(-${CX} -134)" filter="url(#cj-lift)" stroke="#0a0b0e" stroke-opacity="0.3" stroke-width="0.6" stroke-linejoin="round">
-      ${stag()}
-    </g>
+<g clip-path="url(#cj-frame)">
+  <!-- binary rain and reticle -->
+  <g font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" font-weight="bold" fill="${p.matrixBlock1}" opacity="0.28">
+    <text x="58" y="95">1</text><text x="58" y="112">0</text><text x="58" y="129">1</text><text x="58" y="146">1</text><text x="58" y="390">0</text><text x="58" y="407">1</text>
+    <text x="92" y="75">0</text><text x="92" y="92">1</text><text x="92" y="425">1</text><text x="92" y="442">0</text>
+    <text x="412" y="80" fill="${p.matrixBlock2}">1</text><text x="412" y="97" fill="${p.matrixBlock2}">0</text><text x="412" y="415" fill="${p.matrixBlock2}">0</text><text x="412" y="432" fill="${p.matrixBlock2}">1</text>
+    <text x="444" y="110" fill="${p.matrixBlock2}">0</text><text x="444" y="127" fill="${p.matrixBlock2}">1</text><text x="444" y="144" fill="${p.matrixBlock2}">0</text><text x="444" y="385" fill="${p.matrixBlock2}">1</text><text x="444" y="402" fill="${p.matrixBlock2}">1</text>
+    <line x1="40" y1="256" x2="105" y2="256" stroke="${p.border}" stroke-width="1" stroke-opacity="0.3"/>
+    <line x1="407" y1="256" x2="472" y2="256" stroke="${p.matrixBlock2}" stroke-width="1" stroke-opacity="0.3"/>
   </g>
+
+  <!-- Ace corner indices -->
+  <g fill="${p.aceText}" font-family="'JetBrains Mono', ui-monospace, monospace" font-weight="bold">
+    <text x="68" y="108" font-size="34" letter-spacing="-1">A</text><path d="${MINI_SPADE}"/>
+    <g transform="translate(512 512) rotate(180)"><text x="68" y="108" font-size="34" letter-spacing="-1">A</text><path d="${MINI_SPADE}"/></g>
+  </g>
+
+  <!-- the Ace of Spades, filled with code blocks -->
+  <path d="${SPADE}" fill="${p.spadeBase}" stroke="${p.border}" stroke-width="3.5" stroke-linejoin="round"/>
+  <g clip-path="url(#cj-spade)">
+    ${spadeMatrixCells()}
+    <line x1="175" y1="205" x2="265" y2="355" stroke="${p.spadeBase}" stroke-width="5"/>
+    <line x1="337" y1="205" x2="247" y2="355" stroke="${p.spadeBase}" stroke-width="5"/>
+  </g>
+  <path d="${SPADE}" fill="none" stroke="url(#cj-rim)" stroke-width="2.5" stroke-opacity="0.9"/>
+  <g stroke="${p.qrEye}" fill="none">
+    ${finder(256, 178, 15, 6, 4)}${finder(158, 286, 14, 5.5, 4)}${finder(354, 286, 14, 5.5, 4)}${finder(256, 405, 9, 3, 3)}
+  </g>
+
+  <!-- the low-poly stag -->
+  <g transform="translate(0 -4)">
+    <path d="M256 410 L214 352 L224 292 L222 252 L176 230 L218 228 L206 212 L152 178 L142 122 L162 72 L156 122 L172 132 L182 74 L172 128 L194 118 L208 86 L186 136 L176 162 L212 182 L196 142 L200 128 L216 168 L224 188 L220 124 L230 156 L236 186 L256 196 L276 186 L282 156 L292 124 L288 188 L296 168 L312 128 L316 142 L300 182 L336 162 L326 136 L304 86 L318 118 L340 128 L330 74 L340 132 L356 122 L350 72 L370 122 L360 178 L306 212 L294 228 L336 230 L290 252 L288 292 L298 352 Z" fill="#05090b" stroke="#05090b" stroke-width="11" stroke-linejoin="round"/>
+    ${poly('236,196 206,188 164,166 178,156', p.stagGreenMid)}${poly('206,188 156,176 164,166', p.stagTealDark)}${poly('164,166 146,120 160,124 178,156', p.stagGreenLight)}${poly('146,120 156,176 164,166', p.stagTealDark)}
+    ${poly('146,120 162,72 156,122', p.stagGoldLight)}${poly('162,72 160,124 156,122', p.stagGreenLight)}${poly('160,124 182,74 172,128', p.stagGoldLight)}${poly('182,74 176,144 172,128', p.stagGreenMid)}
+    ${poly('172,128 208,86 186,126', p.stagGoldLight)}${poly('208,86 184,138 186,126', p.stagGreenMid)}${poly('176,156 184,138 192,164', p.stagTealDark)}
+    ${poly('212,182 196,140 202,130 220,174', p.stagGoldLight)}${poly('202,130 216,168 220,174', p.stagGreenMid)}
+    ${poly('226,192 220,124 228,154 236,188', p.stagGoldLight)}${poly('220,124 232,158 228,154', p.stagGoldMid)}${poly('212,182 226,192 236,196 220,174', p.stagGreenLight)}
+    ${poly('276,196 306,188 348,166 334,156', p.stagGreenMid)}${poly('306,188 356,176 348,166', p.stagTealDark)}${poly('348,166 366,120 352,124 334,156', p.stagGreenLight)}${poly('366,120 356,176 348,166', p.stagTealDark)}
+    ${poly('366,120 350,72 356,122', p.stagGoldLight)}${poly('350,72 352,124 356,122', p.stagGreenLight)}${poly('352,124 330,74 340,128', p.stagGoldLight)}${poly('330,74 336,144 340,128', p.stagGreenMid)}
+    ${poly('340,128 304,86 326,126', p.stagGoldLight)}${poly('304,86 328,138 326,126', p.stagGreenMid)}${poly('336,156 328,138 320,164', p.stagTealDark)}
+    ${poly('300,182 316,140 310,130 292,174', p.stagGoldLight)}${poly('310,130 296,168 292,174', p.stagGreenMid)}
+    ${poly('286,192 292,124 284,154 276,188', p.stagGoldLight)}${poly('292,124 280,158 284,154', p.stagGoldMid)}${poly('300,182 286,192 276,196 292,174', p.stagGreenLight)}
+    ${poly('224,224 178,228 202,238 222,234', p.stagGreenLight)}${poly('178,228 196,246 212,244 202,238', p.stagGreenMid)}${poly('202,238 212,244 222,250 222,234', p.stagDeep)}
+    ${poly('288,224 334,228 310,238 290,234', p.stagGoldLight)}${poly('334,228 316,246 300,244 310,238', p.stagGreenLight)}${poly('310,238 300,244 290,250 290,234', p.stagDeep)}
+    ${poly('256,198 238,200 246,214 256,210', p.stagGoldLight)}${poly('256,198 274,200 266,214 256,210', p.stagGoldMid)}${poly('238,200 224,224 238,226 246,214', p.stagGoldMid)}${poly('274,200 288,224 274,226 266,214', p.stagGoldLight)}
+    ${poly('256,210 246,214 242,230 256,226', p.stagGoldLight)}${poly('256,210 266,214 270,230 256,226', p.stagGoldMid)}${poly('256,226 242,230 248,244 256,240', p.stagGoldLight)}${poly('256,226 270,230 264,244 256,240', p.stagGoldMid)}
+    ${poly('224,224 222,242 234,238 238,226', p.stagGreenLight)}${poly('238,226 234,238 242,230', p.stagGoldDark)}${poly('222,242 224,264 236,256 232,246', p.stagGreenMid)}${poly('224,264 234,284 244,274 236,256', p.stagTealDark)}
+    ${poly('288,224 290,242 278,238 274,226', p.stagGoldLight)}${poly('274,226 278,238 270,230', p.stagGreenMid)}${poly('290,242 288,264 276,256 280,246', p.stagGreenLight)}${poly('288,264 278,284 268,274 276,256', p.stagGreenMid)}
+    ${poly('226,242 235,239 237,245 229,246', '#05090b')}<circle cx="232" cy="242" r="1.4" fill="#ffffff"/>${poly('286,242 277,239 275,245 283,246', '#05090b')}<circle cx="280" cy="242" r="1.4" fill="#ffffff"/>
+    ${poly('242,230 237,245 246,264 248,244', p.stagGreenLight)}${poly('270,230 275,245 266,264 264,244', p.stagGreenMid)}${poly('256,240 248,244 246,264 256,268', p.muzzle)}${poly('256,240 264,244 266,264 256,268', p.stagGoldLight)}
+    ${poly('246,264 241,278 248,276 256,268', '#ecfeff')}${poly('266,264 271,278 264,276 256,268', '#e0e7ff')}${poly('248,276 264,276 261,284 251,284', p.stagTealDark)}${poly('251,278 261,278 258,283 254,283', '#05090b')}
+    ${poly('245,274 249,277 245,280', '#05090b')}${poly('267,274 263,277 267,280', '#05090b')}
+    ${poly('241,278 245,288 256,287 251,284', '#ecfeff')}${poly('271,278 267,288 256,287 261,284', p.stagGreenLight)}${poly('245,288 256,296 267,288 256,287', p.stagDeep)}
+    ${poly('234,284 226,318 244,308 245,288', p.stagGreenLight)}${poly('278,284 286,318 268,308 267,288', p.stagGreenMid)}${poly('245,288 244,308 256,316 256,296', p.stagGreenMid)}${poly('267,288 268,308 256,316 256,296', p.stagTealDark)}
+    ${poly('226,318 214,352 238,346 244,308', p.stagGreenLight)}${poly('286,318 298,352 274,346 268,308', p.stagGreenMid)}${poly('244,308 238,346 256,356 256,316', p.stagGreenMid)}${poly('268,308 274,346 256,356 256,316', p.stagTealDark)}
+    ${poly('214,352 232,384 256,384 238,346', p.stagGreenMid)}${poly('298,352 280,384 256,384 274,346', p.stagDeep)}${poly('238,346 256,384 256,356', p.stagTealDark)}${poly('274,346 256,384 256,356', p.stagGreenMid)}
+    ${poly('232,384 256,410 256,384', p.stagTealDark)}${poly('280,384 256,410 256,384', p.stagDeep)}
+    <path d="M256 198 L238 200 L224 224 L178 228 L196 246 L222 250 L224 264 L234 284 L226 318 L214 352 L232 384 L256 410 L280 384 L298 352 L286 318 L278 284 L288 264 L290 250 L316 246 L334 228 L288 224 L274 200 Z" fill="none" stroke="${p.stagGoldLight}" stroke-width="1.1" stroke-opacity="0.5"/>
+  </g>
+</g>
 </svg>
 `;
-writeFileSync(out, svg);
-console.log(`Wrote ${out}`);
+writeFileSync(svgOut, svg);
+console.log(`Wrote ${svgOut}`);
+
+// ---------------------------------------------------------------- PNG for emails and checkout
+
+const browser = [
+  process.env.CHROME_PATH,
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+  '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+  '/Applications/Chromium.app/Contents/MacOS/Chromium',
+  '/usr/bin/google-chrome',
+  '/usr/bin/chromium',
+]
+  .filter(Boolean)
+  .find((b) => existsSync(b));
+if (!browser) {
+  console.warn('No Chrome-based browser found: the SVG is updated, but public/codejack-icon.png was not redrawn.');
+  process.exit(0);
+}
+const tmp = mkdtempSync(join(tmpdir(), 'codejack-logo-'));
+const page = join(tmp, 'icon.html');
+// Transparent page, the SVG at exactly PNG_SIZE pixels, so the corners outside the squircle stay transparent.
+writeFileSync(page, `<!doctype html><html><head><style>html,body{margin:0;background:transparent}img{display:block;width:${PNG_SIZE}px;height:${PNG_SIZE}px}</style></head><body><img src="${pathToFileURL(svgOut).href}"></body></html>`);
+execFileSync(
+  browser,
+  [
+    '--headless=new',
+    '--disable-gpu',
+    '--hide-scrollbars',
+    '--allow-file-access-from-files',
+    '--default-background-color=00000000',
+    '--force-device-scale-factor=1',
+    `--window-size=${PNG_SIZE},${PNG_SIZE}`,
+    '--virtual-time-budget=2000',
+    `--user-data-dir=${join(tmp, 'profile')}`,
+    `--screenshot=${pngOut}`,
+    pathToFileURL(page).href,
+  ],
+  { stdio: 'ignore' }
+);
+rmSync(tmp, { recursive: true, force: true });
+console.log(`Wrote ${pngOut} (${PNG_SIZE}×${PNG_SIZE})`);
