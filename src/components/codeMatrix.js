@@ -27,13 +27,20 @@ export const matrixThemes = {
   dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, shape: 0.95, tint: 0.55, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
   light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, max: 1, shape: 1, tint: 0.6, head: '#0c3b36', glow: true, ripple: '15,138,126', rippleAlpha: 0.25 },
   // Behind page content: dim enough that body text stays easy to read over it.
-  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.07, max: 0.3, head: 'rgba(63,209,191,0.45)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
-  lightSubtle: { tile: '#f0f3f2', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.1, max: 0.32, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
+  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.07, max: 0.3, shape: 0.32, tint: 0.3, head: 'rgba(63,209,191,0.45)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
+  lightSubtle: { tile: '#f0f3f2', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.1, max: 0.32, shape: 0.36, tint: 0.34, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
+  // Panels behind a section (the stag behind the hero and footer): close to the page background, faint glyphs.
+  darkPanel: { tile: '#0d0f12', hi: 'rgba(255,255,255,0.03)', lo: 'rgba(0,0,0,0.35)', glyph: '63,209,191', base: 0.06, max: 0.3, shape: 0.32, tint: 0.2, head: 'rgba(63,209,191,0.5)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
+  lightPanel: { tile: '#f1f2ef', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.09, max: 0.3, shape: 0.36, tint: 0.24, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
 };
 
-/** `subtle` picks the dimmer palette used behind page content; the full one is for the welcome screen. */
+/**
+ * The palette for the current light/dark mode. `subtle` (true) is the dimmer one behind page content, 'panel'
+ * the one for a picture panel behind a section; the default, full one is for the welcome screen.
+ */
 export const currentMatrixTheme = (subtle = false) => {
   const dark = document.documentElement.classList.contains('dark');
+  if (subtle === 'panel') return dark ? matrixThemes.darkPanel : matrixThemes.lightPanel;
   if (subtle) return dark ? matrixThemes.darkSubtle : matrixThemes.lightSubtle;
   return dark ? matrixThemes.dark : matrixThemes.light;
 };

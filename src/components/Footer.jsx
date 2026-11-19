@@ -2,12 +2,14 @@ import { motion } from 'motion/react';
 import { ArrowUp } from 'lucide-react';
 import { contacts, profile } from '../data/content';
 import Avatar from './Avatar';
+import DeerMatrix from './DeerMatrix';
 import { contactIcons } from './icons';
 import { Reveal, ease, stagger } from './motion';
 
 export default function Footer({ onResume }) {
   return (
     <footer className="relative py-28 px-6 text-center border-t border-line overflow-hidden">
+      <DeerMatrix className="absolute inset-0 -z-10" />
       <div className="glow-accent absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 w-[60rem] h-[36rem] opacity-80 -z-10" />
       <div className="max-w-7xl mx-auto">
         <Reveal>

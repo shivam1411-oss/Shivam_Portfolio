@@ -3,6 +3,7 @@ import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'moti
 import { ArrowDown, ArrowRight, Briefcase, TrendingUp } from 'lucide-react';
 import { profile } from '../data/content';
 import Avatar from './Avatar';
+import DeerMatrix from './DeerMatrix';
 import { impactMetrics } from '../data/impact';
 import { Counter, Magnetic, SplitWords, ease } from './motion';
 
@@ -138,7 +139,8 @@ export default function Hero({ onConnect }) {
 
   return (
     <section id="top" ref={ref} className="relative min-h-[100svh] flex items-center pt-28 md:pt-32 pb-24 px-6 overflow-hidden">
-      {/* Ambient background */}
+      {/* Ambient background: the stag head in code cubes, under the dot grid and glows */}
+      <DeerMatrix className="absolute inset-0 -z-10" />
       <div className="absolute inset-0 dot-grid opacity-60 -z-10" />
       {/* Soft glows; they drift slowly on desktop and stay still on phones to save battery */}
       <motion.div

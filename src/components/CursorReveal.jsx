@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { createMatrix, currentMatrixTheme, rand } from './codeMatrix';
+import { deerMask } from './deerMask';
 
 // Tuning per input type. Phones get bigger cubes, fewer droplets and no glow to stay smooth.
 const SETTINGS = {
@@ -31,7 +32,7 @@ export default function CursorReveal() {
 
     let w = 0;
     let h = 0;
-    const matrix = createMatrix(CELL);
+    const matrix = createMatrix(CELL, { shape: deerMask }); // the stag head is part of the hidden matrix
     let drops = [];
     let frame = 0;
     let time = 0;
