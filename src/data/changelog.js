@@ -606,8 +606,8 @@ export const changelog = [
     date: '2026-11-19',
     category: 'design',
     title: 'A CodeJack logo: the stag on the Ace of Spades',
-    plain: 'CodeJack has its own logo: a low-poly stag head with gold antlers on a dark Ace of Spades card, over the code-matrix cubes. It appears in the CodeJack header, on its landing page and as the browser-tab icon.',
-    commits: ['229336b', '5308adf'],
+    plain: 'CodeJack has its own logo: a low-poly stag with tall gold antlers and teal and indigo eyes, standing in front of a tilted Ace of Spades, over the code-matrix cubes. It appears in the CodeJack header, on its landing page and as the browser-tab icon.',
+    commits: ['229336b', '5308adf', '398cf64'],
   },
 ];
 
