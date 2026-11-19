@@ -592,6 +592,15 @@ export const changelog = [
     commits: ['a976dad', 'b30d8bd'],
     lessons: ['stag', 'contact', 'data', 'deploy', 'splitting'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'app',
+    title: 'The Learning Lab becomes CodeJack, and the app gets the stag',
+    plain: 'The Learning Lab is now called CodeJack everywhere: the pages, courses, emails, checkout and policies. Accounts, progress and purchases are unchanged, and links still work. The Android app icon and launch screen now show the low-poly stag in teal and indigo over the code matrix, replacing the glass name plaques.',
+    commits: ['1dbf45c', 'c866409'],
+    lessons: ['android', 'learning-lab'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
