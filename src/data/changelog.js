@@ -605,9 +605,9 @@ export const changelog = [
     phase: 'lab',
     date: '2026-11-19',
     category: 'design',
-    title: 'A CodeJack logo: the Jack with antlers',
-    plain: 'CodeJack has its own logo: a Jack playing card crowned with stag antlers, in the site\'s teal and indigo, over the code-matrix cubes. It appears in the CodeJack header, on its landing page and as the browser-tab icon.',
-    commits: ['229336b'],
+    title: 'A CodeJack logo: the stag on the Ace of Spades',
+    plain: 'CodeJack has its own logo: a low-poly stag head with gold antlers on a dark Ace of Spades card, over the code-matrix cubes. It appears in the CodeJack header, on its landing page and as the browser-tab icon.',
+    commits: ['229336b', '5308adf'],
   },
 ];
 
