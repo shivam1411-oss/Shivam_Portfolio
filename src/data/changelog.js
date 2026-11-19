@@ -609,6 +609,14 @@ export const changelog = [
     plain: 'CodeJack has its own logo: a low-poly stag with tall gold antlers and teal and indigo eyes, standing in front of a tilted Ace of Spades, over the code-matrix cubes. It appears in the CodeJack header, on its landing page and as the browser-tab icon.',
     commits: ['229336b', '5308adf', '398cf64'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'feature',
+    title: 'Help and support requests in CodeJack',
+    plain: 'Signed-in learners can now raise a support request from Help in CodeJack, about a payment, their account, a lesson or a bug. Each request gets a number and a reply thread, with emails both ways, and the site owner answers from a new Support inbox on the admin page. The privacy policy, terms and refund policy point to it.',
+    commits: ['5930688'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
