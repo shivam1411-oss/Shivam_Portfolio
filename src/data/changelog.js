@@ -579,7 +579,7 @@ export const changelog = [
     category: 'design',
     title: 'A stag head the cursor uncovers',
     plain: 'A geometric stag head (flat facets in sage, tan and terracotta, with wide antlers) is hidden in the code-cube matrix on the welcome screen and across the site: the cursor\'s trail of water uncovers it, and it covers over again as the trail dries. In the dark theme it uses bright green, amber and coral.',
-    commits: ['3d61661', '9be2a36', 'e00ce0d'],
+    commits: ['3d61661', '9be2a36', 'e00ce0d', 'c2caf0d'],
   },
 ];
 
