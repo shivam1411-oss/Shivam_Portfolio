@@ -7,7 +7,7 @@ import data from './catalog.generated.json';
 import { loadPaidLessons, ownsCourse } from './access';
 
 /** Course order on the Courses page. */
-export const COURSE_IDS = ['site', 'python', 'pandas', 'sql', 'viz', 'react', 'jira', 'k8s'];
+export const COURSE_IDS = ['site', 'python', 'pandas', 'sql', 'viz', 'react', 'jira', 'k8s', 'security'];
 
 export const courses = data.courses;
 export const courseById = Object.fromEntries(courses.map((c) => [c.id, c]));
@@ -32,6 +32,7 @@ const freeLoaders = {
   react: () => import('./content/react.free.js').then((m) => m.default),
   jira: () => import('./content/jira.free.js').then((m) => m.default),
   k8s: () => import('./content/k8s.free.js').then((m) => m.default),
+  security: () => import('./content/security.free.js').then((m) => m.default),
 };
 const loaded = new Map(); // id -> full course
 const pending = new Map(); // id -> promise

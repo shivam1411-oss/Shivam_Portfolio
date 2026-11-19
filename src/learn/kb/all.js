@@ -7,5 +7,6 @@ import { vizKb } from './viz';
 import { reactKb } from './react';
 import { jiraKb } from './jira';
 import { k8sKb } from './k8s';
+import { securityKb } from './security';
 
-export const knowledgeBases = { site: siteKb, python: pythonKb, pandas: pandasKb, sql: sqlKb, viz: vizKb, react: reactKb, jira: jiraKb, k8s: k8sKb };
+export const knowledgeBases = { site: siteKb, python: pythonKb, pandas: pandasKb, sql: sqlKb, viz: vizKb, react: reactKb, jira: jiraKb, k8s: k8sKb, security: securityKb };

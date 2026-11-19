@@ -10,6 +10,7 @@ export const techPath = [
   { course: 'react', why: 'Build the interfaces people use.' },
   { course: 'jira', why: 'Plan and track the work as a team.' },
   { course: 'k8s', why: 'Ship it and keep it running.' },
+  { course: 'security', why: 'Deliver it fast and keep bots, abuse and leaked keys out.' },
 ];
 export const learningPaths = [
   { id: 'data', title: 'Data track', blurb: 'From your first line of Python to finished reports.', steps: learningPath },

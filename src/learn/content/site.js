@@ -9,7 +9,7 @@ export default withGuide(
     title: 'Learn the Code',
     tagline: 'How this portfolio was built, change by change',
     blurb:
-      'React, Tailwind, animations, canvas effects, performance, the AI chat, deploying, the Android app, and how Python was made to run in this Learning Lab, explained from zero with the real code and playgrounds.',
+      'React, Tailwind, animations, canvas effects, performance, the AI chat, deploying through Cloudflare, the Android app, and how Python was made to run in this Learning Lab, explained from zero with the real code and playgrounds.',
     levels: 'Beginner',
     icon: 'site',
     audience: 'Anyone curious how a modern website is built, with no coding experience needed.',

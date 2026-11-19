@@ -33,7 +33,7 @@ bottom of the list: `{ phase, date, category, title, plain, commits, lessons? }`
 `learn.html` opens on a landing page that takes the portfolio apart into its layers (an interactive 3D exploded view,
 each layer linked to the lesson that explains it), then hosts interactive courses, each split into modules and lessons with a quiz:
 
-- **Learn the Code**: 22 beginner lessons on how this site was built, including how the Python course runs, is tested
+- **Learn the Code**: 29 beginner lessons on how this site was built, including how the Python course runs, is tested
   and deploys, with playgrounds, plus a timeline of every change.
 - **Python**: 22 lessons from beginner to advanced (6 modules). Examples run in the browser and 24 exercises
   are checked by tests. There is also a free **Playground**.
@@ -48,6 +48,9 @@ each layer linked to the lesson that explains it), then hosts interactive course
 - **Kubernetes** (7 lessons): containers, pods, Deployments, Services, ConfigMaps and rolling updates. A simulated
   3-node cluster (`src/learn/k8s/sim.js`) accepts real `kubectl` commands and YAML and shows pods starting, crashing
   and healing.
+- **Cloudflare & Web Security** (6 lessons): DNS and the Cloudflare proxy, caching and headers at the edge, robots.txt
+  and blocking AI crawlers without losing search, secret keys, and the abuse-proof "Get Resume" form. Taught on this
+  site's real setup, with playgrounds built from its live DNS answers, headers and limits (`src/learn/security/`).
 
 Python runs in the browser with [Pyodide](https://pyodide.org) inside a web worker, so nothing is sent to a server
 and a runaway loop can be stopped. `scripts/copy-pyodide.mjs` copies it from `node_modules` into `public/pyodide/`
@@ -61,7 +64,7 @@ Every lesson is built for beginners: a one-sentence **big idea**, **words to kno
 **questions beginners ask**, and a **recap** (written per course in `src/learn/guides/`). Every code box has
 **Step through**, which runs the program one line at a time and shows the variables and output at each step. The
 Courses page suggests two learning paths (data: Python → pandas → SQL → charts; technology: React → Jira →
-Kubernetes), and each course says who it is for, what you need and what you will learn.
+Kubernetes → Cloudflare & Web Security), and each course says who it is for, what you need and what you will learn.
 
 **Knowledge base** (`#/kb`, `src/learn/kb/`): every course also has a reference of 20 topics in four levels
 (Beginner, Intermediate, Advanced, Expert), 160 in all. Each topic has a plain-English explanation, an example (Python,

@@ -572,6 +572,7 @@ export const changelog = [
     title: 'New profile photo',
     plain: 'A new professional portrait, on a light grey studio backdrop, replaces the initials placeholder: a head-to-chest crop in the opening section and a head-and-shoulders crop in the small round avatars. The link-preview card shown on LinkedIn and WhatsApp uses it too.',
     commits: ['526d6f6', '6df84fd', '0ebfe3c'],
+    lessons: ['data'],
   },
   {
     phase: 'lab',
@@ -580,6 +581,16 @@ export const changelog = [
     title: 'A stag head the cursor uncovers',
     plain: 'A geometric stag head (flat facets in the site\'s teal and indigo theme colours, with wide antlers) is hidden in the code-cube matrix on the welcome screen and across the site: the cursor\'s trail of water uncovers it, and it covers over again as the trail dries.',
     commits: ['3d61661', '9be2a36', 'e00ce0d', 'c2caf0d', '6a4ca84'],
+    lessons: ['stag'],
+  },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'learning',
+    title: 'A Cloudflare & Web Security course, and Learn the Code catches up',
+    plain: 'A new course in the Learning Lab explains how this site is delivered and protected, using its real setup: DNS and the Cloudflare proxy, caching and headers, robots.txt and blocking AI crawlers without losing search, secret keys, and the abuse-proof resume form. The first module is free. Learn the Code gains a lesson on the stag hidden in the code, and its lessons on contact, data, deploying and loading speed now cover the resume preview, the profile photo, Cloudflare and self-hosted fonts.',
+    commits: ['a976dad', 'b30d8bd'],
+    lessons: ['stag', 'contact', 'data', 'deploy', 'splitting'],
   },
 ];
 

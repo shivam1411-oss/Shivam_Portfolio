@@ -28,6 +28,7 @@ insert into public.products (id, title, price_paise) values
   ('react',  'React', 39900),
   ('jira',   'Jira', 39900),
   ('k8s',    'Kubernetes', 39900),
+  ('security', 'Cloudflare & Web Security', 39900),
   ('all',    'All-access: every course', 149900)
 on conflict (id) do nothing;          -- change prices later with: update public.products set price_paise = 49900 where id = 'python';
 

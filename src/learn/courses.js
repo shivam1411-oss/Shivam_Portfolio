@@ -8,11 +8,12 @@ import viz from './content/viz';
 import react from './content/react';
 import jira from './content/jira';
 import k8s from './content/k8s';
+import security from './content/security';
 
 // To add a course: write its modules and lessons, a beginner guide in guides/, a content/<id>.js that
 // combines them, a knowledge base in kb/, then list it here, in catalog.js (COURSE_IDS and the loaders)
 // and in kb/data.js.
-export const courses = [site, python, pandas, sql, viz, react, jira, k8s];
+export const courses = [site, python, pandas, sql, viz, react, jira, k8s, security];
 export const courseById = Object.fromEntries(courses.map((c) => [c.id, c]));
 export { learningPath, learningPaths, techPath } from './paths';
 export const lessonKey = (course, lesson) => `${course.id}/${lesson.id}`;

@@ -4,7 +4,7 @@
    "id": "site",
    "title": "Learn the Code",
    "tagline": "How this portfolio was built, change by change",
-   "blurb": "React, Tailwind, animations, canvas effects, performance, the AI chat, deploying, the Android app, and how Python was made to run in this Learning Lab, explained from zero with the real code and playgrounds.",
+   "blurb": "React, Tailwind, animations, canvas effects, performance, the AI chat, deploying through Cloudflare, the Android app, and how Python was made to run in this Learning Lab, explained from zero with the real code and playgrounds.",
    "levels": "Beginner",
    "icon": "site",
    "audience": "Anyone curious how a modern website is built, with no coding experience needed.",
@@ -75,7 +75,7 @@
     {
      "id": "effects",
      "title": "The effects",
-     "blurb": "The code matrix, cursor trail, welcome screen and water reveal."
+     "blurb": "The code matrix, cursor trail, welcome screen, water reveal and the stag hidden in the code."
     },
     {
      "id": "speed",
@@ -152,7 +152,7 @@
      "goals": [
       "Why text and numbers are kept apart from layout",
       "What is in content.js, impact.js and playbook.js",
-      "How a component loops over data"
+      "How a component loops over data, and how the photo is set"
      ],
      "free": true,
      "exercises": []
@@ -262,6 +262,19 @@
      "exercises": []
     },
     {
+     "id": "stag",
+     "module": "effects",
+     "title": "The stag hidden in the code",
+     "minutes": 10,
+     "goals": [
+      "How a picture is drawn with cubes that only know a number and a colour",
+      "Sampling a drawing onto a grid",
+      "Why the stag shows only under the cursor"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
      "id": "performance",
      "module": "speed",
      "title": "Making it fast on phones",
@@ -282,7 +295,7 @@
      "goals": [
       "What a bundle and a chunk are",
       "How React.lazy splits the site",
-      "Why it prefetches during the welcome screen"
+      "Why it prefetches, and why fewer, larger shared files load faster"
      ],
      "free": true,
      "exercises": []
@@ -321,7 +334,7 @@
      "goals": [
       "How pop-ups (modals) open and close",
       "Masked phone numbers",
-      "Sending the resume through a server function, and the PDF preview"
+      "The resume: built from a source file, previewed safely, sent by a server function"
      ],
      "free": true,
      "exercises": []
@@ -347,7 +360,7 @@
      "goals": [
       "Commits and branches in plain words",
       "What the deploy workflow does, step by step",
-      "How a change reaches shivam-soni.com, and how shared links get a preview card"
+      "How a change reaches shivam-soni.com through Cloudflare, and how shared links get a preview card"
      ],
      "free": true,
      "exercises": []
@@ -2235,6 +2248,163 @@
      ]
     }
    ]
+  },
+  {
+   "id": "security",
+   "title": "Cloudflare & Web Security",
+   "tagline": "Deliver a website fast and keep bots, abuse and leaked keys out",
+   "blurb": "DNS and nameservers, Cloudflare as a reverse proxy, caching and HTTPS at the edge, robots.txt and blocking AI crawlers without losing search, secret keys, and a public form that sends email without being abused. Taught on this site's real setup.",
+   "levels": "Beginner → Intermediate",
+   "icon": "security",
+   "audience": "Anyone who runs or helps run a website: owners, analysts, product people and new developers.",
+   "needs": "Nothing. A computer helps for the optional steps that use the browser's developer tools or a terminal.",
+   "outcomes": [
+    "Explain how DNS and a Cloudflare proxy deliver a site",
+    "Block AI training crawlers without losing search",
+    "Keep secret keys off a website and protect a public form"
+   ],
+   "start": {
+    "intro": "This course explains how shivam-soni.com is delivered and protected, using its real setup: the DNS records, the response headers, robots.txt, the Cloudflare bot rules and the function behind the \"Get Resume\" form. Every playground uses values taken from the live site.",
+    "need": [
+     "No coding experience and nothing to install.",
+     "About 12 minutes for each lesson.",
+     "Optional: a terminal for the curl and dig steps (built into macOS and Linux; on Windows use PowerShell or skip them)."
+    ],
+    "order": [
+     "Start with \"How a visit reaches the site\": everything else builds on the proxy idea.",
+     "Then caching and headers, so you can read what Cloudflare is doing.",
+     "Module 2 covers crawlers: first asking politely, then enforcing at the edge.",
+     "Module 3 covers secret keys and a public form that sends email safely."
+    ],
+    "lesson": [
+     [
+      "Learn the words",
+      "Each lesson starts with its keywords, a plain-English meaning for each, and an everyday comparison. Read them first."
+     ],
+     [
+      "See how it works",
+      "A short numbered list shows what happens, in order, for the idea being taught."
+     ],
+     [
+      "Read and try",
+      "Short explanations with live examples. Try every one, change something, and see what happens."
+     ],
+     [
+      "Do it yourself, step by step",
+      "A numbered walkthrough in the lesson's playground, and sometimes on the live site: one small action per step, and what you should see. Tick each step as you go."
+     ],
+     [
+      "Practise",
+      "Small tasks to try alone, where the lesson has them. A hint is always available."
+     ],
+     [
+      "Pass the quiz",
+      "A few questions to check the idea has landed. When the exercises and quiz are right, the lesson is marked complete."
+     ]
+    ],
+    "tip": "Every lesson has a checklist at the top called \"Your path through this lesson\". Follow it from step 1 and you will never wonder what to do next."
+   },
+   "modules": [
+    {
+     "id": "sec-front",
+     "title": "Cloudflare in front",
+     "level": "Beginner",
+     "blurb": "How a visit finds the site, and what Cloudflare does standing between visitors and GitHub Pages."
+    },
+    {
+     "id": "sec-bots",
+     "title": "Bots and AI crawlers",
+     "level": "Intermediate",
+     "blurb": "Asking crawlers politely with robots.txt, then enforcing it at the edge without losing search."
+    },
+    {
+     "id": "sec-secrets",
+     "title": "Secrets, forms and email",
+     "level": "Intermediate",
+     "blurb": "Which keys may ship in a website, and how a public form sends email without being abused."
+    }
+   ],
+   "paid": true,
+   "lessons": [
+    {
+     "id": "sec-journey",
+     "module": "sec-front",
+     "title": "How a visit reaches the site",
+     "minutes": 12,
+     "goals": [
+      "What DNS and nameservers do",
+      "What it means for Cloudflare to \"proxy\" a site",
+      "Why the hosting address stays hidden"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
+     "id": "sec-edge",
+     "module": "sec-front",
+     "title": "Caching, HTTPS and headers at the edge",
+     "minutes": 11,
+     "goals": [
+      "Read response headers like a pro",
+      "What cf-cache-status HIT, MISS and DYNAMIC mean",
+      "Why renamed files make long caching safe"
+     ],
+     "free": true,
+     "exercises": []
+    },
+    {
+     "id": "sec-robots",
+     "module": "sec-bots",
+     "title": "Asking crawlers politely",
+     "minutes": 12,
+     "goals": [
+      "How robots.txt groups work",
+      "The extra signals: Content-Signal, ai.txt, TDM and page tags",
+      "Why a dotted folder nearly went missing"
+     ],
+     "free": false,
+     "exercises": []
+    },
+    {
+     "id": "sec-bot-wall",
+     "module": "sec-bots",
+     "title": "Blocking AI crawlers at the edge",
+     "minutes": 13,
+     "goals": [
+      "Why a request is not a wall",
+      "How Cloudflare blocks crawlers before they reach the site",
+      "Why blocking a whole category also blocked search engines"
+     ],
+     "free": false,
+     "exercises": []
+    },
+    {
+     "id": "sec-secrets",
+     "module": "sec-secrets",
+     "title": "Keeping secrets off the website",
+     "minutes": 11,
+     "goals": [
+      "Why everything in a website is public",
+      "Publishable keys versus secret keys",
+      "Where each secret on this site lives"
+     ],
+     "free": false,
+     "exercises": []
+    },
+    {
+     "id": "sec-forms",
+     "module": "sec-secrets",
+     "title": "A form that cannot be abused",
+     "minutes": 14,
+     "goals": [
+      "The checks a public form needs",
+      "Rate limits that store no personal data",
+      "How email proves it really came from your domain"
+     ],
+     "free": false,
+     "exercises": []
+    }
+   ]
   }
  ],
  "kb": {
@@ -3075,6 +3245,71 @@
      "id": "gitops",
      "level": "expert",
      "title": "GitOps and production operations"
+    }
+   ]
+  },
+  "security": {
+   "intro": "Delivering and protecting a website, from what DNS does to running a site behind Cloudflare with bot rules, secret keys and abuse-proof forms. Examples come from shops, blogs, banks and small businesses as well as this site.",
+   "topics": [
+    {
+     "id": "dns-basics",
+     "level": "beginner",
+     "title": "DNS: from a name to an address"
+    },
+    {
+     "id": "https-basics",
+     "level": "beginner",
+     "title": "HTTPS and certificates"
+    },
+    {
+     "id": "status-codes",
+     "level": "beginner",
+     "title": "Status codes and headers"
+    },
+    {
+     "id": "reverse-proxy",
+     "level": "intermediate",
+     "title": "Reverse proxies and CDNs"
+    },
+    {
+     "id": "caching",
+     "level": "intermediate",
+     "title": "Caching that never serves stale code"
+    },
+    {
+     "id": "robots-rules",
+     "level": "intermediate",
+     "title": "robots.txt and AI signals"
+    },
+    {
+     "id": "secret-keys",
+     "level": "intermediate",
+     "title": "Publishable and secret keys"
+    },
+    {
+     "id": "bot-management",
+     "level": "advanced",
+     "title": "Bot management at the edge"
+    },
+    {
+     "id": "form-abuse",
+     "level": "advanced",
+     "title": "Protecting public forms"
+    },
+    {
+     "id": "email-auth",
+     "level": "expert",
+     "title": "SPF, DKIM and DMARC"
+    },
+    {
+     "id": "rls-defaults",
+     "level": "expert",
+     "title": "Locked-by-default databases"
+    },
+    {
+     "id": "incident-debugging",
+     "level": "expert",
+     "title": "Debugging a failed integration from the server side"
     }
    ]
   }

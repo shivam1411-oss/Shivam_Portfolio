@@ -26,6 +26,7 @@ import {
   UserRound,
   RotateCcw,
   Search,
+  ShieldCheck,
   Sparkles,
   SquareKanban,
   SquareTerminal,
@@ -61,7 +62,7 @@ import { btn, btnPrimary } from './ui';
 
 const KnowledgeBase = lazy(() => import('./kb/KnowledgeBase'));
 
-const courseIcons = { site: Code2, python: SquareTerminal, pandas: Table2, sql: Database, viz: ChartColumn, react: Atom, jira: SquareKanban, k8s: Boxes };
+const courseIcons = { site: Code2, python: SquareTerminal, pandas: Table2, sql: Database, viz: ChartColumn, react: Atom, jira: SquareKanban, k8s: Boxes, security: ShieldCheck };
 const allLessons = courses.flatMap((c) => c.lessons.map((l) => ({ course: c, lesson: l })));
 
 // ---------------------------------------------------------------- routing and progress
