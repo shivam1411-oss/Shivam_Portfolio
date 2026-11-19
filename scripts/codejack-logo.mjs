@@ -1,6 +1,6 @@
-// Writes public/codejack-icon.svg, the CodeJack logo: a low-poly stag head in charcoal with gold antlers and
-// eyes, on an Ace of Spades card, over the site's code-matrix cubes. Used as the CodeJack header badge, the
-// landing page logo and the learn.html tab icon.
+// Writes public/codejack-icon.svg, the CodeJack logo: a low-poly stag head (slate greys, with tall gold-and-
+// charcoal antlers and teal-to-indigo eyes and accents) standing in front of a tilted Ace of Spades, over the
+// site's code-matrix cubes. Used as the CodeJack header badge, the landing page logo and the learn.html tab icon.
 //   node scripts/codejack-logo.mjs
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -8,24 +8,34 @@ import { fileURLToPath } from 'node:url';
 
 const out = join(dirname(fileURLToPath(import.meta.url)), '../public/codejack-icon.svg');
 const S = 256; // drawing size; the SVG scales to any size
-const CX = 128; // the stag is mirrored about this line
+const CX = 140; // the stag is mirrored about this line (right of centre, leaving room for the card)
 
-const GOLD = ['#f7cf6b', '#e0a43a', '#b8781c'];
-const pts = (p) => p.map(([x, y]) => `${x},${y}`).join(' ');
-const mirror = (p) => p.map(([x, y]) => [2 * CX - x, y]);
+const TEAL = '#3fd1bf';
+const INDIGO = '#9196f6';
+const GOLD = '#e0a43a';
+const GOLD_LIGHT = '#f6cd6a';
+const HORN = '#232a33'; // the charcoal faces of the antlers
+
 const n = (v) => Math.round(v * 10) / 10;
+const pts = (p) => p.map(([x, y]) => `${n(x)},${n(y)}`).join(' ');
+// Shapes are written for the viewer's left half as [dx, y], dx measured from the centre line (negative = left).
+const at = (p, right) => p.map(([dx, y]) => [CX + (right ? -dx : dx), y]);
 
-/** Darken a #rrggbb colour by factor k (0–1), for the shadowed right side of the face. */
+/** Darken a #rrggbb colour by factor k, for the shadowed right side. */
 const shade = (hex, k) => {
   if (!hex.startsWith('#')) return hex;
   const c = [1, 3, 5].map((i) => Math.round(parseInt(hex.slice(i, i + 2), 16) * k));
   return `#${c.map((v) => v.toString(16).padStart(2, '0')).join('')}`;
 };
 
-/** A polyline as a filled sliver narrowing from w0 to w1, ending in a point. */
-function taper(p, w0, w1) {
-  const L = [];
-  const R = [];
+/**
+ * A tapered antler segment split lengthwise into two facets, like the gilded horn in the reference: one half
+ * gold, the other charcoal. Returns [goldHalf, darkHalf] as point lists. `goldInside` puts the gold on the side
+ * facing the head.
+ */
+function hornFacets(p, w0, w1, goldInside, right) {
+  const A = []; // offset to one side
+  const B = []; // offset to the other
   p.forEach(([x, y], i) => {
     const [ax, ay] = p[Math.max(0, i - 1)];
     const [bx, by] = p[Math.min(p.length - 1, i + 1)];
@@ -33,65 +43,90 @@ function taper(p, w0, w1) {
     const nx = -(by - ay) / len;
     const ny = (bx - ax) / len;
     const h = (w0 + (w1 - w0) * (i / (p.length - 1))) / 2;
-    L.push([n(x + nx * h), n(y + ny * h)]);
-    R.push([n(x - nx * h), n(y - ny * h)]);
+    A.push([x + nx * h, y + ny * h]);
+    B.push([x - nx * h, y - ny * h]);
   });
   const [lx, ly] = p[p.length - 1];
   const [px, py] = p[p.length - 2];
   const len = Math.hypot(lx - px, ly - py) || 1;
-  return [...L, [n(lx + ((lx - px) / len) * w1 * 2.5), n(ly + ((ly - py) / len) * w1 * 2.5)], ...R.reverse()];
+  const tip = [lx + ((lx - px) / len) * w1 * 3, ly + ((ly - py) / len) * w1 * 3];
+  const sideA = [...A, tip, ...[...p].reverse()];
+  const sideB = [...B, tip, ...[...p].reverse()];
+  // For a beam drawn upwards on the left, side A points away from the head (outside).
+  const inside = right ? sideA : sideB;
+  const outside = right ? sideB : sideA;
+  return goldInside ? [inside, outside] : [outside, inside];
 }
 
-// ---------------------------------------------------------------- the stag (viewer's left half)
+// ---------------------------------------------------------------- the antlers (as in the reference)
 
-// Antler: [points, start width, end width, fill]. Gold beams with charcoal tines, like gilded horn.
+// Tall, lyre-shaped: each beam leans out, then sweeps up and curves back in at the crown, with tines pointing
+// up. [points as [dx, y], start width, end width, gold on the inside?]
 const ANTLER = [
-  [[[118, 102], [104, 92], [90, 80], [80, 64], [78, 48], [82, 33]], 8.5, 2.4, 'url(#cj-gold)'], // main beam
-  [[[100, 89], [97, 73], [101, 58]], 4.6, 1.4, '#2b323c'], // inner tine
-  [[[86, 75], [75, 67], [66, 59]], 4.2, 1.3, 'url(#cj-gold)'], // outer tine
-  [[[80, 59], [87, 50], [93, 40]], 4, 1.2, '#2b323c'], // upper inner tine
-  [[[112, 98], [108, 86], [110, 75]], 3.8, 1.2, '#39414c'], // brow tine
-  [[[79, 46], [72, 38], [68, 30]], 3.4, 1.1, '#2b323c'], // top outer tine
+  [[[-13, 104], [-21, 92], [-34, 78], [-46, 62], [-53, 46], [-55, 30], [-52, 16]], 9, 2.6, true], // main beam
+  [[[-19, 95], [-16, 83], [-13, 73], [-12, 64]], 4.6, 1.4, false], // brow tine, inside
+  [[[-33, 79], [-29, 66], [-27, 55], [-27, 46]], 4.6, 1.4, false], // second tine, inside
+  [[[-45, 64], [-57, 57], [-64, 47], [-67, 38]], 4.4, 1.3, true], // outer tine
+  [[[-53, 43], [-47, 33], [-43, 24], [-42, 15]], 4, 1.2, true], // crown, inner point
+  [[[-55, 36], [-63, 29], [-67, 20], [-68, 12]], 3.8, 1.1, false], // crown, outer point
 ];
-// Face facets, top to bottom: [points, fill].
-const FACE = [
-  [[[112, 112], [74, 98], [82, 118], [104, 126]], '#2a313b'], // ear
-  [[[106, 116], [82, 104], [88, 117]], '#4b5563'], // inner ear
-  [[[128, 102], [116, 104], [110, 117], [128, 123]], '#6f7a87'], // forehead
-  [[[116, 104], [106, 110], [110, 117]], '#3a434f'], // temple
-  [[[110, 117], [128, 123], [124, 136], [111, 133]], '#8c96a2'], // brow
-  [[[106, 110], [110, 117], [111, 133], [103, 140], [99, 123]], '#303843'], // outer cheek
-  [[[124, 136], [128, 123], [128, 160], [122, 158]], '#c5cdd5'], // bridge
-  [[[111, 133], [124, 136], [122, 158], [114, 156], [103, 140]], '#5c6774'], // cheek
-  [[[114, 156], [122, 158], [121, 166], [113, 164]], '#e2e7ec'], // muzzle side
-  [[[121, 162], [128, 160], [128, 169], [123, 168]], '#11151a'], // nose
-  [[[113, 164], [121, 166], [123, 168], [128, 170], [128, 181], [117, 178]], '#b4bdc7'], // chin
-  [[[103, 140], [114, 156], [113, 164], [117, 178], [128, 181], [128, 214], [118, 198], [106, 178], [99, 157]], '#1e252e'], // neck
-  [[[117, 178], [128, 181], [128, 214]], '#3a434e'], // throat
-  [[[99, 157], [106, 178], [97, 172]], 'url(#cj-gold)'], // gold flash on the neck
-  [[[110, 117], [104, 121], [106, 113]], 'url(#cj-gold)'], // gold flash over the eye
-];
-const EYE = [[[110, 131], [116.5, 127.5], [121.5, 131.5], [116, 134]], 'url(#cj-gold)'];
 
-const NARROW = 0.86; // the face is drawn narrower than its coordinates, towards the centre line
-const narrow = (p) => p.map(([x, y]) => [n(CX - (CX - x) * NARROW), y]);
+const BOLD = 1.55; // antler thickness, so the beams read as solid horn at small sizes
+
+// ---------------------------------------------------------------- the head (viewer's left half)
+
+const FACE = [
+  [[[-16, 112], [-60, 101], [-51, 121], [-25, 130]], '#262d37'], // ear, outer
+  [[[-22, 118], [-53, 105], [-42, 121]], '#46505d'], // ear, middle
+  [[[-24, 125], [-45, 112], [-37, 124]], '#687482'], // ear, inner
+  [[[0, 100], [-12, 102], [-18, 112], [0, 116]], '#5b6673'], // forehead, top
+  [[[-12, 102], [-20, 104], [-18, 112]], '#37404c'], // forehead, corner
+  [[[0, 116], [-18, 112], [-14, 124], [0, 126]], '#7b8693'], // forehead, middle
+  [[[-18, 112], [-24, 118], [-20, 128], [-14, 124]], '#2d3540'], // brow
+  [[[-14, 124], [-20, 128], [-22, 134], [-12, 136], [0, 130], [0, 126]], '#8e98a4'], // around the eye
+  [[[-22, 134], [-12, 136], [-14, 142], [-24, 140]], '#262d37'], // tear line
+  [[[-24, 118], [-28, 130], [-26, 148], [-24, 140], [-22, 134], [-20, 128]], '#38414d'], // outer cheek
+  [[[0, 130], [-12, 136], [-8, 156], [0, 160]], '#c6ced6'], // bridge
+  [[[-12, 136], [-14, 142], [-12, 158], [-8, 156]], '#a3adb8'], // side of the bridge
+  [[[-24, 140], [-14, 142], [-12, 158], [-18, 162], [-26, 148]], '#6a7582'], // lower cheek
+  [[[-8, 156], [-12, 158], [-11, 168], [-4, 166], [0, 160]], '#e4e9ee'], // muzzle
+  [[[-12, 158], [-18, 162], [-16, 172], [-11, 168]], '#ced5dc'], // side of the muzzle
+  [[[0, 161], [-3, 165], [-6.5, 168], [-5.5, 173], [0, 172]], '#101419'], // nose
+  [[[-11, 168], [-16, 172], [-10, 180], [0, 182], [0, 172], [-8, 174]], '#b8c1ca'], // chin
+  [[[-26, 148], [-18, 162], [-16, 172], [-10, 180], [-20, 184], [-30, 166]], '#262d37'], // jaw
+  [[[-30, 166], [-20, 184], [-10, 180], [0, 182], [0, 200], [-16, 204], [-30, 190]], '#1e252e'], // upper neck
+  [[[-10, 180], [0, 182], [0, 200], [-8, 196]], '#46505d'], // throat highlight
+  [[[-30, 190], [-16, 204], [0, 200], [0, 246], [-12, 226], [-26, 207]], '#161b22'], // lower neck
+  [[[-16, 204], [0, 200], [0, 228]], '#2a313b'], // front of the neck
+];
+// Accents in the site's colours: [points, fill]. Left side teal, right side indigo.
+const ACCENTS = [
+  [[[-26, 207], [-12, 226], [-22, 214]], 'side'], // neck flash
+  [[[-30, 190], [-34, 182], [-26, 186]], 'side'], // shoulder glint
+  [[[-18, 112], [-24, 118], [-20, 116]], 'side'], // brow glint
+];
+const EYE = [[-21, 131], [-14.5, 127.5], [-9, 131.5], [-15, 134.5]];
 
 function stag() {
   const parts = [];
   for (const right of [false, true]) {
-    const flip = right ? mirror : (p) => p;
     const tone = (f) => (right ? shade(f, 0.84) : f);
-    for (const [p, w0, w1, fill] of ANTLER) parts.push(`<polygon points="${pts(taper(flip(p), w0, w1))}" fill="${tone(fill)}" />`);
-    for (const [p, fill] of FACE) parts.push(`<polygon points="${pts(flip(narrow(p)))}" fill="${tone(fill)}" />`);
-    parts.push(`<polygon points="${pts(flip(narrow(EYE[0])))}" fill="${EYE[1]}" />`);
-    const ex0 = n(CX - (CX - 116.3) * NARROW);
-    const [ex, ey] = right ? [2 * CX - ex0, 131.2] : [ex0, 131.2];
-    parts.push(`<circle cx="${ex}" cy="${ey}" r="1.5" fill="#11151a" />`);
+    const side = right ? INDIGO : TEAL;
+    for (const [p, w0, w1, goldInside] of ANTLER) {
+      const [gold, dark] = hornFacets(at(p, right), w0 * BOLD, w1 * BOLD, goldInside, right);
+      parts.push(`<polygon points="${pts(gold)}" fill="url(#cj-gold)" />`);
+      parts.push(`<polygon points="${pts(dark)}" fill="${tone(HORN)}" />`);
+    }
+    for (const [p, fill] of FACE) parts.push(`<polygon points="${pts(at(p, right))}" fill="${tone(fill)}" />`);
+    for (const [p] of ACCENTS) parts.push(`<polygon points="${pts(at(p, right))}" fill="${side}" />`);
+    parts.push(`<polygon points="${pts(at(EYE, right))}" fill="${side}" />`);
+    const [[ex, ey]] = at([[-15, 131.2]], right);
+    parts.push(`<circle cx="${ex}" cy="${ey}" r="1.6" fill="#0b0e12" />`);
   }
   return parts.join('\n      ');
 }
 
-// ---------------------------------------------------------------- the code matrix behind
+// ---------------------------------------------------------------- the code matrix and the card
 
 function matrix() {
   const cubes = [];
@@ -109,46 +144,53 @@ function matrix() {
 
 const SPADE = 'M0-5C2-2 5 0 5 2.2C5 4 3 5 1.4 4L2.2 6.5H-2.2L-1.4 4C-3 5-5 4-5 2.2C-5 0-2-2 0-5Z';
 const { cubes, marks } = matrix();
-const corner = `<text x="57" y="51" font-size="23">A</text><use href="#cj-spade" transform="translate(64.2 64) scale(1.25)" />`;
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${S} ${S}" role="img" aria-label="CodeJack">
-  <!-- CodeJack logo, generated by scripts/codejack-logo.mjs: a low-poly stag head with gold antlers on an
-       Ace of Spades card, over code-matrix cubes. -->
+  <!-- CodeJack logo, generated by scripts/codejack-logo.mjs: a low-poly stag with gold antlers in front of a
+       tilted Ace of Spades, over code-matrix cubes. -->
   <defs>
     <linearGradient id="cj-gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="${GOLD[0]}" />
-      <stop offset="0.55" stop-color="${GOLD[1]}" />
-      <stop offset="1" stop-color="${GOLD[2]}" />
+      <stop offset="0" stop-color="${GOLD_LIGHT}" />
+      <stop offset="1" stop-color="${GOLD}" />
+    </linearGradient>
+    <linearGradient id="cj-site" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${TEAL}" />
+      <stop offset="1" stop-color="${INDIGO}" />
     </linearGradient>
     <linearGradient id="cj-card" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1b2129" />
-      <stop offset="1" stop-color="#11151b" />
+      <stop offset="0" stop-color="#1c232c" />
+      <stop offset="1" stop-color="#11161c" />
     </linearGradient>
-    <radialGradient id="cj-pool" cx="128" cy="132" r="128" gradientUnits="userSpaceOnUse">
+    <radialGradient id="cj-pool" cx="132" cy="134" r="130" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#08090c" stop-opacity="0.9" />
       <stop offset="0.65" stop-color="#08090c" stop-opacity="0.4" />
       <stop offset="1" stop-color="#08090c" stop-opacity="0" />
     </radialGradient>
+    <filter id="cj-lift" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.6" />
+    </filter>
     <clipPath id="cj-clip"><rect width="${S}" height="${S}" rx="56" /></clipPath>
     <path id="cj-spade" d="${SPADE}" />
   </defs>
   <g clip-path="url(#cj-clip)">
     <rect width="${S}" height="${S}" fill="#0a0b0e" />
     <g fill="#12171d">${cubes}</g>
-    <g fill="${GOLD[1]}">${marks}</g>
+    <g fill="${TEAL}">${marks}</g>
     <rect width="${S}" height="${S}" fill="url(#cj-pool)" />
 
-    <!-- the Ace of Spades -->
-    <rect x="46" y="22" width="164" height="214" rx="16" fill="url(#cj-card)" stroke="url(#cj-gold)" stroke-width="4" />
-    <rect x="56" y="32" width="144" height="194" rx="9" fill="none" stroke="${GOLD[1]}" stroke-opacity="0.35" stroke-width="1.5" />
-    <use href="#cj-spade" transform="translate(128 140) scale(10)" fill="${GOLD[1]}" fill-opacity="0.13" stroke="${GOLD[1]}" stroke-opacity="0.45" stroke-width="0.12" />
-    <g fill="url(#cj-gold)" font-family="Georgia, 'Times New Roman', serif" font-weight="700">
-      ${corner}
-      <g transform="rotate(180 128 129)">${corner}</g>
+    <!-- the Ace of Spades, tilted behind the stag with its corner showing -->
+    <g transform="rotate(-16 82 150)" filter="url(#cj-lift)">
+      <rect x="26" y="72" width="112" height="156" rx="12" fill="url(#cj-card)" stroke="url(#cj-site)" stroke-width="3.5" />
+      <rect x="34" y="80" width="96" height="140" rx="7" fill="none" stroke="${TEAL}" stroke-opacity="0.3" stroke-width="1.2" />
+      <use href="#cj-spade" transform="translate(82 152) scale(7)" fill="url(#cj-site)" fill-opacity="0.22" />
+      <g fill="url(#cj-site)" font-family="Georgia, 'Times New Roman', serif" font-weight="700">
+        <text x="38" y="104" font-size="26">A</text>
+        <use href="#cj-spade" transform="translate(47 119) scale(1.5)" />
+      </g>
     </g>
 
-    <!-- the stag, scaled a little so its antler tips clear the corner marks -->
-    <g transform="translate(128 136) scale(0.88) translate(-128 -128)" stroke="#0a0b0e" stroke-opacity="0.35" stroke-width="0.6" stroke-linejoin="round">
+    <!-- the stag -->
+    <g transform="translate(${CX} 142) scale(0.93) translate(-${CX} -134)" filter="url(#cj-lift)" stroke="#0a0b0e" stroke-opacity="0.3" stroke-width="0.6" stroke-linejoin="round">
       ${stag()}
     </g>
   </g>
