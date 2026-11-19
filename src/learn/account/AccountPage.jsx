@@ -1,6 +1,6 @@
 // #/account: sign in, create an account, reset a password, and (signed in) the learner's profile.
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { CheckCircle2, Eye, EyeOff, Loader2, LogOut, Mail, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
+import { CheckCircle2, Eye, EyeOff, LifeBuoy, Loader2, LogOut, Mail, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
 import { btn, btnPrimary } from '../ui';
 import { courseById } from '../catalog';
 import {
@@ -355,6 +355,14 @@ function Profile({ account }) {
       <section className="p-5 rounded-2xl bg-surface border border-line">
         <NewPassword title="Change password" />
       </section>
+
+      <a href="#/support" className="flex items-center gap-3 p-5 rounded-2xl bg-surface border border-line hover:border-accent/40 transition-colors">
+        <LifeBuoy size={18} className="text-accent shrink-0" />
+        <span>
+          <span className="block font-extrabold text-fg">Help & support</span>
+          <span className="block text-sm text-muted">Problems with a payment, your account or a lesson? Raise a request and follow our replies.</span>
+        </span>
+      </a>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <button type="button" onClick={signOut} className={btn}>

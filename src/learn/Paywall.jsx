@@ -1,9 +1,12 @@
 // What learners see when a lesson or knowledge base is part of a paid course they do not own yet.
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Check, Lock, Sparkles } from 'lucide-react';
+import { ArrowLeft, Check, LifeBuoy, Lock, Sparkles } from 'lucide-react';
 import { FALLBACK_PRICES } from './paywall.config';
+import { courses } from './catalog';
 import { formatRupees, loadPrices } from './access';
 import { btn, btnPrimary } from './ui';
+
+const PAID_COURSES = courses.filter((c) => c.paid).length;
 
 /** Live prices from Supabase, falling back to the defaults if they cannot be loaded. */
 export function usePrices() {
@@ -48,7 +51,7 @@ export function UnlockCard({ course, compact = false }) {
           <Lock size={15} /> Unlock {course.title} · {formatRupees(prices.course(course.id))}
         </button>
         <button type="button" onClick={() => requestUnlock('all', setNote)} className={`${btn} justify-center`}>
-          All 7 courses · {formatRupees(prices.all)}
+          All {PAID_COURSES} courses · {formatRupees(prices.all)}
         </button>
       </div>
       <p className="mt-3 text-[11px] text-subtle leading-relaxed">
@@ -67,6 +70,9 @@ export function UnlockCard({ course, compact = false }) {
           {note}
         </p>
       )}
+      <a href="#/support/payment" className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-fg">
+        <LifeBuoy size={13} /> Paid but still locked, or a problem paying? Get help
+      </a>
     </div>
   );
 }

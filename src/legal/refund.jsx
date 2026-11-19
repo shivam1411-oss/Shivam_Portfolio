@@ -61,7 +61,10 @@ const sections = [
           needs to be done.
         </li>
         <li>If you were charged twice for the same course, we refund the extra payment as soon as we see it, or when you tell us.</li>
-        <li>If you paid but the course did not unlock within one hour, contact us with the payment reference. We will unlock it or refund you.</li>
+        <li>
+          If you paid but the course did not unlock within one hour, raise a request under Help in CodeJack, or contact us, with the payment reference. We
+          will unlock it or refund you.
+        </li>
       </ul>
     ),
   },

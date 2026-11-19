@@ -32,6 +32,12 @@ const dataSummary = [
   ['Account name, email and scrambled password', 'To sign you in and send account emails', 'Supabase (emails are delivered by Brevo)', 'Until you delete your account'],
   ['Learning progress saved to your account', 'To follow you across devices', 'Supabase', 'Until you delete your account'],
   ['Purchase records and payment reference numbers', 'To unlock your courses, give refunds and keep accounts', 'Supabase and Razorpay', 'As long as Indian tax and accounting laws require'],
+  [
+    'Support requests: what you write, the topic, the page you asked from, website or app, your browser\'s name, and any payment reference you add',
+    'To answer your request and keep its history',
+    'Supabase (emails about it are delivered by Brevo)',
+    'Until you delete your account, or sooner if you ask',
+  ],
   ['Card, UPI or bank details', 'To take your payment', 'Razorpay only; never seen by Shivam Soni', "Under Razorpay's own policy"],
   ['Messages you type to the AI assistant', 'To answer your question', 'Passed through Cloudflare to Anthropic; not stored by Shivam Soni', 'Gone from your page when you close or reload it'],
 ];
@@ -248,6 +254,11 @@ const sections = [
             <strong>Account activity</strong>: the account provider keeps basic security logs, such as when you signed in and the IP address it
             came from, to protect accounts and prevent abuse.
           </li>
+          <li>
+            <strong>Support requests</strong>: if you raise a request under Help, what you write, its topic and subject, any payment reference you
+            add, the CodeJack page you asked from, whether you used the website or the app, and your browser's name and version. It is linked to
+            your account so we can see your purchases and reply. You and Shivam Soni both get an email about it, sent by Brevo.
+          </li>
         </ul>
         <p className="mt-3">
           <strong>Payment details are never seen or stored by Shivam Soni.</strong> When you buy a course, you pay on a secure checkout run by 
@@ -413,6 +424,10 @@ const sections = [
           for your account to be deleted, it and its progress are deleted within 30 days. Purchase records are kept only for as long as Indian
           tax and accounting laws require, and are then deleted.
         </p>
+        <p className="mt-3">
+          <strong>Support requests:</strong> kept with their replies while your account exists, so we can see the history if you ask again.
+          They are deleted with your account, or sooner if you ask us to delete them.
+        </p>
       </>
     ),
   },
@@ -532,6 +547,7 @@ const sections = [
           <strong>What changed in this version ({EFFECTIVE_DATE}):</strong>
         </p>
         <ul className="list-disc list-inside mt-3 space-y-2">
+          <li>Added support requests: signed-in CodeJack learners can raise a request under Help. Listed what it stores and for how long.</li>
           <li>The Learning Lab is now called CodeJack. Only the name changed: accounts, progress and purchases are the same.</li>
           <li>Added the new "Cloudflare &amp; Web Security" course to the list of CodeJack courses. Nothing about what is collected changed.</li>
         </ul>
