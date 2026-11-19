@@ -23,24 +23,18 @@ const GLITCH = '01{}[]()<>=+*/;:#$%&|!?'.split('');
 // base/max: glyph opacity when unlit / at the brightest point of a stream. glow: allow a halo on stream heads.
 // shape/tint: for a picture drawn in the grid (createMatrix's `shape` option), the unlit glyph opacity and the
 // strength of the picture's colour washed over the cube face, where the picture fully covers a cube.
+// vivid: use the picture's bright palette (for dark backgrounds) instead of its soft one.
 export const matrixThemes = {
-  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, shape: 0.95, tint: 0.55, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
+  dark: { tile: '#0d1614', hi: 'rgba(255,255,255,0.07)', lo: 'rgba(0,0,0,0.5)', glyph: '63,209,191', base: 0.28, max: 1, shape: 1, tint: 0.62, vivid: true, head: '#e8fffb', glow: true, ripple: '255,255,255', rippleAlpha: 0.25 },
   light: { tile: '#e9efed', hi: 'rgba(255,255,255,0.9)', lo: 'rgba(15,23,42,0.1)', glyph: '15,138,126', base: 0.4, max: 1, shape: 1, tint: 0.6, head: '#0c3b36', glow: true, ripple: '15,138,126', rippleAlpha: 0.25 },
   // Behind page content: dim enough that body text stays easy to read over it.
-  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.07, max: 0.3, shape: 0.32, tint: 0.3, head: 'rgba(63,209,191,0.45)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
-  lightSubtle: { tile: '#f0f3f2', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.1, max: 0.32, shape: 0.36, tint: 0.34, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
-  // Panels behind a section (the stag behind the hero and footer): close to the page background, faint glyphs.
-  darkPanel: { tile: '#0d0f12', hi: 'rgba(255,255,255,0.03)', lo: 'rgba(0,0,0,0.35)', glyph: '63,209,191', base: 0.06, max: 0.3, shape: 0.32, tint: 0.2, head: 'rgba(63,209,191,0.5)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
-  lightPanel: { tile: '#f1f2ef', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.09, max: 0.3, shape: 0.36, tint: 0.24, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
+  darkSubtle: { tile: '#0c1412', hi: 'rgba(255,255,255,0.035)', lo: 'rgba(0,0,0,0.4)', glyph: '63,209,191', base: 0.07, max: 0.3, shape: 0.9, tint: 0.55, vivid: true, head: 'rgba(63,209,191,0.45)', glow: false, ripple: '63,209,191', rippleAlpha: 0.1 },
+  lightSubtle: { tile: '#f0f3f2', hi: 'rgba(255,255,255,0.7)', lo: 'rgba(15,23,42,0.05)', glyph: '15,138,126', base: 0.1, max: 0.32, shape: 0.7, tint: 0.5, head: 'rgba(15,138,126,0.5)', glow: false, ripple: '15,138,126', rippleAlpha: 0.12 },
 };
 
-/**
- * The palette for the current light/dark mode. `subtle` (true) is the dimmer one behind page content, 'panel'
- * the one for a picture panel behind a section; the default, full one is for the welcome screen.
- */
+/** `subtle` picks the dimmer palette used behind page content; the full one is for the welcome screen. */
 export const currentMatrixTheme = (subtle = false) => {
   const dark = document.documentElement.classList.contains('dark');
-  if (subtle === 'panel') return dark ? matrixThemes.darkPanel : matrixThemes.lightPanel;
   if (subtle) return dark ? matrixThemes.darkSubtle : matrixThemes.lightSubtle;
   return dark ? matrixThemes.dark : matrixThemes.light;
 };
@@ -50,7 +44,7 @@ export const randomGlyph = () => GLITCH[(Math.random() * GLITCH.length) | 0];
 
 /**
  * `shape(cols, rows, cell)`, optional, returns a picture sampled per cell (row-major): `weight`, 0 to 1, how much
- * of the cube it covers, and `rgb`, its colour there as "r,g,b" (or null). Covered cubes take that colour, so
+ * of the cube it covers, and `rgb`, its colour there as "r,g,b" (or null), optionally `rgbVivid` for themes marked `vivid`. Covered cubes take that colour, so
  * the grid shows the picture (the welcome screen's deer head). Themes without `shape`/`tint` ignore it.
  */
 export function createMatrix(cell, { shape: shapeFn } = {}) {
@@ -80,7 +74,7 @@ export function createMatrix(cell, { shape: shapeFn } = {}) {
     ctx.fillRect(x, y, s, s);
     const weight = i >= 0 ? weightAt(theme, i) : 0;
     if (weight > 0) {
-      ctx.fillStyle = `rgba(${shape.rgb[i]},${weight * theme.tint})`;
+      ctx.fillStyle = `rgba(${colours(theme)[i]},${weight * theme.tint})`;
       ctx.fillRect(x, y, s, s);
     }
     ctx.fillStyle = theme.hi;
@@ -91,12 +85,13 @@ export function createMatrix(cell, { shape: shapeFn } = {}) {
     ctx.fillRect(x + s - 1, y, 1, s);
   };
 
+  const colours = (theme) => (theme.vivid && shape.rgbVivid ? shape.rgbVivid : shape.rgb);
   // How strongly the picture shows on cube i under this theme (0 when the theme or the matrix has none).
   function weightAt(theme, i) {
     return shape && theme.tint && shape.rgb[i] ? shape.weight[i] : 0;
   }
   // Unlit glyph colour and opacity: the theme's, or the picture's colour, brighter, inside the picture.
-  const glyphColour = (theme, i) => (weightAt(theme, i) > 0.3 ? shape.rgb[i] : theme.glyph);
+  const glyphColour = (theme, i) => (weightAt(theme, i) > 0.3 ? colours(theme)[i] : theme.glyph);
   const baseAlpha = (theme, i) => theme.base + weightAt(theme, i) * ((theme.shape ?? theme.base) - theme.base);
 
   const drawGlyph = (ctx, theme, col, row, glow) => {

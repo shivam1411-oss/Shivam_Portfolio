@@ -3,9 +3,14 @@
 // antlers. It is painted on a small off-screen canvas and sampled per grid cell, so every cube gets a
 // coverage (0 to 1) and the colour of the facet under it. The matrix tints its cubes with that.
 
-const SAGE = [143, 163, 146];
-const TAN = [214, 184, 150];
-const TERRA = [190, 108, 88];
+// Facet colours: soft, like the reference, for light backgrounds, and vivid ones that stand out on dark.
+const PALETTES = {
+  soft: { sage: [143, 163, 146], tan: [214, 184, 150], terra: [190, 108, 88] },
+  vivid: { sage: [52, 230, 140], tan: [255, 196, 64], terra: [255, 94, 70] },
+};
+const SAGE = 'sage';
+const TAN = 'tan';
+const TERRA = 'terra';
 
 // Drawing space (left half; the right half is mirrored about CX). y grows downwards.
 const CX = 232;
@@ -41,6 +46,7 @@ const mirrorX = (pts) => pts.map(([x, y]) => [2 * CX - x, y]);
 const rightColour = (c) => (c === SAGE ? TERRA : c);
 const rgb = ([r, g, b]) => `rgb(${r},${g},${b})`;
 
+
 function polygon(ctx, pts) {
   ctx.beginPath();
   pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
@@ -69,19 +75,19 @@ function taper(ctx, pts, w0, w1) {
   polygon(ctx, [...left, tip, ...right.reverse()]);
 }
 
-/** Paint the deer in its drawing space: colours where it is, transparent everywhere else. */
-function paintDeer(ctx) {
+/** Paint the deer in its drawing space, in `palette`: colours where it is, transparent everywhere else. */
+function paintDeer(ctx, palette) {
   ctx.lineJoin = 'round';
   for (const right of [false, true]) {
     const flip = right ? mirrorX : (p) => p;
     const colour = right ? rightColour : (c) => c;
     for (const [pts, w0, w1, c] of ANTLER) {
-      ctx.fillStyle = rgb(colour(c));
+      ctx.fillStyle = rgb(palette[colour(c)]);
       taper(ctx, flip(pts), w0, w1);
       ctx.fill();
     }
     for (const [pts, c] of HEAD) {
-      ctx.fillStyle = rgb(colour(c));
+      ctx.fillStyle = rgb(palette[colour(c)]);
       polygon(ctx, flip(pts));
       ctx.fill();
     }
@@ -105,33 +111,22 @@ function paintDeer(ctx) {
 const SUPERSAMPLE = 4; // canvas pixels per cell side when sampling, for smooth coverage
 const BOOST = 1.6; // thin tines cover only part of a cube; this lifts them so they still read
 
-/**
- * The deer sampled on a `cols`×`rows` grid of `cell`-px cubes, centred on the screen and as large as fits:
- * `weight` (0 to 1, how much of each cell it covers) and `rgb` (the cell's facet colour as "r,g,b").
- */
-export function deerMask(cols, rows, cell) {
-  const n = cols * rows;
-  const weight = new Float32Array(n);
-  const rgbOut = new Array(n).fill(null);
-  const w = cols * cell;
-  const h = rows * cell;
-  const bw = BOX.x1 - BOX.x0;
-  const bh = BOX.y1 - BOX.y0;
-  // On tall, narrow screens the antler tips may run a little past the sides, to keep the head large.
-  const scale = Math.min((h * 0.9) / bh, (w * 1.12) / bw);
-  if (!(scale > 0)) return { weight, rgb: rgbOut };
-
-  const k = SUPERSAMPLE / cell;
+/** Paint the deer in `palette` on a canvas covering the grid, and read back its pixels. */
+function render(cols, rows, transform, palette) {
   const canvas = document.createElement('canvas');
   canvas.width = cols * SUPERSAMPLE;
   canvas.height = rows * SUPERSAMPLE;
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  const ox = w / 2 - (BOX.x0 + bw / 2) * scale;
-  const oy = h / 2 - (BOX.y0 + bh / 2) * scale;
-  ctx.setTransform(k * scale, 0, 0, k * scale, k * ox, k * oy);
-  paintDeer(ctx);
+  ctx.setTransform(...transform);
+  paintDeer(ctx, palette);
+  return ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+}
 
-  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+/** Per cell of the grid: coverage (0 to 1) and average colour ("r,g,b", or null where the deer is absent). */
+function sample(data, cols, rows) {
+  const weight = new Float32Array(cols * rows);
+  const colour = new Array(cols * rows).fill(null);
+  const width = cols * SUPERSAMPLE;
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       let a = 0;
@@ -139,7 +134,7 @@ export function deerMask(cols, rows, cell) {
       let g = 0;
       let b = 0;
       for (let y = 0; y < SUPERSAMPLE; y++) {
-        let i = ((row * SUPERSAMPLE + y) * canvas.width + col * SUPERSAMPLE) * 4;
+        let i = ((row * SUPERSAMPLE + y) * width + col * SUPERSAMPLE) * 4;
         for (let x = 0; x < SUPERSAMPLE; x++, i += 4) {
           const al = data[i + 3];
           a += al;
@@ -150,8 +145,32 @@ export function deerMask(cols, rows, cell) {
       }
       const cellIndex = row * cols + col;
       weight[cellIndex] = Math.min(1, (BOOST * a) / (SUPERSAMPLE * SUPERSAMPLE * 255));
-      if (a > 0) rgbOut[cellIndex] = `${Math.round(r / a)},${Math.round(g / a)},${Math.round(b / a)}`;
+      if (a > 0) colour[cellIndex] = `${Math.round(r / a)},${Math.round(g / a)},${Math.round(b / a)}`;
     }
   }
-  return { weight, rgb: rgbOut };
+  return { weight, colour };
+}
+
+/**
+ * The deer sampled on a `cols`×`rows` grid of `cell`-px cubes, centred on the screen and as large as fits:
+ * `weight` (0 to 1, how much of each cell it covers), and the cell's facet colour as "r,g,b" in the soft
+ * palette (`rgb`) and the vivid one (`rgbVivid`).
+ */
+export function deerMask(cols, rows, cell) {
+  const n = cols * rows;
+  const w = cols * cell;
+  const h = rows * cell;
+  const bw = BOX.x1 - BOX.x0;
+  const bh = BOX.y1 - BOX.y0;
+  // On tall, narrow screens the antler tips may run a little past the sides, to keep the head large.
+  const scale = Math.min((h * 0.9) / bh, (w * 1.12) / bw);
+  if (!(scale > 0)) return { weight: new Float32Array(n), rgb: new Array(n).fill(null), rgbVivid: new Array(n).fill(null) };
+
+  const k = SUPERSAMPLE / cell;
+  const ox = w / 2 - (BOX.x0 + bw / 2) * scale;
+  const oy = h / 2 - (BOX.y0 + bh / 2) * scale;
+  const transform = [k * scale, 0, 0, k * scale, k * ox, k * oy];
+  const soft = sample(render(cols, rows, transform, PALETTES.soft), cols, rows);
+  const vivid = sample(render(cols, rows, transform, PALETTES.vivid), cols, rows);
+  return { weight: soft.weight, rgb: soft.colour, rgbVivid: vivid.colour };
 }

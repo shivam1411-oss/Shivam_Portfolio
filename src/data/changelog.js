@@ -570,8 +570,8 @@ export const changelog = [
     date: '2026-11-19',
     category: 'design',
     title: 'A stag head in the welcome-screen code matrix',
-    plain: 'The cubes of falling code on the welcome screen now form a geometric stag head behind the name: flat facets in sage, tan and terracotta with wide antlers, while the code streams keep running through it. The glow behind the text is lighter so the stag shows through, and phones use smaller cubes so it stays recognisable. A fainter stag also sits behind the opening section and the footer, and appears in the hidden code the cursor uncovers.',
-    commits: ['3d61661', '764ac63'],
+    plain: 'The cubes of falling code on the welcome screen now form a geometric stag head behind the name: flat facets in sage, tan and terracotta with wide antlers, while the code streams keep running through it. The glow behind the text is lighter so the stag shows through, and phones use smaller cubes so it stays recognisable. On the rest of the site the stag is part of the hidden code the cursor uncovers, and in the dark theme it uses bright green, amber and coral.',
+    commits: ['3d61661', 'NEWHASH'],
   },
 ];
 
