@@ -565,6 +565,14 @@ export const changelog = [
     commits: ['1720865'],
     lessons: ['deploy'],
   },
+  {
+    phase: 'lab',
+    date: '2026-11-19',
+    category: 'design',
+    title: 'A stag head in the welcome-screen code matrix',
+    plain: 'The cubes of falling code on the welcome screen now form a geometric stag head behind the name: flat facets in sage, tan and terracotta with wide antlers, while the code streams keep running through it. The glow behind the text is lighter so the stag shows through, and phones use smaller cubes so it stays recognisable.',
+    commits: ['3d61661'],
+  },
 ];
 
 export const commitUrl = (hash) => `${REPO_URL}/commit/${hash}`;
